@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konsalting Profi — účetnictví, mzdy a daně pro firmy v Praze</title>
+<meta name="description" content="Účetní kancelář Praha 9 – Vysočany. Vedení účetnictví, mzdová agenda, daňová evidence a poradenství při zakládání společnosti. Termíny hlídáme za vás.">
+<meta name="theme-color" content="#16264F">
+<link rel="canonical" href="https://konsalting.cz/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:title" content="Konsalting Profi — účetnictví, mzdy a daně pro firmy v Praze">
+<meta property="og:description" content="Účetní kancelář v Praze 9 – Vysočanech. Vedení účetnictví, mzdy, daňová evidence a poradenství při zakládání společnosti.">
+<meta property="og:image" content="assets/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Konsalting Profi — vizuální systém
+   papír (krém) · inkoust (námořní modř) · mosaz (akcent)
+   ============================================================ */
+:root{
+  --paper:#F7F4EF;
+  --paper-2:#FFFFFF;
+  --paper-3:#EFEAE1;
+  --ink:#111A2E;
+  --navy:#16264F;
+  --navy-2:#0D1935;
+  --brass:#A9743C;
+  --brass-2:#C08F4E;
+  --signal:#8C3B2C;
+  --line:rgba(17,26,46,.14);
+  --line-2:rgba(17,26,46,.08);
+  --muted:rgba(17,26,46,.68);
+  --on-dark:#F4F1EB;
+  --on-dark-mute:rgba(244,241,235,.72);
+  --line-dark:rgba(244,241,235,.18);
+  --maxw:1260px;
+  --pad:clamp(20px,5vw,68px);
+  --r:3px;
+  --shadow:0 26px 70px -34px rgba(13,25,53,.5);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  font-size:17px;line-height:1.65;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.disp{font-family:"Fraunces","Iowan Old Style",Georgia,serif;font-weight:600;line-height:1.04;letter-spacing:-.015em;margin:0}
+h1{font-size:clamp(40px,6.4vw,80px);font-weight:500;line-height:1.02;letter-spacing:-.025em}
+h2{font-size:clamp(30px,4.2vw,54px);font-weight:500;letter-spacing:-.02em}
+h3{font-size:clamp(19px,2vw,24px);font-weight:600;line-height:1.2}
+p{margin:0 0 1em}
+a{color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+.measure{max-width:60ch}
+.eyebrow{font-family:"IBM Plex Sans";font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin:0 0 18px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;flex:none}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px}
+img{max-width:100%}
+::selection{background:var(--brass);color:#fff}
+
+/* ---------- tlačítka ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;
+  font-family:"IBM Plex Sans";font-size:15px;font-weight:600;letter-spacing:.01em;padding:15px 26px;border-radius:var(--r);
+  text-decoration:none;background:var(--navy);color:var(--on-dark);
+  transition:transform .18s cubic-bezier(.2,.8,.3,1),background .22s,box-shadow .22s;
+  box-shadow:0 10px 24px -16px rgba(13,25,53,.9)}
+.btn:hover{background:var(--ink);transform:translateY(-2px)}
+.btn.brass{background:var(--brass);color:#fff}
+.btn.brass:hover{background:#94622F}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost:hover{background:rgba(17,26,46,.05)}
+.on-dark .btn.ghost,.hero .btn.ghost{color:var(--on-dark);box-shadow:inset 0 0 0 1px var(--line-dark)}
+.on-dark .btn.ghost:hover,.hero .btn.ghost:hover{background:rgba(244,241,235,.1)}
+.hero .btn:not(.ghost){background:var(--paper);color:var(--ink)}
+.hero .btn:not(.ghost):hover{background:#fff}
+
+/* ---------- hlavička ---------- */
+header{position:fixed;inset:0 0 auto;z-index:60;border-bottom:1px solid transparent;
+  transition:background .35s,backdrop-filter .35s,border-color .35s,color .35s;color:var(--on-dark)}
+header.solid{background:rgba(247,244,239,.9);backdrop-filter:blur(16px) saturate(1.2);border-bottom-color:var(--line);color:var(--ink)}
+.hbar{display:flex;align-items:center;gap:26px;height:78px}
+/* --- značka --- */
+.logo{display:inline-flex;align-items:center;gap:13px;text-decoration:none;flex:none}
+.mark{width:38px;height:38px;flex:none;position:relative;display:grid;place-items:center;
+  border:1px solid var(--brass);color:var(--brass);transition:background .3s,color .3s}
+.mark span{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:17px;letter-spacing:.02em;line-height:1;
+  transform:translateY(.5px)}
+.logo:hover .mark{background:var(--brass);color:#fff}
+.logo-w{display:flex;flex-direction:column;line-height:1;gap:6px}
+.logo-w b{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:23px;letter-spacing:.06em;
+  text-transform:uppercase;line-height:.9}
+.logo-w i{font-style:normal;font-weight:500;font-family:"IBM Plex Sans",sans-serif;font-size:9px;
+  letter-spacing:.42em;color:var(--brass);text-indent:.42em}
+nav.main{display:flex;gap:26px;margin-left:auto;font-size:15px}
+nav.main a{text-decoration:none;opacity:.82;transition:opacity .2s,color .2s;padding:6px 0;position:relative}
+nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--brass);transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.2,.8,.3,1)}
+nav.main a:hover{opacity:1}
+nav.main a:hover::after{transform:none}
+.tswitch{background:none;border:1px solid currentColor;color:inherit;width:38px;height:38px;border-radius:50%;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:none;opacity:.7;transition:opacity .2s,background .2s}
+.tswitch:hover{opacity:1;background:rgba(169,116,60,.14)}
+.tswitch svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6}
+.tswitch .moon{display:none}
+.burger{display:none;margin-left:auto;background:none;border:0;color:inherit;padding:10px;cursor:pointer}
+.hbar .btn{padding:12px 22px;font-size:14px}
+header:not(.solid) .hbar .btn{background:rgba(244,241,235,.12);color:var(--on-dark);box-shadow:inset 0 0 0 1px var(--line-dark)}
+header:not(.solid) .hbar .btn:hover{background:rgba(244,241,235,.2)}
+@media(max-width:960px){
+  nav.main{position:fixed;inset:78px 0 auto;flex-direction:column;gap:0;background:var(--paper);color:var(--ink);
+    padding:8px var(--pad) 28px;border-bottom:1px solid var(--line);transform:translateY(-125%);transition:transform .42s cubic-bezier(.3,.9,.3,1)}
+  nav.main.open{transform:none}
+  nav.main a{padding:15px 0;border-bottom:1px solid var(--line-2);font-size:18px;opacity:1}
+  .hbar .btn{display:none}
+  .burger{display:block;margin-left:auto}
+  .tswitch{margin-left:0}
+}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:min(100svh,880px);display:flex;flex-direction:column;justify-content:flex-end;
+  overflow:hidden;padding-top:120px;background:var(--navy-2);color:var(--on-dark)}
+.hero-media{position:absolute;inset:0;z-index:0;background:
+  radial-gradient(120% 100% at 78% 12%,#22355F 0%,#16264F 42%,#0B1226 100%)}
+.hero-media img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04);
+  animation:heroZoom 18s ease-out forwards}
+@keyframes heroZoom{to{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.hero-media img{animation:none;transform:none}}
+.hero-scrim{position:absolute;inset:0;z-index:1;background:
+  linear-gradient(180deg,rgba(13,25,53,.78) 0%,rgba(13,25,53,.28) 34%,rgba(13,25,53,.86) 100%),
+  radial-gradient(110% 85% at 10% 92%,rgba(13,25,53,.9) 0%,rgba(13,25,53,.25) 62%,transparent 88%)}
+.hero-inner{position:relative;z-index:2;padding-bottom:clamp(34px,5vw,64px)}
+.hero h1{max-width:15ch}
+.hero-media img,.about-media img,.step-media img{transition:opacity .6s}
+.no-photo img{opacity:0}
+.hero h1 .ln{display:block;overflow:hidden}
+.hero h1 .ln b{display:block;font-weight:inherit;transform:translateY(105%);animation:rise 1s cubic-bezier(.16,.9,.24,1) forwards}
+.hero h1 .ln:nth-child(2) b{animation-delay:.1s}
+.hero h1 .ln:nth-child(3) b{animation-delay:.2s}
+.hero h1 em{font-style:italic;font-weight:400;color:var(--brass-2)}
+@keyframes rise{to{transform:none}}
+.hero-lede{margin-top:26px;font-size:clamp(17px,1.5vw,20px);color:var(--on-dark-mute);max-width:50ch;opacity:0;animation:fade .9s .55s forwards}
+@keyframes fade{to{opacity:1}}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px;opacity:0;animation:fade .9s .72s forwards}
+@media(prefers-reduced-motion:reduce){
+  .hero h1 .ln b{transform:none;animation:none}
+  .hero-lede,.hero-cta{opacity:1;animation:none}
+}
+.hero-facts{position:relative;z-index:2;border-top:1px solid var(--line-dark);margin-top:clamp(34px,5vw,60px)}
+.hero-facts .wrap{display:flex;flex-wrap:wrap;gap:clamp(18px,4vw,54px);padding-block:20px;font-size:14px;color:var(--on-dark-mute)}
+.hero-facts span{display:flex;align-items:center;gap:10px}
+.hero-facts span::before{content:"";width:5px;height:5px;background:var(--brass);flex:none;transform:rotate(45deg)}
+
+/* ---------- pruh s termínem ---------- */
+.strip{position:relative;z-index:5;background:var(--ink);color:var(--on-dark)}
+.strip .wrap{display:flex;align-items:center;gap:clamp(16px,3vw,46px);padding-block:22px;flex-wrap:wrap}
+.strip .label{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-2);max-width:14ch;line-height:1.4}
+.strip .what{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(17px,2vw,23px);letter-spacing:-.01em;flex:1 1 240px}
+.strip .what em{display:block;font-style:normal;font-family:"IBM Plex Sans";font-weight:400;font-size:14px;color:var(--on-dark-mute);margin-top:5px}
+.clock{display:flex;gap:8px}
+.clock div{min-width:64px;text-align:center;background:rgba(244,241,235,.07);border:1px solid var(--line-dark);padding:9px 6px;border-radius:var(--r)}
+.clock b{display:block;font-family:"Fraunces",serif;font-weight:600;font-size:24px;line-height:1.1}
+.clock i{font-style:normal;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--on-dark-mute)}
+.clock.urgent b{color:var(--brass-2)}
+
+/* ---------- sekce ---------- */
+section{position:relative;padding-block:clamp(76px,9vw,136px)}
+.sec-head{display:flex;gap:clamp(20px,5vw,72px);align-items:flex-end;flex-wrap:wrap;margin-bottom:clamp(38px,5vw,66px)}
+.sec-head .h{flex:1 1 440px}
+.sec-head h2{max-width:18ch}
+.sec-head p{flex:1 1 320px;max-width:46ch;color:var(--muted);margin:0}
+.on-dark{background:var(--navy);color:var(--on-dark)}
+.on-dark .sec-head p,.on-dark .muted{color:var(--on-dark-mute)}
+.tint{background:var(--paper-3)}
+
+/* ---------- o firmě ---------- */
+.about{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,6vw,84px);align-items:center}
+@media(max-width:900px){.about{grid-template-columns:1fr}}
+.about-media{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;box-shadow:var(--shadow);
+  background:linear-gradient(145deg,#22355F 0%,#16264F 48%,#0B1226 100%)}
+.about-media img{width:100%;height:100%;object-fit:cover;display:block}
+.about-media::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.pillars{display:grid;gap:2px;background:var(--line);border:1px solid var(--line);margin-top:36px;border-radius:var(--r);overflow:hidden}
+@media(min-width:620px){.pillars{grid-template-columns:1fr 1fr}}
+.pillars div{background:var(--paper);padding:22px 24px}
+.pillars b{font-family:"Fraunces",serif;font-size:17px;font-weight:600;display:block;margin-bottom:6px}
+.pillars p{margin:0;font-size:15px;color:var(--muted);line-height:1.5}
+
+/* ---------- služby (rejstřík) ---------- */
+.ledger{border-top:1px solid var(--line)}
+.row{border-bottom:1px solid var(--line)}
+.row button{width:100%;background:none;border:0;padding:clamp(24px,3vw,34px) 0;display:grid;
+  grid-template-columns:44px minmax(0,1.05fr) minmax(0,1fr) 44px;gap:clamp(14px,3vw,40px);align-items:center;
+  text-align:left;cursor:pointer;color:inherit;font:inherit;transition:padding-left .32s cubic-bezier(.2,.8,.3,1)}
+.row button:hover{padding-left:12px}
+.row .idx{font-family:"Fraunces",serif;font-size:14px;font-weight:600;color:var(--brass);letter-spacing:.04em}
+.row h3{transition:color .2s}
+.row button:hover h3{color:var(--brass)}
+.row .teaser{color:var(--muted);font-size:15.5px;margin:0}
+.plus{justify-self:end;width:40px;height:40px;border:1px solid var(--line);border-radius:50%;position:relative;
+  transition:transform .38s cubic-bezier(.2,.8,.3,1),background .25s,border-color .25s,color .25s}
+.plus::before,.plus::after{content:"";position:absolute;inset:50% 12px auto;height:1px;background:currentColor;transform:translateY(-50%)}
+.plus::after{transform:translateY(-50%) rotate(90deg)}
+.row[aria-expanded="true"] .plus{transform:rotate(135deg);background:var(--brass);color:#fff;border-color:var(--brass)}
+.panel{overflow:hidden;height:0;transition:height .45s cubic-bezier(.2,.8,.25,1)}
+.panel-in{padding:0 0 clamp(26px,3vw,42px) clamp(0px,4vw,58px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,4vw,48px)}
+.panel-in ul{margin:0;padding-left:0;list-style:none}
+.panel-in li{padding:10px 0 10px 26px;position:relative;border-bottom:1px solid var(--line-2);font-size:15.5px;line-height:1.5}
+.panel-in li:last-child{border-bottom:0}
+.panel-in li::before{content:"";position:absolute;left:3px;top:19px;width:8px;height:8px;background:var(--brass);transform:rotate(45deg)}
+@media(max-width:860px){
+  .row button{grid-template-columns:28px minmax(0,1fr) 40px;gap:14px}
+  .row .teaser{display:none}
+  .panel-in{grid-template-columns:1fr;padding-left:0}
+}
+
+/* ---------- postup ---------- */
+.steps{display:grid;gap:clamp(52px,7vw,104px)}
+.step{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(24px,5vw,68px);align-items:center}
+.step:nth-child(even) .step-media{order:-1}
+.step-media{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:3/2;box-shadow:var(--shadow);
+  background:linear-gradient(145deg,#22355F 0%,#16264F 48%,#0B1226 100%)}
+.step-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s cubic-bezier(.2,.8,.3,1)}
+.step:hover .step-media img{transform:scale(1.03)}
+.step-n{display:inline-flex;align-items:baseline;gap:10px;font-family:"Fraunces",serif;font-size:13px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.step-n em{font-style:normal;font-size:42px;line-height:1;letter-spacing:-.02em;opacity:.28}
+.step h3{margin-bottom:12px;font-size:clamp(22px,2.6vw,30px)}
+.step p{color:var(--muted);margin:0;max-width:44ch}
+@media(max-width:860px){
+  .step{grid-template-columns:1fr;gap:22px}
+  .step:nth-child(even) .step-media{order:0}
+}
+
+/* ---------- výhody ---------- */
+.adv{display:grid;grid-template-columns:repeat(12,1fr);gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:var(--r);overflow:hidden}
+.adv article{grid-column:span 4;background:var(--navy);padding:clamp(28px,3vw,40px) clamp(22px,2.4vw,32px);
+  display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;transition:background .3s}
+.adv article:hover{background:var(--navy-2)}
+.adv article::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:var(--brass);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.8,.3,1)}
+.adv article.seen::after{transform:none}
+.adv h3{font-size:20px}
+.adv p{color:var(--on-dark-mute);font-size:15.5px;margin:0;line-height:1.55}
+.adv svg{width:26px;height:26px;stroke:var(--brass-2);fill:none;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:980px){.adv article{grid-column:span 6}}
+@media(max-width:640px){.adv article{grid-column:span 12}}
+
+/* ---------- diagnostika ---------- */
+.quiz{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 24px 60px -46px rgba(13,25,53,.6)}
+.quiz-bar{height:3px;background:var(--line-2)}
+.quiz-bar i{display:block;height:100%;background:var(--brass);width:0;transition:width .5s cubic-bezier(.2,.8,.3,1)}
+.quiz-body{padding:clamp(26px,4vw,54px)}
+.qstep{display:none}
+.qstep.on{display:block;animation:qin .45s cubic-bezier(.2,.8,.3,1)}
+@keyframes qin{from{opacity:0;transform:translateY(14px)}}
+.qcount{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+.qtitle{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(23px,3vw,34px);letter-spacing:-.02em;line-height:1.1;margin-bottom:26px;max-width:22ch}
+.opts{display:grid;gap:9px}
+.opt{text-align:left;background:var(--paper);border:1px solid var(--line);color:inherit;font:inherit;font-size:16px;
+  padding:17px 20px;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;gap:14px;
+  transition:background .2s,border-color .2s,transform .18s cubic-bezier(.2,.8,.3,1)}
+.opt:hover{background:#fff;border-color:var(--brass);transform:translateX(5px)}
+.opt span{width:8px;height:8px;border:1px solid var(--brass);flex:none;transform:rotate(45deg);transition:background .2s}
+.opt:hover span{background:var(--brass)}
+.qback{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;margin-top:24px;cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:4px}
+.qback:hover{color:var(--ink)}
+.result .tag{display:inline-block;background:var(--brass);color:#fff;font-size:12px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;padding:6px 13px;border-radius:var(--r);margin-bottom:16px}
+.result h3{margin-bottom:10px;font-size:clamp(22px,2.6vw,30px)}
+.result ul{padding-left:0;list-style:none;margin:20px 0 28px}
+.result li{padding:10px 0 10px 26px;position:relative;border-bottom:1px solid var(--line-2);font-size:16px}
+.result li::before{content:"";position:absolute;left:0;top:20px;width:14px;height:1px;background:var(--brass)}
+
+/* ---------- daňový kalendář ---------- */
+.cal{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.cal .m{background:var(--paper-2);padding:22px 22px 24px;min-height:158px}
+.cal .m.past{opacity:.45}
+.cal .m.now{background:var(--navy);color:var(--on-dark)}
+.cal .m h4{font-family:"Fraunces",serif;font-weight:600;font-size:16px;margin:0 0 14px;text-transform:capitalize}
+.cal .m.now h4{color:var(--brass-2)}
+.cal .m ul{list-style:none;margin:0;padding:0}
+.cal .m li{font-size:14px;line-height:1.45;padding:8px 0;border-top:1px solid var(--line-2);display:flex;gap:10px;color:var(--muted)}
+.cal .m.now li{border-top-color:var(--line-dark);color:var(--on-dark-mute)}
+.cal .m li b{font-family:"Fraunces",serif;font-weight:600;flex:none;width:26px;color:var(--brass)}
+.cal .m.now li b{color:var(--brass-2)}
+
+/* ---------- FAQ ---------- */
+.faq .row button{grid-template-columns:minmax(0,1fr) 44px}
+.faq .panel-in{grid-template-columns:1fr;max-width:72ch;color:var(--muted);padding-left:0}
+
+/* ---------- kontakt ---------- */
+.contact{background:var(--navy);color:var(--on-dark)}
+.cgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(32px,6vw,84px);align-items:start}
+@media(max-width:900px){.cgrid{grid-template-columns:1fr}}
+form{display:grid;gap:13px}
+.field{position:relative}
+.field input,.field textarea{width:100%;background:rgba(13,25,53,.4);border:1px solid var(--line-dark);
+  color:var(--on-dark);font:inherit;font-size:16px;padding:23px 16px 10px;border-radius:var(--r);transition:border-color .2s,background .2s}
+.field textarea{min-height:110px;resize:vertical;padding-top:27px}
+.field label{position:absolute;left:16px;top:16px;font-size:15px;color:var(--on-dark-mute);pointer-events:none;transition:.2s cubic-bezier(.2,.8,.3,1)}
+.field input:focus,.field textarea:focus{border-color:var(--brass-2);outline:none;background:rgba(13,25,53,.62)}
+.field input:focus+label,.field input:not(:placeholder-shown)+label,
+.field textarea:focus+label,.field textarea:not(:placeholder-shown)+label{top:7px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.consent{font-size:13px;color:var(--on-dark-mute);line-height:1.5}
+.consent a{color:var(--brass-2)}
+.info dl{display:grid;grid-template-columns:auto 1fr;gap:15px 26px;margin:0;font-size:16px}
+.info dt{color:var(--on-dark-mute);font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding-top:4px}
+.info dd{margin:0}
+.info dd a{text-decoration:none;border-bottom:1px solid rgba(192,143,78,.6)}
+.info dd a:hover{border-bottom-color:var(--brass-2)}
+.formnote{font-size:15px;padding:15px 17px;border-left:2px solid var(--brass-2);background:rgba(192,143,78,.14);display:none;margin-bottom:14px;border-radius:0 var(--r) var(--r) 0}
+.formnote.on{display:block}
+
+/* ---------- patička ---------- */
+footer{background:var(--navy-2);color:var(--on-dark);padding-block:60px 34px}
+.fgrid{display:flex;gap:clamp(24px,5vw,72px);flex-wrap:wrap;justify-content:space-between}
+footer h5{font-family:"IBM Plex Sans";font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 16px;color:var(--brass-2)}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:15px}
+footer a{text-decoration:none;color:var(--on-dark-mute);transition:color .2s}
+footer a:hover{color:var(--on-dark)}
+.fbot{margin-top:48px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:13px;color:var(--on-dark-mute);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* ---------- odhalování ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.8,.3,1),transform .8s cubic-bezier(.2,.8,.3,1)}
+.reveal.seen{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ---------- tmavý motiv ---------- */
+body.dark{
+  --paper:#0D1526;--paper-2:#121C31;--paper-3:#0A1120;
+  --ink:#F1EDE6;--navy:#16264F;--navy-2:#0A1223;
+  --line:rgba(241,237,230,.16);--line-2:rgba(241,237,230,.09);
+  --muted:rgba(241,237,230,.68);
+}
+body.dark header.solid{background:rgba(13,21,38,.92)}
+body.dark nav.main{background:var(--paper)}
+body.dark .btn{background:var(--brass);color:#fff}
+body.dark .btn:hover{background:var(--brass-2)}
+body.dark .btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+body.dark .hero .btn:not(.ghost){background:var(--brass);color:#fff}
+body.dark .pillars div{background:var(--paper-2)}
+body.dark .tint{background:var(--paper-3)}
+body.dark .opt{background:var(--paper)}
+body.dark .opt:hover{background:var(--paper-3)}
+body.dark .cal .m{background:var(--paper-2)}
+body.dark .tswitch .moon{display:block}
+body.dark .tswitch .sun{display:none}
+body.dark ::selection{background:var(--brass);color:#fff}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap hbar">
+    <a class="logo" href="#top" aria-label="Konsalting Profi — úvod">
+      <span class="mark" aria-hidden="true"><span>KP</span></span>
+      <span class="logo-w"><b>Konsalting</b><i>PROFI</i></span>
+    </a>
+    <button class="burger" id="burger" aria-label="Otevřít menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 26 26" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M3 8h20M3 18h20"/></svg>
+    </button>
+    <nav class="main" id="nav">
+      <a href="#o-nas">O nás</a>
+      <a href="#sluzby">Služby</a>
+      <a href="#postup">Spolupráce</a>
+      <a href="#proc">Proč my</a>
+      <a href="#diagnostika">Diagnostika</a>
+      <a href="#kalendar">Kalendář</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="tswitch" id="tsw" aria-label="Přepnout světlý a tmavý motiv">
+      <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    <a class="btn" href="#kontakt">Nezávazná konzultace</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-media">
+    <img src="assets/hero.jpg" alt="Účetní kancelář Konsalting Profi v Praze" fetchpriority="high">
+  </div>
+  <div class="hero-scrim"></div>
+  <div class="wrap hero-inner">
+    <h1>
+      <span class="ln"><b>Účetnictví, které</b></span>
+      <span class="ln"><b>drží firmu</b></span>
+      <span class="ln"><b><em>v pořádku.</em></b></span>
+    </h1>
+    <p class="hero-lede">Vedeme účetnictví, mzdy a daňovou evidenci pro firmy a podnikatele v Praze. Přebíráme agendu i odpovědnost za termíny — vy se věnujete svému podnikání.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#kontakt">Domluvit konzultaci</a>
+      <a class="btn ghost" href="#sluzby">Prohlédnout služby</a>
+    </div>
+  </div>
+  <div class="hero-facts">
+    <div class="wrap">
+      <span>Praha 9 — Vysočany</span>
+      <span>Účetnictví a daňová evidence</span>
+      <span>Mzdová agenda</span>
+      <span>Zakládání společností</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NEJBLIŽŠÍ TERMÍN ============ -->
+<div class="strip">
+  <div class="wrap">
+    <div class="label">Nejbližší zákonný termín</div>
+    <div class="what" id="dlWhat">—<em id="dlDate"></em></div>
+    <div class="clock num" id="clock">
+      <div><b id="dD">–</b><i>dní</i></div>
+      <div><b id="dH">–</b><i>hodin</i></div>
+      <div><b id="dM">–</b><i>minut</i></div>
+      <div><b id="dS">–</b><i>sekund</i></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ O NÁS ============ -->
+<section id="o-nas">
+  <div class="wrap">
+    <div class="about">
+      <div class="reveal">
+        <p class="eyebrow">O kanceláři</p>
+        <h2>Účetní kancelář, která zná vaši firmu jménem</h2>
+        <p class="measure" style="margin-top:22px;color:var(--muted)">Jsme účetní kancelář se sídlem v Praze 9 – Vysočanech. Staráme se o účetnictví podnikatelů, malých a středních firem — od živnostníka po společnost s desítkami zaměstnanců. Každý klient u nás má svého účetního, který zná kontext jeho podnikání a je k zastižení, když je potřeba.</p>
+        <p class="measure" style="color:var(--muted)">Nejsme anonymní servis na zpracování dokladů. Rozsah spolupráce nastavujeme podle toho, jak vaše firma reálně funguje, a upozorníme dřív, než se z drobnosti stane problém.</p>
+        <div class="pillars">
+          <div><b>Osobní účetní</b><p>Jeden konkrétní člověk, kterému nemusíte pokaždé vysvětlovat kontext.</p></div>
+          <div><b>Hlídané termíny</b><p>Zákonné lhůty sledujeme za vás a hlásíme je s předstihem.</p></div>
+          <div><b>Kompletní agenda</b><p>Účetnictví, mzdy i daně na jednom místě, bez skládání dodavatelů.</p></div>
+          <div><b>Pojištěná odpovědnost</b><p>Za zpracování ručíme a jsme pojištěni na odpovědnost za škodu.</p></div>
+        </div>
+      </div>
+      <div class="about-media reveal">
+        <img src="assets/office.jpg" alt="Recepce kanceláře Konsalting Profi v Praze 9 – Vysočanech" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLUŽBY ============ -->
+<section id="sluzby" class="tint">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="h">
+        <p class="eyebrow">Služby</p>
+        <h2>Čtyři agendy, jeden dodavatel</h2>
+      </div>
+      <p>Kliknutím na řádek uvidíte, co konkrétně přebíráme. Rozsah nastavujeme podle velikosti firmy a počtu dokladů.</p>
+    </div>
+    <div class="ledger" id="svc">
+      <div class="row" aria-expanded="false">
+        <button>
+          <span class="idx num">01</span>
+          <h3>Účetnictví a účetní poradenství</h3>
+          <p class="teaser">Externí vedení účetnictví pro podnikatele a firmy, včetně rekonstrukce účtů.</p>
+          <span class="plus" aria-hidden="true"></span>
+        </button>
+        <div class="panel"><div class="panel-in">
+          <ul>
+            <li>Zpracování prvotních dokladů a bankovních výpisů</li>
+            <li>Vedení hlavní knihy, deníku a evidence majetku</li>
+            <li>Přiznání k DPH a kontrolní hlášení</li>
+            <li>Roční účetní závěrka a přiznání k dani z příjmů</li>
+          </ul>
+          <ul>
+            <li>Rekonstrukce zanedbaného nebo neúplného účetnictví</li>
+            <li>Zastupování při kontrole z finančního úřadu</li>
+            <li>Podklady pro banku, dotace a výběrová řízení</li>
+            <li>Průběžný přehled o hospodaření, ne jen jednou ročně</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <div class="row" aria-expanded="false">
+        <button>
+          <span class="idx num">02</span>
+          <h3>Vedení mzdové agendy</h3>
+          <p class="teaser">Kompletní externí zpracování mezd od nástupu zaměstnance po roční zúčtování.</p>
+          <span class="plus" aria-hidden="true"></span>
+        </button>
+        <div class="panel"><div class="panel-in">
+          <ul>
+            <li>Měsíční výpočet mezd a výplatní pásky</li>
+            <li>Přihlášky a odhlášky na ČSSZ a zdravotní pojišťovny</li>
+            <li>Srážková a zálohová daň, exekuční srážky</li>
+            <li>Roční zúčtování daně zaměstnanců</li>
+          </ul>
+          <ul>
+            <li>Pracovní smlouvy, DPP a DPČ</li>
+            <li>Evidenční listy důchodového pojištění</li>
+            <li>Potvrzení o příjmu pro zaměstnance</li>
+            <li>Komunikace s úřady místo vás</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <div class="row" aria-expanded="false">
+        <button>
+          <span class="idx num">03</span>
+          <h3>Daňová evidence</h3>
+          <p class="teaser">Pro OSVČ a menší firmy: evidence podle zákona o daních z příjmů bez zbytečné administrativy.</p>
+          <span class="plus" aria-hidden="true"></span>
+        </button>
+        <div class="panel"><div class="panel-in">
+          <ul>
+            <li>Peněžní deník, evidence pohledávek a závazků</li>
+            <li>Kniha jízd a evidence majetku</li>
+            <li>Přiznání k dani z příjmů fyzických osob</li>
+          </ul>
+          <ul>
+            <li>Přehledy pro ČSSZ a zdravotní pojišťovnu</li>
+            <li>Posouzení, zda se vyplatí paušální daň</li>
+            <li>Hlídání limitu pro povinnou registraci k DPH</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <div class="row" aria-expanded="false">
+        <button>
+          <span class="idx num">04</span>
+          <h3>Poradenství při zakládání společnosti</h3>
+          <p class="teaser">Od výběru právní formy po první podané přiznání.</p>
+          <span class="plus" aria-hidden="true"></span>
+        </button>
+        <div class="panel"><div class="panel-in">
+          <ul>
+            <li>Volba právní formy podle vašeho záměru</li>
+            <li>Registrace u finančního úřadu a dalších institucí</li>
+            <li>Nastavení účetního systému od prvního dne</li>
+          </ul>
+          <ul>
+            <li>Registrace k DPH, dobrovolná i povinná</li>
+            <li>Nastavení interních pravidel pro doklady</li>
+            <li>Kontrola souladu s legislativou</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPOLUPRÁCE ============ -->
+<section id="postup">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="h">
+        <p class="eyebrow">Spolupráce</p>
+        <h2>Jak u nás vypadá běžný měsíc</h2>
+      </div>
+      <p>Tři kroky od prvního setkání po pravidelný rytmus, ve kterém už nemusíte nic hlídat.</p>
+    </div>
+    <div class="steps">
+      <article class="step reveal">
+        <div>
+          <div class="step-n"><em>01</em> Úvodní konzultace</div>
+          <h3>Projdeme, v jakém stavu je vaše agenda</h3>
+          <p>Sejdeme se, projdeme dosavadní účetnictví a řekneme si, co je potřeba srovnat. Teprve pak navrhneme rozsah spolupráce a cenu — bez závazku a bez překvapení v prvním vyúčtování.</p>
+        </div>
+        <div class="step-media"><img src="assets/foto-1.jpg" alt="Předání a roztřídění účetních dokladů" loading="lazy"></div>
+      </article>
+
+      <article class="step reveal">
+        <div>
+          <div class="step-n"><em>02</em> Převzetí a zpracování</div>
+          <h3>Doklady předáváte tak, jak vám to vyhovuje</h3>
+          <p>Elektronicky, nebo osobně v kanceláři ve Vysočanech. Zpracování, DPH, mzdy i komunikaci s úřady vedeme my a hlídáme přitom všechny zákonné lhůty za vás.</p>
+        </div>
+        <div class="step-media"><img src="assets/foto-2.jpg" alt="Účetní zpracovává doklady klienta" loading="lazy"></div>
+      </article>
+
+      <article class="step reveal">
+        <div>
+          <div class="step-n"><em>03</em> Přehled a konzultace</div>
+          <h3>Víte, jak na tom firma je — průběžně</h3>
+          <p>Dostáváte pravidelný přehled o hospodaření a upozornění na to, co se blíží. Když se rozhodujete o investici, zaměstnanci nebo úvěru, máte si s kým zavolat.</p>
+        </div>
+        <div class="step-media"><img src="assets/foto-3.jpg" alt="Konzultace s klientem nad účetní uzávěrkou" loading="lazy"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROČ MY ============ -->
+<section id="proc" class="on-dark">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="h">
+        <p class="eyebrow">Proč Konsalting Profi</p>
+        <h2>Šest důvodů, proč nebudete mít starosti</h2>
+      </div>
+      <p>Externí účetní dává smysl jen tehdy, když skutečně ubírá práci. Takhle to děláme.</p>
+    </div>
+    <div class="adv" id="adv">
+      <article>
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.2-2.9 7.6-7 9-4.1-1.4-7-4.8-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
+        <h3>Odbornost a praxe</h3>
+        <p>Tým zkušených účetních a daňových poradců. Za každým číslem stojí člověk, kterému můžete zavolat.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.4l3.4 2"/></svg>
+        <h3>Úspora času a nákladů</h3>
+        <p>Žádné vlastní účetní oddělení, žádné školení, žádné suplování při nemoci. Platíte za výsledek, ne za pracovní místo.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24"><path d="M4 19V9l6-4 6 4v10"/><path d="M9 19v-5h3v5"/><path d="M2.5 19h19"/></svg>
+        <h3>Individuální přístup</h3>
+        <p>Rozsah služeb i způsob předávání dokladů nastavíme podle toho, jak vaše firma reálně funguje.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h7M9 17h5"/></svg>
+        <h3>Aktuální legislativa</h3>
+        <p>Změny v účetních a daňových předpisech sledujeme průběžně. Nová povinnost se u vás projeví včas, ne až po termínu.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 10h16"/><path d="M8 14h4"/></svg>
+        <h3>Bez zbytečného papírování</h3>
+        <p>Doklady předáváte elektronicky, přehledy máte k dispozici hned. Papír jen tam, kde ho vyžaduje zákon.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24"><path d="M3 10.5L12 4l9 6.5"/><path d="M5.5 12v8h13v-8"/><path d="M10 20v-4.5h4V20"/></svg>
+        <h3>Vše pod jednou střechou</h3>
+        <p>Účetnictví, daně, mzdy i finanční poradenství na jednom místě. Nemusíte skládat tým z různých dodavatelů.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIAGNOSTIKA ============ -->
+<section id="diagnostika">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="h">
+        <p class="eyebrow">Diagnostika</p>
+        <h2>Zjistěte za minutu, co vaše firma potřebuje</h2>
+      </div>
+      <p>Čtyři otázky. Na konci dostanete konkrétní doporučení a připravený text pro nezávaznou konzultaci.</p>
+    </div>
+    <div class="quiz reveal" id="quiz">
+      <div class="quiz-bar"><i id="qbar"></i></div>
+      <div class="quiz-body" id="qbody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KALENDÁŘ ============ -->
+<section id="kalendar" class="tint">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="h">
+        <p class="eyebrow">Daňový kalendář</p>
+        <h2>Termíny, které za vás hlídáme</h2>
+      </div>
+      <p id="calYearNote">Přehled opakujících se termínů. Aktuální měsíc je zvýrazněn. U klientů tyto termíny hlídáme automaticky.</p>
+    </div>
+    <div class="cal" id="cal"></div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="h">
+        <p class="eyebrow">Časté otázky</p>
+        <h2>Na co se firmy ptají nejčastěji</h2>
+      </div>
+      <p>Odpovědi na to, co obvykle rozhoduje, než firma přejde k externímu účetnictví.</p>
+    </div>
+    <div class="ledger faq" id="faqbox">
+      <div class="row" aria-expanded="false"><button><h3>Jak probíhá přechod od současné účetní?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Převezmeme účetní data k dohodnutému datu, zkontrolujeme zůstatky a navážeme. Ideální je přechod k začátku účetního období, ale zvládneme ho i v jeho průběhu — v tom případě nejprve odsouhlasíme stav účtů.</p></div></div>
+      </div>
+      <div class="row" aria-expanded="false"><button><h3>Jak vám budu předávat doklady?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Nejčastěji elektronicky — stačí sken nebo fotografie. Pokud vám vyhovuje osobní předání, domluvíme se na pravidelném termínu v kanceláři ve Vysočanech.</p></div></div>
+      </div>
+      <div class="row" aria-expanded="false"><button><h3>Kdo odpovídá za chybu v přiznání?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Za zpracování odpovídáme my a jsme pojištěni. Odpovědnost vůči správci daně nese ze zákona podnikatel, proto vám vždy dáváme podklady ke kontrole před odesláním.</p></div></div>
+      </div>
+      <div class="row" aria-expanded="false"><button><h3>Zvládnete rekonstrukci zanedbaného účetnictví?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Ano, je to jedna z našich hlavních specializací. Nejdřív zmapujeme, co chybí, navrhneme postup a teprve pak se pouštíme do dohledávání dokladů a oprav.</p></div></div>
+      </div>
+      <div class="row" aria-expanded="false"><button><h3>Budu mít jednoho konkrétního člověka?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Ano. Každý klient má svého účetního jako hlavní kontakt, aby nemusel při každém dotazu vysvětlovat kontext znovu.</p></div></div>
+      </div>
+      <div class="row" aria-expanded="false"><button><h3>Poradíte i s věcmi, které se účetnictví jen dotýkají?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Ano — nastavení fakturace, cash flow, podklady pro banku nebo posouzení, zda se vyplatí zaměstnanec versus spolupráce na IČO. Ptejte se, i když si nejste jistí, že jde o účetní otázku.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KONTAKT ============ -->
+<section id="kontakt" class="contact">
+  <div class="wrap cgrid">
+    <div class="reveal">
+      <p class="eyebrow">Kontakt</p>
+      <h2>Zavoláme vám zpět</h2>
+      <p class="measure" style="margin-top:20px;color:var(--on-dark-mute)">Napište telefon a co řešíte. Ozveme se v provozní době a řekneme si, jestli vám dává smysl přejít na externí účetnictví — nezávazně a bez prodejních řečí.</p>
+      <div class="info" style="margin-top:36px">
+        <dl>
+          <dt>Telefon</dt><dd><a href="tel:+420773966787" class="num">+420 773 966 787</a></dd>
+          <dt>E-mail</dt><dd><a href="mailto:konsaltingprofi@gmail.com">konsaltingprofi@gmail.com</a></dd>
+          <dt>Adresa</dt><dd>Rubeška 383/4<br>190 00 Praha 9 – Vysočany</dd>
+          <dt>IČO</dt><dd class="num">25720121</dd>
+          <dt>Provozní doba</dt><dd>Po, St — objednaní klienti<br>Út, Čt — 10:00–18:00<br>Přestávka 13:00–14:00<br>Pá, So, Ne — zavřeno</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="formnote" id="fnote"></div>
+      <form id="leadform" novalidate>
+        <div class="field"><input id="f-name" name="name" placeholder=" " autocomplete="name" required><label for="f-name">Celé jméno</label></div>
+        <div class="field"><input id="f-mail" name="email" type="email" placeholder=" " autocomplete="email"><label for="f-mail">E-mail</label></div>
+        <div class="field"><input id="f-tel" name="tel" type="tel" placeholder=" " autocomplete="tel" required><label for="f-tel">Telefon</label></div>
+        <div class="field"><textarea id="f-msg" name="msg" placeholder=" "></textarea><label for="f-msg">Co potřebujete řešit</label></div>
+        <p class="consent">Odesláním potvrzuji, že jsem se seznámil/a s <a href="https://konsalting.cz/podminky-ochrany-osobnich-udaju">podmínkami ochrany osobních údajů</a>.</p>
+        <button class="btn brass" type="submit">Odeslat žádost o konzultaci</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div style="flex:1 1 260px">
+        <a class="logo" href="#top" aria-label="Konsalting Profi — úvod">
+          <span class="mark" aria-hidden="true"><span>KP</span></span>
+          <span class="logo-w"><b>Konsalting</b><i>PROFI</i></span>
+        </a>
+        <p style="margin-top:18px;color:var(--on-dark-mute);font-size:15px;max-width:34ch">Účetnictví, mzdy a daňové poradenství pro firmy a podnikatele. Praha 9 – Vysočany.</p>
+      </div>
+      <div><h5>Navigace</h5><ul>
+        <li><a href="#o-nas">O nás</a></li>
+        <li><a href="#sluzby">Služby</a></li>
+        <li><a href="#postup">Spolupráce</a></li>
+        <li><a href="#proc">Proč my</a></li>
+        <li><a href="#diagnostika">Diagnostika</a></li>
+        <li><a href="#kalendar">Daňový kalendář</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul></div>
+      <div><h5>Kontakt</h5><ul>
+        <li><a class="num" href="tel:+420773966787">+420 773 966 787</a></li>
+        <li><a href="mailto:konsaltingprofi@gmail.com">konsaltingprofi@gmail.com</a></li>
+        <li><a href="https://www.facebook.com/konsaltingprofi">Facebook</a></li>
+      </ul></div>
+      <div><h5>Sídlo</h5><ul>
+        <li>Rubeška 383/4</li><li>190 00 Praha 9 – Vysočany</li><li class="num">IČO 25720121</li>
+      </ul></div>
+    </div>
+    <div class="fbot">
+      <span>© <span id="yr"></span> Konsalting Profi</span>
+      <a href="https://konsalting.cz/podminky-ochrany-osobnich-udaju">Ochrana osobních údajů</a>
+    </div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"AccountingService","name":"Konsalting Profi","image":"assets/hero.jpg","telephone":"+420773966787","email":"konsaltingprofi@gmail.com","address":{"@type":"PostalAddress","streetAddress":"Rubeška 383/4","addressLocality":"Praha 9 – Vysočany","postalCode":"19000","addressCountry":"CZ"},"areaServed":"Praha","description":"Externí vedení účetnictví, mzdová agenda, daňová evidence a poradenství při zakládání společnosti.","openingHours":["Tu 10:00-13:00","Tu 14:00-18:00","Th 10:00-13:00","Th 14:00-18:00"]}
+</script>
+
+<script>
+/* ---------------- hlavička a navigace ---------------- */
+const hdr=document.getElementById('hdr'),nav=document.getElementById('nav'),burger=document.getElementById('burger');
+addEventListener('scroll',()=>hdr.classList.toggle('solid',scrollY>40),{passive:true});
+burger.onclick=()=>{const o=nav.classList.toggle('open');burger.setAttribute('aria-expanded',o)};
+nav.querySelectorAll('a').forEach(a=>a.onclick=()=>{nav.classList.remove('open');burger.setAttribute('aria-expanded','false')});
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+/* motiv: uložená volba, jinak podle systému */
+(function(){
+  let saved=null;try{saved=localStorage.getItem('kp-theme')}catch(e){}
+  const sysDark=matchMedia('(prefers-color-scheme: dark)').matches;
+  if(saved==='dark'||(saved===null&&sysDark))document.body.classList.add('dark');
+  document.getElementById('tsw').onclick=()=>{
+    const dark=document.body.classList.toggle('dark');
+    try{localStorage.setItem('kp-theme',dark?'dark':'light')}catch(e){}
+  };
+})();
+
+/* ---------------- odhalování při scrollu ---------------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target)}}),{threshold:.16});
+document.querySelectorAll('.reveal').forEach(e=>io.observe(e));
+document.querySelectorAll('#adv article').forEach((e,i)=>{e.style.transitionDelay=(i*60)+'ms';io.observe(e)});
+
+/* ---------------- rozbalovací seznamy ---------------- */
+function accordion(scope){
+  scope.querySelectorAll('.row').forEach(row=>{
+    const btn=row.querySelector('button'),panel=row.querySelector('.panel'),inner=panel.firstElementChild;
+    btn.onclick=()=>{
+      const open=row.getAttribute('aria-expanded')==='true';
+      scope.querySelectorAll('.row[aria-expanded="true"]').forEach(o=>{
+        if(o!==row){o.setAttribute('aria-expanded','false');o.querySelector('.panel').style.height='0px'}
+      });
+      row.setAttribute('aria-expanded',String(!open));
+      panel.style.height=open?'0px':inner.scrollHeight+'px';
+    };
+  });
+}
+accordion(document.getElementById('svc'));
+accordion(document.getElementById('faqbox'));
+addEventListener('resize',()=>document.querySelectorAll('.row[aria-expanded="true"] .panel').forEach(p=>p.style.height=p.firstElementChild.scrollHeight+'px'));
+
+/* ---------------- daňové termíny ---------------- */
+const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+function buildDeadlines(year){
+  const out=[];
+  for(let m=0;m<12;m++){
+    out.push({d:new Date(year,m,25,23,59),t:'Přiznání k DPH a kontrolní hlášení',s:'za předchozí měsíc / čtvrtletí'});
+    out.push({d:new Date(year,m,20,23,59),t:'Odvod srážkové daně ze mzdy',s:'a záloh na daň ze závislé činnosti'});
+  }
+  out.push({d:new Date(year,0,31,23,59),t:'Přiznání k dani silniční',s:'za předchozí zdaňovací období'});
+  out.push({d:new Date(year,2,15,23,59),t:'Čtvrtletní záloha na daň z příjmů',s:'první čtvrtletí'});
+  out.push({d:new Date(year,3,1,23,59),t:'Přiznání k dani z příjmů — listinně',s:'za předchozí rok'});
+  out.push({d:new Date(year,4,2,23,59),t:'Přiznání k dani z příjmů — elektronicky',s:'a přehledy pro ČSSZ a zdravotní pojišťovnu'});
+  out.push({d:new Date(year,5,15,23,59),t:'Čtvrtletní záloha na daň z příjmů',s:'druhé čtvrtletí'});
+  out.push({d:new Date(year,6,1,23,59),t:'Přiznání k dani z příjmů — daňový poradce',s:'při odkladu na základě plné moci'});
+  out.push({d:new Date(year,8,15,23,59),t:'Čtvrtletní záloha na daň z příjmů',s:'třetí čtvrtletí'});
+  out.push({d:new Date(year,11,15,23,59),t:'Čtvrtletní záloha na daň z příjmů',s:'čtvrté čtvrtletí'});
+  return out.sort((a,b)=>a.d-b.d);
+}
+const now=new Date(),Y=now.getFullYear();
+const all=[...buildDeadlines(Y),...buildDeadlines(Y+1)];
+const next=all.find(x=>x.d>now)||all[0];
+document.getElementById('dlWhat').firstChild.textContent=next.t;
+document.getElementById('dlDate').textContent=next.d.toLocaleDateString('cs-CZ',{day:'numeric',month:'long',year:'numeric'})+' — '+next.s;
+const clock=document.getElementById('clock');
+function tick(){
+  let ms=next.d-new Date();if(ms<0)ms=0;
+  const d=Math.floor(ms/864e5),h=Math.floor(ms/36e5)%24,m=Math.floor(ms/6e4)%60,s=Math.floor(ms/1e3)%60;
+  dD.textContent=d;dH.textContent=String(h).padStart(2,'0');dM.textContent=String(m).padStart(2,'0');dS.textContent=String(s).padStart(2,'0');
+  clock.classList.toggle('urgent',d<3);
+}
+tick();setInterval(tick,1000);
+
+/* kalendář na 12 měsíců */
+const cal=document.getElementById('cal');
+const byMonth=Array.from({length:12},()=>[]);
+buildDeadlines(Y).forEach(x=>{
+  const m=x.d.getMonth(),day=x.d.getDate();
+  if(!byMonth[m].some(e=>e.day===day&&e.t===x.t))byMonth[m].push({day,t:x.t});
+});
+byMonth.forEach((items,m)=>{
+  items.sort((a,b)=>a.day-b.day);
+  const el=document.createElement('div');
+  el.className='m'+(m<now.getMonth()?' past':'')+(m===now.getMonth()?' now':'');
+  el.innerHTML='<h4>'+MONTHS[m]+'</h4><ul>'+items.map(i=>'<li><b class="num">'+i.day+'.</b><span>'+i.t+'</span></li>').join('')+'</ul>';
+  cal.appendChild(el);
+});
+document.getElementById('calYearNote').textContent='Opakující se termíny pro rok '+Y+'. Aktuální měsíc je zvýrazněn — u klientů tyto termíny hlídáme automaticky.';
+
+/* ---------------- diagnostika ---------------- */
+const Q=[
+ {q:'Jakou máte právní formu?',o:[['osvc','OSVČ / živnostník'],['sro','s.r.o.'],['zaklad','Zatím nic — teprve zakládám'],['jine','Jiná forma']]},
+ {q:'Kolik lidí u vás pracuje?',o:[['0','Jsem sám'],['1_5','1–5 zaměstnanců'],['6_20','6–20 zaměstnanců'],['20p','Víc než 20']]},
+ {q:'Kdo vám dnes vede účetnictví?',o:[['sam','Dělám si to sám'],['ucetni','Externí účetní'],['interni','Vlastní účetní ve firmě'],['nikdo','Nikdo — je v tom nepořádek']]},
+ {q:'Co vás na tom nejvíc brzdí?',o:[['cas','Zabírá mi to čas, který potřebuji jinde'],['terminy','Bojím se, že mi uteče termín'],['prehled','Nemám průběžný přehled o číslech'],['chyby','Řeším chyby po někom jiném']]}
+];
+const rules={
+  zaklad:{tag:'Start firmy',h:'Nastavení od nuly',l:['Volba právní formy a registrace u úřadů','Nastavení účetnictví od prvního dokladu','Posouzení, zda se registrovat k DPH hned']},
+  nikdo:{tag:'Rekonstrukce',h:'Nejdřív pořádek, pak rutina',l:['Zmapování, co chybí, a návrh postupu','Rekonstrukce účtů a dohledání dokladů','Teprve pak převzetí běžné agendy']},
+  zam:{tag:'Účetnictví + mzdy',h:'Účetnictví společně se mzdovou agendou',l:['Kompletní vedení účetnictví a DPH','Měsíční mzdy, ČSSZ a zdravotní pojišťovny','Jeden dodavatel místo dvou']},
+  osvc:{tag:'Daňová evidence',h:'Daňová evidence pro OSVČ',l:['Peněžní deník a evidence majetku','Přiznání a přehledy pro ČSSZ a pojišťovnu','Posouzení paušální daně a limitu pro DPH']},
+  sro:{tag:'Účetnictví',h:'Externí vedení účetnictví',l:['Zpracování dokladů, DPH a kontrolní hlášení','Roční závěrka a přiznání k dani z příjmů','Podklady pro banku a majitele']}
+};
+const pains={
+  cas:'Sběr dokladů nastavíme tak, abyste u toho trávili minuty měsíčně.',
+  terminy:'Termíny hlídáme za vás a upozorníme dopředu, ne den předem.',
+  prehled:'Dostáváte průběžný přehled o hospodaření, ne jen roční závěrku.',
+  chyby:'Začneme kontrolou stávajícího stavu, aby se chyby netáhly dál.'
+};
+let step=0;const A={};
+const qbody=document.getElementById('qbody'),qbar=document.getElementById('qbar');
+function renderQ(){
+  qbar.style.width=(step/Q.length*100)+'%';
+  if(step<Q.length){
+    const q=Q[step];
+    qbody.innerHTML='<div class="qstep on"><div class="qcount num">Otázka '+(step+1)+' ze '+Q.length+'</div>'+
+      '<div class="qtitle">'+q.q+'</div><div class="opts">'+
+      q.o.map(o=>'<button class="opt" data-v="'+o[0]+'"><span></span>'+o[1]+'</button>').join('')+'</div>'+
+      (step?'<button class="qback">Zpět na předchozí otázku</button>':'')+'</div>';
+    qbody.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{A[step]=b.dataset.v;step++;renderQ()});
+    const back=qbody.querySelector('.qback');if(back)back.onclick=()=>{step--;renderQ()};
+  } else result();
+}
+function result(){
+  qbar.style.width='100%';
+  const form=A[0],staff=A[1],who=A[2],pain=A[3];
+  let r;
+  if(form==='zaklad')r=rules.zaklad;
+  else if(who==='nikdo')r=rules.nikdo;
+  else if(staff!=='0')r=rules.zam;
+  else if(form==='osvc')r=rules.osvc;
+  else r=rules.sro;
+  const line=pains[pain]||'';
+  qbody.innerHTML='<div class="qstep on result"><span class="tag">'+r.tag+'</span><h3>'+r.h+'</h3>'+
+    '<p style="color:var(--muted);max-width:52ch">'+line+'</p><ul>'+r.l.map(x=>'<li>'+x+'</li>').join('')+'</ul>'+
+    '<div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn brass" href="#kontakt" id="qgo">Domluvit nezávaznou konzultaci</a>'+
+    '<button class="btn ghost" id="qrst">Projít znovu</button></div></div>';
+  const map={osvc:'OSVČ',sro:'s.r.o.',zaklad:'teprve zakládám firmu',jine:'jiná právní forma'};
+  const smap={'0':'bez zaměstnanců','1_5':'1–5 zaměstnanců','6_20':'6–20 zaměstnanců','20p':'víc než 20 zaměstnanců'};
+  const wmap={sam:'vedu si to sám',ucetni:'mám externí účetní',interni:'mám vlastní účetní',nikdo:'účetnictví je v nepořádku'};
+  document.getElementById('f-msg').value=
+    'Diagnostika: '+(map[form]||'')+', '+(smap[staff]||'')+', '+(wmap[who]||'')+'. Doporučení: '+r.h+'.';
+  document.getElementById('qrst').onclick=()=>{step=0;renderQ()};
+}
+renderQ();
+
+/* chybějící fotografie: necháme jen barevnou plochu, ne rozbitý obrázek */
+document.querySelectorAll('.hero-media img,.about-media img,.step-media img').forEach(im=>{
+  const hide=()=>{im.alt='';im.parentElement.classList.add('no-photo')};
+  im.addEventListener('error',hide,{once:true});
+  if(im.complete&&!im.naturalWidth)hide();
+});
+
+/* ---------------- formulář ---------------- */
+const fnote=document.getElementById('fnote');
+document.getElementById('leadform').addEventListener('submit',e=>{
+  e.preventDefault();
+  const f=e.target,tel=f.tel.value.trim(),name=f.name.value.trim();
+  if(name.length<2||tel.replace(/\D/g,'').length<9){
+    fnote.className='formnote on';fnote.textContent='Doplňte prosím jméno a telefonní číslo — bez nich se nemáme jak ozvat.';return;
+  }
+  fnote.className='formnote on';
+  fnote.textContent='Děkujeme, '+name.split(' ')[0]+'. Ozveme se na '+tel+' v nejbližší provozní době.';
+  f.reset();
+  /* napojení na backend / CRM se doplní zde */
+});
+</script>
+</body>
+</html>
