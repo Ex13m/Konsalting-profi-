@@ -1,0 +1,9 @@
+{
+  "name": "konsalting-profi",
+  "private": true,
+  "type": "module",
+  "description": "Prezentační web účetní kanceláře Konsalting Profi",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.0"
+  }
+}
