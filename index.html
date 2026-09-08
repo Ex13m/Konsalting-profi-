@@ -393,23 +393,34 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .dock .x{background:none;border:0;color:var(--on-dark-mute);cursor:pointer;font-size:20px;line-height:1;padding:6px;flex:none}
 @media(max-width:700px){.dock .txt em{display:none}.dock .wrap{gap:10px}}
 
-/* --- kalkulačka --- */
-.calcbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.86fr);gap:2px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-@media(max-width:900px){.calcbox{grid-template-columns:1fr}}
-.calc-in,.calc-out{background:var(--paper-2);padding:clamp(24px,3vw,40px)}
-.calc-out{background:var(--navy);color:var(--on-dark);display:flex;flex-direction:column;justify-content:center;gap:6px}
-.crow{margin-bottom:24px}
-.crow label{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--muted);margin-bottom:10px;gap:14px}
-.crow label b{font-family:"Fraunces",serif;font-size:18px;color:var(--ink);font-weight:600}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--line);border-radius:2px;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--brass);cursor:pointer;border:3px solid var(--paper-2);box-shadow:0 2px 8px rgba(13,25,53,.3)}
-input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--brass);cursor:pointer;border:3px solid var(--paper-2)}
-.calc-out .lbl{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-2)}
-.calc-out .big{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(34px,5vw,54px);line-height:1;letter-spacing:-.02em;margin:4px 0 2px}
-.calc-out .sub{color:var(--on-dark-mute);font-size:15px;margin-bottom:18px}
-.calc-out ul{list-style:none;margin:0 0 22px;padding:0;font-size:14.5px;display:grid;gap:8px;color:var(--on-dark-mute)}
-.calc-out li{display:flex;justify-content:space-between;gap:14px;border-bottom:1px dashed var(--line-dark);padding-bottom:8px}
-.calc-out li b{color:var(--on-dark);font-variant-numeric:tabular-nums}
+
+/* --- body důvěry: tiché signály, ne slogany --- */
+.trustline{display:flex;flex-wrap:wrap;gap:clamp(14px,3vw,34px);margin-top:26px;padding-top:20px;
+  border-top:1px solid var(--line-dark);font-size:13px;color:var(--on-dark-mute);letter-spacing:.02em}
+.trustline span{display:flex;align-items:center;gap:9px}
+.trustline svg{width:15px;height:15px;stroke:var(--brass-2);fill:none;stroke-width:1.4;flex:none}
+.microtrust{margin:18px 0 0;font-size:13.5px;color:var(--muted);line-height:1.5;max-width:48ch;
+  padding-left:14px;border-left:1px solid var(--brass);opacity:.9}
+.on-dark .microtrust,.contact .microtrust,.book .microtrust{color:var(--on-dark-mute)}
+.lock{display:inline-block;width:11px;height:13px;vertical-align:-2px;margin-right:5px;
+  border:1px solid currentColor;border-radius:2px;position:relative;opacity:.75}
+.lock::before{content:"";position:absolute;left:2px;right:2px;bottom:9px;height:6px;border:1px solid currentColor;
+  border-bottom:0;border-radius:4px 4px 0 0}
+.ctahint{font-size:12.5px;color:var(--muted);margin:12px 0 0;display:flex;align-items:center;gap:8px}
+.ctahint::before{content:"";width:14px;height:1px;background:var(--brass)}
+.on-dark .ctahint,.book .ctahint{color:var(--on-dark-mute)}
+
+/* pečeť — čitelná až při pohledu, nikoli výkřik */
+.seal{position:absolute;width:132px;height:132px;opacity:.16;pointer-events:none;color:var(--brass);
+  animation:sealturn 90s linear infinite}
+@keyframes sealturn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.seal{animation:none}}
+.seal text{font-family:"IBM Plex Sans",sans-serif;font-size:8.4px;letter-spacing:.32em;fill:currentColor;text-transform:uppercase}
+.seal circle{fill:none;stroke:currentColor;stroke-width:.7}
+.about-media .seal{right:-14px;bottom:-14px;opacity:.5;color:var(--brass-2)}
+.book-r{position:relative;overflow:hidden}
+.book-r .seal{right:-30px;bottom:-26px;color:var(--brass-2);opacity:.2}
+.about-media{position:relative}
 
 /* --- daňový kalendář --- */
 .calbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:26px;align-items:center}
@@ -457,6 +468,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .day i{font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--on-dark-mute)}
 .day.on i{color:rgba(255,255,255,.8)}
 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.slots .booknote{grid-column:1/-1}
 .slot{background:transparent;border:1px solid var(--line-dark);color:var(--on-dark);font:inherit;font-size:15px;
   padding:11px 8px;border-radius:var(--r);cursor:pointer;transition:all .2s;font-variant-numeric:tabular-nums}
 .slot:hover{border-color:var(--brass-2);background:rgba(192,143,78,.14)}
@@ -560,19 +572,18 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
       <svg width="26" height="26" viewBox="0 0 26 26" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M3 8h20M3 18h20"/></svg>
     </button>
     <nav class="main" id="nav">
-      <a href="#o-nas">O nás</a>
+      <a href="#objednani">Objednat se</a>
       <a href="#sluzby">Služby</a>
-      <a href="#postup">Spolupráce</a>
-      <a href="#proc">Proč my</a>
-      <a href="#diagnostika">Diagnostika</a>
+      <a href="#o-nas">O kanceláři</a>
+      <a href="#postup">Jak to chodí</a>
       <a href="#kalendar">Kalendář</a>
-      <a href="#faq">FAQ</a>
+      <a href="#faq">Otázky</a>
     </nav>
     <button class="tswitch" id="tsw" aria-label="Přepnout světlý a tmavý motiv">
       <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
       <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
     </button>
-    <a class="btn" href="#kontakt">Nezávazná konzultace</a>
+    <a class="btn" href="#objednani">Vybrat termín</a>
   </div>
 </header>
 
@@ -590,18 +601,25 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
       <span class="ln"><b>drží firmu</b></span>
       <span class="ln"><b><em>v pořádku.</em></b></span>
     </h1>
-    <p class="hero-lede">Vedeme účetnictví, mzdy a daňovou evidenci pro firmy a podnikatele v Praze. Přebíráme agendu i odpovědnost za termíny — vy se věnujete svému podnikání.</p>
+    <p class="hero-lede">Přebíráme celou agendu — účetnictví, mzdy i jednání s úřady. Vy se staráte o firmu, my o to, aby v jejích papírech nebylo co řešit.</p>
     <div class="hero-cta">
-      <a class="btn" href="#kontakt">Domluvit konzultaci</a>
-      <a class="btn ghost" href="#sluzby">Prohlédnout služby</a>
+      <a class="btn" href="#objednani">Vybrat termín schůzky</a>
+      <a class="btn ghost" href="#sluzby">Co pro vás děláme</a>
+    </div>
+    <div class="trustline">
+      <span><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.2-2.9 7.6-7 9-4.1-1.4-7-4.8-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg>Za zpracování ručíme</span>
+      <span><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Mlčenlivost samozřejmostí</span>
+      <span><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.2"/><path d="M5.5 19c.8-3.2 3.4-4.8 6.5-4.8s5.7 1.6 6.5 4.8"/></svg>Svůj účetní, ne přepážka</span>
+      <span><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h13"/></svg>Podklady vidíte před odesláním</span>
     </div>
   </div>
   <div class="hero-facts">
     <div class="wrap">
       <span>Praha 9 — Vysočany</span>
-      <span>Účetnictví a daňová evidence</span>
-      <span>Mzdová agenda</span>
-      <span>Zakládání společností</span>
+      <span>Vedení účetnictví</span>
+      <span>Mzdy a odvody</span>
+      <span>Daňová evidence</span>
+      <span>Start podnikání</span>
     </div>
   </div>
 </div>
@@ -626,28 +644,88 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="ticker-in" id="tick"></div>
 </div>
 
+<!-- ============ OBJEDNÁNÍ ============ -->
+<section id="objednani">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="h">
+        <p class="eyebrow">Objednání</p>
+        <h2>Vyberte si termín, kdy se vám hodí</h2>
+      </div>
+      <p>První setkání je nezávazné a nic za ně neplatíte. Vyberte si den a čas, kdy se vám to hodí — pozvánku do kalendáře dostanete rovnou.</p>
+    </div>
+    <div class="book reveal">
+      <div class="book-l">
+        <p class="eyebrow" style="color:var(--brass-2)">1 — Den</p>
+        <div class="days" id="days"></div>
+        <p class="eyebrow" style="color:var(--brass-2)">2 — Čas</p>
+        <div class="slots" id="slots"></div>
+        <p class="booknote" id="booknote">V úterý a ve čtvrtek si vybíráte čas sami. Pondělí a středa patří objednaným klientům — označte je a ozveme se s návrhem termínu.</p>
+      </div>
+      <div class="book-r">
+        <svg class="seal" viewBox="0 0 132 132" aria-hidden="true">
+        <circle cx="66" cy="66" r="62"/><circle cx="66" cy="66" r="52"/>
+        <path id="spb" d="M66,66 m0,-44 a44,44 0 1,1 0,88 a44,44 0 1,1 0,-88" fill="none"/>
+        <text><textPath href="#spb" startOffset="0">Konsalting Profi · Praha 9 · účetní kancelář · </textPath></text>
+        <g transform="translate(66 66)"><path d="M-9 0l6 6 12-13" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      </svg>
+        <div id="bookform">
+          <p class="eyebrow" style="color:var(--brass-2)">3 — Kontakt</p>
+          <div class="picked" id="picked"><b>Zatím nevybráno</b><em>Vyberte den a čas vlevo</em></div>
+          <p class="ctahint">Termín potvrdíme osobně, ne automatem</p>
+          <form id="bform">
+            <div class="field"><input id="b-name" placeholder=" " autocomplete="name" required><label for="b-name">Jméno a firma</label></div>
+            <div class="field"><input id="b-tel" placeholder=" " autocomplete="tel" required><label for="b-tel">Telefon</label></div>
+            <div class="field"><input id="b-mail" type="email" placeholder=" " autocomplete="email"><label for="b-mail">E-mail</label></div>
+            <div class="field"><textarea id="b-msg" placeholder=" " style="min-height:84px"></textarea><label for="b-msg">Co potřebujete řešit</label></div>
+            <button class="btn brass" type="submit">Rezervovat termín</button>
+            <p class="consent"><span class="lock" aria-hidden="true"></span> Nezávazně. Údaje zůstávají u nás a slouží jen k potvrzení schůzky.</p>
+          </form>
+        </div>
+        <div class="bookdone" id="bookdone">
+          <p class="eyebrow" style="color:var(--brass-2)">Hotovo</p>
+          <h3 style="color:var(--on-dark);margin-bottom:12px">Termín je předběžně rezervovaný</h3>
+          <p style="color:var(--on-dark-mute);font-size:15px" id="donetext"></p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+            <button class="btn brass" id="dl-ics">Stáhnout do kalendáře</button>
+            <button class="btn ghost" id="mailto-btn">Odeslat e-mailem</button>
+          </div>
+          <p class="consent" style="margin-top:18px">Kdyby se termín nehodil, stačí zavolat na <a href="tel:+420773966787" style="color:var(--brass-2)">+420 773 966 787</a> a najdeme jiný.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ O NÁS ============ -->
 <section id="o-nas">
   <div class="wrap">
     <div class="about">
       <div class="reveal">
         <p class="eyebrow">O kanceláři</p>
-        <h2>Účetní kancelář, která zná vaši firmu jménem</h2>
-        <p class="measure" style="margin-top:22px;color:var(--muted)">Jsme účetní kancelář se sídlem v Praze 9 – Vysočanech. Staráme se o účetnictví podnikatelů, malých a středních firem — od živnostníka po společnost s desítkami zaměstnanců. Každý klient u nás má svého účetního, který zná kontext jeho podnikání a je k zastižení, když je potřeba.</p>
-        <p class="measure" style="color:var(--muted)">Nejsme anonymní servis na zpracování dokladů. Rozsah spolupráce nastavujeme podle toho, jak vaše firma reálně funguje, a upozorníme dřív, než se z drobnosti stane problém.</p>
+        <h2>Kancelář, kde vaši firmu znají jménem</h2>
+        <p class="measure" style="margin-top:22px;color:var(--muted)">Sídlíme ve Vysočanech a pracujeme pro živnostníky i zavedené společnosti. Každý klient má svého účetního — člověka, který ví, jak jeho podnikání funguje, a kterému stačí napsat jednu větu, aby věděl, o co jde.</p>
+        <p class="measure" style="color:var(--muted)">Nejsme přepážka na příjem dokladů. Sledujeme, co se ve firmě děje, a ozveme se dřív, než se z maličkosti stane věc pro úřad.</p>
         <div class="pillars">
-          <div><b>Osobní účetní</b><p>Jeden konkrétní člověk, kterému nemusíte pokaždé vysvětlovat kontext.</p></div>
-          <div><b>Hlídané termíny</b><p>Zákonné lhůty sledujeme za vás a hlásíme je s předstihem.</p></div>
-          <div><b>Kompletní agenda</b><p>Účetnictví, mzdy i daně na jednom místě, bez skládání dodavatelů.</p></div>
-          <div><b>Pojištěná odpovědnost</b><p>Za zpracování ručíme a jsme pojištěni na odpovědnost za škodu.</p></div>
+          <div><b>Svůj člověk</b><p>Voláte přímo tomu, kdo vaše účetnictví skutečně vede.</p></div>
+          <div><b>Lhůty na naší straně</b><p>Co se blíží, hlásíme dopředu — ne den před termínem.</p></div>
+          <div><b>Vše na jednom místě</b><p>Účetnictví, mzdy i daně bez skládání dodavatelů.</p></div>
+          <div><b>Ručíme za práci</b><p>Za zpracování odpovídáme a jsme pojištěni.</p></div>
         </div>
         <div class="hero-cta" style="margin-top:32px">
-          <a class="btn brass" href="#objednani">Vybrat termín schůzky</a>
-          <a class="btn ghost" href="tel:+420773966787">Zavolat hned</a>
+          <a class="btn brass" href="#objednani">Domluvit setkání</a>
+          <a class="btn ghost" href="tel:+420773966787">Zavolat rovnou</a>
         </div>
+        <p class="microtrust">Mlčenlivost bereme jako součást řemesla — obsah vašich dokladů zůstává mezi námi.</p>
       </div>
       <div class="about-media reveal">
         <img src="assets/office.jpg" alt="Recepce kanceláře Konsalting Profi v Praze 9 – Vysočanech" loading="lazy">
+        <svg class="seal" viewBox="0 0 132 132" aria-hidden="true">
+        <circle cx="66" cy="66" r="62"/><circle cx="66" cy="66" r="52"/>
+        <path id="spa" d="M66,66 m0,-44 a44,44 0 1,1 0,88 a44,44 0 1,1 0,-88" fill="none"/>
+        <text><textPath href="#spa" startOffset="0">Konsalting Profi · Praha 9 · účetní kancelář · </textPath></text>
+        <g transform="translate(66 66)"><path d="M-9 0l6 6 12-13" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      </svg>
       </div>
     </div>
   </div>
@@ -658,96 +736,96 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="h">
-        <p class="eyebrow">Služby</p>
-        <h2>Čtyři agendy, jeden dodavatel</h2>
+        <p class="eyebrow">Co pro vás děláme</p>
+        <h2>Celá agenda pod jednou střechou</h2>
       </div>
-      <p>Kliknutím na řádek uvidíte, co konkrétně přebíráme. Rozsah nastavujeme podle velikosti firmy a počtu dokladů.</p>
+      <p>Rozklikněte řádek a uvidíte, co konkrétně přebíráme. Rozsah skládáme podle toho, jak velká firma je a kolik toho měsíčně proteče.</p>
     </div>
     <div class="ledger" id="svc">
       <div class="row" aria-expanded="false">
         <button>
-          <span class="idx num">01</span>
-          <h3>Účetnictví a účetní poradenství</h3>
-          <p class="teaser">Externí vedení účetnictví pro podnikatele a firmy, včetně rekonstrukce účtů.</p>
+          <span class="idx" aria-hidden="true">◆</span>
+          <h3>Vedení účetnictví</h3>
+          <p class="teaser">Od zpracování dokladů po závěrku — včetně srovnání účtů, které někdo zanedbal.</p>
           <span class="plus" aria-hidden="true"></span>
         </button>
         <div class="panel"><div class="panel-in">
           <ul>
-            <li>Zpracování prvotních dokladů a bankovních výpisů</li>
-            <li>Vedení hlavní knihy, deníku a evidence majetku</li>
-            <li>Přiznání k DPH a kontrolní hlášení</li>
-            <li>Roční účetní závěrka a přiznání k dani z příjmů</li>
+            <li>Zpracování dokladů a bankovních výpisů</li>
+            <li>Hlavní kniha, deník a evidence majetku</li>
+            <li>Přiznání k DPH i kontrolní hlášení</li>
+            <li>Účetní závěrka a přiznání k dani z příjmů</li>
           </ul>
           <ul>
-            <li>Rekonstrukce zanedbaného nebo neúplného účetnictví</li>
-            <li>Zastupování při kontrole z finančního úřadu</li>
-            <li>Podklady pro banku, dotace a výběrová řízení</li>
-            <li>Průběžný přehled o hospodaření, ne jen jednou ročně</li>
+            <li>Srovnání zanedbaného nebo neúplného účetnictví</li>
+            <li>Jednání s finančním úřadem místo vás</li>
+            <li>Podklady pro banku, dotace i výběrová řízení</li>
+            <li>Přehled o hospodaření průběžně, ne jen po závěrce</li>
           </ul>
         </div></div>
       </div>
 
       <div class="row" aria-expanded="false">
         <button>
-          <span class="idx num">02</span>
-          <h3>Vedení mzdové agendy</h3>
-          <p class="teaser">Kompletní externí zpracování mezd od nástupu zaměstnance po roční zúčtování.</p>
+          <span class="idx" aria-hidden="true">◆</span>
+          <h3>Mzdy a lidé</h3>
+          <p class="teaser">Od nástupu zaměstnance po roční zúčtování, včetně komunikace s pojišťovnami.</p>
           <span class="plus" aria-hidden="true"></span>
         </button>
         <div class="panel"><div class="panel-in">
           <ul>
-            <li>Měsíční výpočet mezd a výplatní pásky</li>
-            <li>Přihlášky a odhlášky na ČSSZ a zdravotní pojišťovny</li>
+            <li>Výpočet mezd a výplatní pásky</li>
+            <li>Přihlášky a odhlášky na ČSSZ i pojišťovny</li>
             <li>Srážková a zálohová daň, exekuční srážky</li>
             <li>Roční zúčtování daně zaměstnanců</li>
           </ul>
           <ul>
-            <li>Pracovní smlouvy, DPP a DPČ</li>
+            <li>Podklady ke smlouvám, DPP i DPČ</li>
             <li>Evidenční listy důchodového pojištění</li>
             <li>Potvrzení o příjmu pro zaměstnance</li>
-            <li>Komunikace s úřady místo vás</li>
+            <li>Odpovědi úřadům bez vašeho zapojení</li>
           </ul>
         </div></div>
       </div>
 
       <div class="row" aria-expanded="false">
         <button>
-          <span class="idx num">03</span>
-          <h3>Daňová evidence</h3>
-          <p class="teaser">Pro OSVČ a menší firmy: evidence podle zákona o daních z příjmů bez zbytečné administrativy.</p>
+          <span class="idx" aria-hidden="true">◆</span>
+          <h3>Evidence pro živnostníky</h3>
+          <p class="teaser">Vedeno tak, aby vás papíry nebrzdily a přiznání bylo hotové včas.</p>
           <span class="plus" aria-hidden="true"></span>
         </button>
         <div class="panel"><div class="panel-in">
           <ul>
-            <li>Peněžní deník, evidence pohledávek a závazků</li>
+            <li>Peněžní deník, pohledávky a závazky</li>
             <li>Kniha jízd a evidence majetku</li>
-            <li>Přiznání k dani z příjmů fyzických osob</li>
+            <li>Přiznání k dani z příjmů</li>
           </ul>
           <ul>
-            <li>Přehledy pro ČSSZ a zdravotní pojišťovnu</li>
-            <li>Posouzení, zda se vyplatí paušální daň</li>
-            <li>Hlídání limitu pro povinnou registraci k DPH</li>
+            <li>Přehledy pro ČSSZ i zdravotní pojišťovnu</li>
+            <li>Posouzení, jestli je pro vás výhodnější paušál</li>
+            <li>Sledování hranice pro povinnou registraci k DPH</li>
           </ul>
         </div></div>
       </div>
 
       <div class="row" aria-expanded="false">
         <button>
-          <span class="idx num">04</span>
-          <h3>Poradenství při zakládání společnosti</h3>
-          <p class="teaser">Od výběru právní formy po první podané přiznání.</p>
+          <span class="idx" aria-hidden="true">◆</span>
+          <h3>Start podnikání</h3>
+          <p class="teaser">Provedeme vás od rozhodnutí o právní formě až po první odeslané přiznání.</p>
           <span class="plus" aria-hidden="true"></span>
         </button>
         <div class="panel"><div class="panel-in">
           <ul>
             <li>Volba právní formy podle vašeho záměru</li>
-            <li>Registrace u finančního úřadu a dalších institucí</li>
-            <li>Nastavení účetního systému od prvního dne</li>
+            <li>Registrace u finančního úřadu i dalších institucí</li>
+            <li>Nastavení účetnictví hned od začátku</li>
           </ul>
           <ul>
-            <li>Registrace k DPH, dobrovolná i povinná</li>
-            <li>Nastavení interních pravidel pro doklady</li>
-            <li>Kontrola souladu s legislativou</li>
+            <li>Registrace k DPH — dobrovolná i povinná</li>
+            <li>Pravidla pro doklady, aby se v nich dalo vyznat</li>
+            <li>Kontrola, že vše sedí s předpisy</li>
           </ul>
         </div></div>
       </div>
@@ -755,86 +833,41 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   </div>
 </section>
 
-
-<!-- ============ KALKULAČKA ============ -->
-<section id="kalkulacka">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="h">
-        <p class="eyebrow">Kolik to stojí dnes</p>
-        <h2>Spočítejte si, co vás stojí účetnictví ve vlastní režii</h2>
-      </div>
-      <p>Posuňte hodnoty podle své firmy. Počítáme jen náklady na vlastní zpracování — mzdu, odvody, software a čas majitele. Nabídku na míru dostanete na konzultaci.</p>
-    </div>
-    <div class="calcbox reveal">
-      <div class="calc-in">
-        <div class="crow">
-          <label for="c-doc">Dokladů měsíčně <b><span id="c-doc-v">120</span></b></label>
-          <input type="range" id="c-doc" min="10" max="600" step="10" value="120">
-        </div>
-        <div class="crow">
-          <label for="c-emp">Zaměstnanců (mzdy) <b><span id="c-emp-v">4</span></b></label>
-          <input type="range" id="c-emp" min="0" max="60" step="1" value="4">
-        </div>
-        <div class="crow">
-          <label for="c-sal">Hrubá mzda účetní / měsíc <b><span id="c-sal-v">42 000</span> Kč</b></label>
-          <input type="range" id="c-sal" min="25000" max="80000" step="1000" value="42000">
-        </div>
-        <div class="crow" style="margin-bottom:0">
-          <label for="c-hrs">Hodin měsíčně, které tomu věnujete vy <b><span id="c-hrs-v">8</span> h</b></label>
-          <input type="range" id="c-hrs" min="0" max="60" step="1" value="8">
-        </div>
-      </div>
-      <div class="calc-out">
-        <span class="lbl">Vlastní režie — odhad</span>
-        <div class="big num"><span id="c-total">0</span> Kč</div>
-        <div class="sub">měsíčně, bez rizika pokut a bez zástupu při nemoci</div>
-        <ul>
-          <li><span>Mzda a odvody zaměstnavatele</span><b class="num" id="c-l1">0 Kč</b></li>
-          <li><span>Účetní software a školení</span><b class="num" id="c-l2">0 Kč</b></li>
-          <li><span>Váš čas nad agendou</span><b class="num" id="c-l3">0 Kč</b></li>
-        </ul>
-        <a class="btn brass" href="#objednani">Chci nabídku na míru</a>
-        <p style="font-size:12.5px;color:var(--on-dark-mute);margin:14px 0 0">Orientační propočet z vámi zadaných hodnot: odvody 33,8 %, software 900 Kč/měsíc, hodina majitele 800 Kč. Slouží k porovnání, ne jako cenová nabídka.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============ SPOLUPRÁCE ============ -->
 <section id="postup">
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="h">
-        <p class="eyebrow">Spolupráce</p>
-        <h2>Jak u nás vypadá běžný měsíc</h2>
+        <p class="eyebrow">Jak to chodí</p>
+        <h2>Od prvního setkání k rytmu, který běží sám</h2>
       </div>
-      <p>Tři kroky od prvního setkání po pravidelný rytmus, ve kterém už nemusíte nic hlídat.</p>
+      <p>Cesta od nezávazné schůzky k měsíci, ve kterém už na účetnictví nemyslíte.</p>
     </div>
     <div class="steps">
       <article class="step reveal">
         <div>
-          <div class="step-n"><em>01</em> Úvodní konzultace</div>
-          <h3>Projdeme, v jakém stavu je vaše agenda</h3>
-          <p>Sejdeme se, projdeme dosavadní účetnictví a řekneme si, co je potřeba srovnat. Teprve pak navrhneme rozsah spolupráce a cenu — bez závazku a bez překvapení v prvním vyúčtování.</p>
+          <div class="step-n"><em>◆</em> Nejdřív</div>
+          <h3>Podíváme se, v jakém stavu agenda je</h3>
+          <p>Sejdeme se, projdeme dosavadní papíry a řekneme si na rovinu, co je potřeba srovnat. Teprve pak přijde návrh rozsahu i ceny — bez závazku a bez překvapení ve vyúčtování.</p>
         </div>
         <div class="step-media"><img src="assets/foto-1.jpg" alt="Předání a roztřídění účetních dokladů" loading="lazy"></div>
       </article>
 
       <article class="step reveal">
         <div>
-          <div class="step-n"><em>02</em> Převzetí a zpracování</div>
-          <h3>Doklady předáváte tak, jak vám to vyhovuje</h3>
-          <p>Elektronicky, nebo osobně v kanceláři ve Vysočanech. Zpracování, DPH, mzdy i komunikaci s úřady vedeme my a hlídáme přitom všechny zákonné lhůty za vás.</p>
+          <div class="step-n"><em>◆</em> Potom</div>
+          <h3>Doklady předáváte, jak vám to vyhovuje</h3>
+          <p>Elektronicky, nebo osobně u nás ve Vysočanech. Zpracování, DPH, mzdy i dopisy úřadům vedeme my — a lhůty držíme na své straně.</p>
         </div>
         <div class="step-media"><img src="assets/foto-2.jpg" alt="Účetní zpracovává doklady klienta" loading="lazy"></div>
       </article>
 
       <article class="step reveal">
         <div>
-          <div class="step-n"><em>03</em> Přehled a konzultace</div>
-          <h3>Víte, jak na tom firma je — průběžně</h3>
-          <p>Dostáváte pravidelný přehled o hospodaření a upozornění na to, co se blíží. Když se rozhodujete o investici, zaměstnanci nebo úvěru, máte si s kým zavolat.</p>
+          <div class="step-n"><em>◆</em> Průběžně</div>
+          <h3>Víte, jak na tom firma je</h3>
+          <p>Chodí vám přehled o hospodaření a upozornění na to, co se blíží. Když zvažujete investici, nábor nebo úvěr, máte komu zavolat dřív, než se rozhodnete.</p>
         </div>
         <div class="step-media"><img src="assets/foto-3.jpg" alt="Konzultace s klientem nad účetní uzávěrkou" loading="lazy"></div>
       </article>
@@ -847,41 +880,41 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="h">
-        <p class="eyebrow">Proč Konsalting Profi</p>
-        <h2>Šest důvodů, proč nebudete mít starosti</h2>
+        <p class="eyebrow">Proč u nás klienti zůstávají</p>
+        <h2>Účetní má ubírat práci, ne přidávat</h2>
       </div>
-      <p>Externí účetní dává smysl jen tehdy, když skutečně ubírá práci. Takhle to děláme.</p>
+      <p>Podle toho jsme si nastavili, jak pracujeme. Tohle na spolupráci klienti zmiňují nejčastěji.</p>
     </div>
     <div class="adv" id="adv">
       <article>
         <svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.2-2.9 7.6-7 9-4.1-1.4-7-4.8-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
-        <h3>Odbornost a praxe</h3>
-        <p>Tým zkušených účetních a daňových poradců. Za každým číslem stojí člověk, kterému můžete zavolat.</p>
+        <h3>Řemeslo, ne rutina</h3>
+        <p>Účetní i daňoví poradci s praxí, která už leccos viděla. Za každou položkou stojí člověk, kterému se dá zavolat.</p>
       </article>
       <article>
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.4l3.4 2"/></svg>
-        <h3>Úspora času a nákladů</h3>
-        <p>Žádné vlastní účetní oddělení, žádné školení, žádné suplování při nemoci. Platíte za výsledek, ne za pracovní místo.</p>
+        <h3>Bez vlastního oddělení</h3>
+        <p>Nemusíte řešit nábor, školení ani zástup při nemoci. Platíte za odvedenou práci, ne za pracovní místo.</p>
       </article>
       <article>
         <svg viewBox="0 0 24 24"><path d="M4 19V9l6-4 6 4v10"/><path d="M9 19v-5h3v5"/><path d="M2.5 19h19"/></svg>
-        <h3>Individuální přístup</h3>
-        <p>Rozsah služeb i způsob předávání dokladů nastavíme podle toho, jak vaše firma reálně funguje.</p>
+        <h3>Podle vaší firmy</h3>
+        <p>Rozsah i způsob předávání dokladů skládáme na míru tomu, jak u vás chod firmy opravdu vypadá.</p>
       </article>
       <article>
         <svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h7M9 17h5"/></svg>
-        <h3>Aktuální legislativa</h3>
-        <p>Změny v účetních a daňových předpisech sledujeme průběžně. Nová povinnost se u vás projeví včas, ne až po termínu.</p>
+        <h3>Změny předpisů dřív než vy</h3>
+        <p>Novinky v účetních a daňových pravidlech sledujeme za vás. Nová povinnost se u vás objeví včas, ne až v dopise od úřadu.</p>
       </article>
       <article>
         <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 10h16"/><path d="M8 14h4"/></svg>
-        <h3>Bez zbytečného papírování</h3>
-        <p>Doklady předáváte elektronicky, přehledy máte k dispozici hned. Papír jen tam, kde ho vyžaduje zákon.</p>
+        <h3>Papír jen tam, kde musí být</h3>
+        <p>Doklady posíláte elektronicky, přehledy máte po ruce. Šanony zůstanou jen tam, kde je vyžaduje zákon.</p>
       </article>
       <article>
         <svg viewBox="0 0 24 24"><path d="M3 10.5L12 4l9 6.5"/><path d="M5.5 12v8h13v-8"/><path d="M10 20v-4.5h4V20"/></svg>
-        <h3>Vše pod jednou střechou</h3>
-        <p>Účetnictví, daně, mzdy i finanční poradenství na jednom místě. Nemusíte skládat tým z různých dodavatelů.</p>
+        <h3>Jedno místo na všechno</h3>
+        <p>Účetnictví, daně, mzdy i poradenství vedle sebe. Nemusíte skládat tým z několika dodavatelů a hlídat, kdo co ví.</p>
       </article>
     </div>
   </div>
@@ -892,10 +925,10 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="h">
-        <p class="eyebrow">Diagnostika</p>
-        <h2>Zjistěte za minutu, co vaše firma potřebuje</h2>
+        <p class="eyebrow">Nevíte, co přesně potřebujete?</p>
+        <h2>Krátce se zeptáme a doporučíme rozsah</h2>
       </div>
-      <p>Čtyři otázky. Na konci dostanete konkrétní doporučení a připravený text pro nezávaznou konzultaci.</p>
+      <p>Pár otázek o vaší firmě. Na konci dostanete doporučení a připravený text, se kterým se rovnou objednáte.</p>
     </div>
     <div class="quiz reveal" id="quiz">
       <div class="quiz-bar"><i id="qbar"></i></div>
@@ -910,59 +943,13 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
     <div class="sec-head reveal">
       <div class="h">
         <p class="eyebrow">Účetní kalendář</p>
-        <h2>Každý termín a co je u něj potřeba udělat</h2>
+        <h2>Co se blíží a co je u toho potřeba udělat</h2>
       </div>
-      <p id="calYearNote">Vyberte měsíc. U každého termínu je uvedeno, koho se týká a co se odevzdává. Celý rok i jednotlivé termíny si můžete stáhnout do svého kalendáře.</p>
+      <p id="calYearNote">Vyberte měsíc. U každého termínu stojí, koho se týká a co se odevzdává — a stáhnete si ho k sobě do kalendáře, ať už jednotlivě, nebo celý rok najednou.</p>
     </div>
     <div class="calbar reveal" id="calbar"></div>
     <div class="evlist" id="evlist"></div>
     <p class="calnote">Přehled je orientační a vychází z pravidelných zákonných lhůt; připadne-li termín na víkend nebo svátek, posouvá se na nejbližší pracovní den. Konkrétní povinnosti se liší podle právní formy, registrace k DPH a počtu zaměstnanců — u našich klientů termíny hlídáme jmenovitě a hlásíme je s předstihem.</p>
-  </div>
-</section>
-
-<!-- ============ OBJEDNÁNÍ ============ -->
-<section id="objednani">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="h">
-        <p class="eyebrow">Objednání</p>
-        <h2>Vyberte si termín, kdy se vám hodí</h2>
-      </div>
-      <p>Úvodní konzultace trvá 45 minut a je nezávazná. Vyberte den a čas v provozní době kanceláře — potvrzení a pozvánku do kalendáře dostanete hned.</p>
-    </div>
-    <div class="book reveal">
-      <div class="book-l">
-        <p class="eyebrow" style="color:var(--brass-2)">1 — Den</p>
-        <div class="days" id="days"></div>
-        <p class="eyebrow" style="color:var(--brass-2)">2 — Čas</p>
-        <div class="slots" id="slots"></div>
-        <p class="booknote" id="booknote">Út a Čt 10:00–18:00 (pauza 13:00–14:00). Po a St jsou vyhrazené objednaným klientům — vyberte je a my se ozveme s návrhem času.</p>
-      </div>
-      <div class="book-r">
-        <div id="bookform">
-          <p class="eyebrow" style="color:var(--brass-2)">3 — Kontakt</p>
-          <div class="picked" id="picked"><b>Zatím nevybráno</b><em>Vyberte den a čas vlevo</em></div>
-          <form id="bform">
-            <div class="field"><input id="b-name" placeholder=" " autocomplete="name" required><label for="b-name">Jméno a firma</label></div>
-            <div class="field"><input id="b-tel" placeholder=" " autocomplete="tel" required><label for="b-tel">Telefon</label></div>
-            <div class="field"><input id="b-mail" type="email" placeholder=" " autocomplete="email"><label for="b-mail">E-mail</label></div>
-            <div class="field"><textarea id="b-msg" placeholder=" " style="min-height:84px"></textarea><label for="b-msg">Co potřebujete řešit</label></div>
-            <button class="btn brass" type="submit">Rezervovat termín</button>
-            <p class="consent">Rezervace je nezávazná. Potvrdíme ji telefonicky v provozní době.</p>
-          </form>
-        </div>
-        <div class="bookdone" id="bookdone">
-          <p class="eyebrow" style="color:var(--brass-2)">Hotovo</p>
-          <h3 style="color:var(--on-dark);margin-bottom:12px">Termín je předběžně rezervovaný</h3>
-          <p style="color:var(--on-dark-mute);font-size:15px" id="donetext"></p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
-            <button class="btn brass" id="dl-ics">Stáhnout do kalendáře</button>
-            <button class="btn ghost" id="mailto-btn">Odeslat e-mailem</button>
-          </div>
-          <p class="consent" style="margin-top:18px">Pokud se termín z jakéhokoli důvodu nehodí, zavolejte na <a href="tel:+420773966787" style="color:var(--brass-2)">+420 773 966 787</a>.</p>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -971,29 +958,29 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="h">
-        <p class="eyebrow">Časté otázky</p>
-        <h2>Na co se firmy ptají nejčastěji</h2>
+        <p class="eyebrow">Než se rozhodnete</p>
+        <h2>Otázky, které padnou pokaždé</h2>
       </div>
-      <p>Odpovědi na to, co obvykle rozhoduje, než firma přejde k externímu účetnictví.</p>
+      <p>Odpovídáme na to, co obvykle rozhoduje, když firma zvažuje změnu účetní.</p>
     </div>
     <div class="ledger faq" id="faqbox">
-      <div class="row" aria-expanded="false"><button><h3>Jak probíhá přechod od současné účetní?</h3><span class="plus" aria-hidden="true"></span></button>
-        <div class="panel"><div class="panel-in"><p>Převezmeme účetní data k dohodnutému datu, zkontrolujeme zůstatky a navážeme. Ideální je přechod k začátku účetního období, ale zvládneme ho i v jeho průběhu — v tom případě nejprve odsouhlasíme stav účtů.</p></div></div>
+      <div class="row" aria-expanded="false"><button><h3>Jak proběhne přechod od současné účetní?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Domluvíme datum, převezmeme data, odsouhlasíme zůstatky a navážeme. Nejjednodušší je začátek účetního období, ale zvládneme to i uprostřed roku — jen si nejdřív potvrdíme stav účtů, aby se nic neztratilo.</p></div></div>
       </div>
       <div class="row" aria-expanded="false"><button><h3>Jak vám budu předávat doklady?</h3><span class="plus" aria-hidden="true"></span></button>
-        <div class="panel"><div class="panel-in"><p>Nejčastěji elektronicky — stačí sken nebo fotografie. Pokud vám vyhovuje osobní předání, domluvíme se na pravidelném termínu v kanceláři ve Vysočanech.</p></div></div>
+        <div class="panel"><div class="panel-in"><p>Většinou elektronicky, stačí sken nebo fotka z telefonu. Komu vyhovuje osobní předání, domluví si u nás pravidelnou schůzku.</p></div></div>
       </div>
       <div class="row" aria-expanded="false"><button><h3>Kdo odpovídá za chybu v přiznání?</h3><span class="plus" aria-hidden="true"></span></button>
-        <div class="panel"><div class="panel-in"><p>Za zpracování odpovídáme my a jsme pojištěni. Odpovědnost vůči správci daně nese ze zákona podnikatel, proto vám vždy dáváme podklady ke kontrole před odesláním.</p></div></div>
+        <div class="panel"><div class="panel-in"><p>Za zpracování ručíme my a máme na to pojištění. Vůči úřadu je ze zákona odpovědný podnikatel, proto vám podklady vždy posíláme ke kontrole dřív, než cokoli odejde.</p></div></div>
       </div>
       <div class="row" aria-expanded="false"><button><h3>Zvládnete rekonstrukci zanedbaného účetnictví?</h3><span class="plus" aria-hidden="true"></span></button>
-        <div class="panel"><div class="panel-in"><p>Ano, je to jedna z našich hlavních specializací. Nejdřív zmapujeme, co chybí, navrhneme postup a teprve pak se pouštíme do dohledávání dokladů a oprav.</p></div></div>
+        <div class="panel"><div class="panel-in"><p>Ano, děláme to pravidelně. Nejdřív zmapujeme, co chybí, dohodneme postup — a teprve potom se pouštíme do dohledávání dokladů a oprav.</p></div></div>
       </div>
       <div class="row" aria-expanded="false"><button><h3>Budu mít jednoho konkrétního člověka?</h3><span class="plus" aria-hidden="true"></span></button>
-        <div class="panel"><div class="panel-in"><p>Ano. Každý klient má svého účetního jako hlavní kontakt, aby nemusel při každém dotazu vysvětlovat kontext znovu.</p></div></div>
+        <div class="panel"><div class="panel-in"><p>Ano. Máte svého účetního jako hlavní kontakt, takže při každém dotazu nezačínáte vysvětlovat od začátku.</p></div></div>
       </div>
-      <div class="row" aria-expanded="false"><button><h3>Poradíte i s věcmi, které se účetnictví jen dotýkají?</h3><span class="plus" aria-hidden="true"></span></button>
-        <div class="panel"><div class="panel-in"><p>Ano — nastavení fakturace, cash flow, podklady pro banku nebo posouzení, zda se vyplatí zaměstnanec versus spolupráce na IČO. Ptejte se, i když si nejste jistí, že jde o účetní otázku.</p></div></div>
+      <div class="row" aria-expanded="false"><button><h3>Poradíte i s věcmi kolem účetnictví?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Ano — fakturace, cash flow, podklady pro banku i úvaha, jestli se vyplatí zaměstnanec, nebo spolupráce na IČO. Ptejte se klidně i na věci, u kterých si nejste jistí, že patří účetní.</p></div></div>
       </div>
     </div>
   </div>
@@ -1004,8 +991,8 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="wrap cgrid">
     <div class="reveal">
       <p class="eyebrow">Kontakt</p>
-      <h2>Zavoláme vám zpět</h2>
-      <p class="measure" style="margin-top:20px;color:var(--on-dark-mute)">Napište telefon a co řešíte. Ozveme se v provozní době a řekneme si, jestli vám dává smysl přejít na externí účetnictví — nezávazně a bez prodejních řečí.</p>
+      <h2>Ozveme se vám</h2>
+      <p class="measure" style="margin-top:20px;color:var(--on-dark-mute)">Napište telefon a pár slov o tom, co řešíte. Zavoláme v provozní době a řekneme si, jestli má přechod k nám pro vaši firmu smysl — bez prodejních řečí.</p>
       <div class="info" style="margin-top:36px">
         <dl>
           <dt>Telefon</dt><dd><a href="tel:+420773966787" class="num">+420 773 966 787</a></dd>
@@ -1024,8 +1011,8 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
         <div class="field"><input id="f-mail" name="email" type="email" placeholder=" " autocomplete="email"><label for="f-mail">E-mail</label></div>
         <div class="field"><input id="f-tel" name="tel" type="tel" placeholder=" " autocomplete="tel" required><label for="f-tel">Telefon</label></div>
         <div class="field"><textarea id="f-msg" name="msg" placeholder=" "></textarea><label for="f-msg">Co potřebujete řešit</label></div>
-        <p class="consent">Odesláním potvrzuji, že jsem se seznámil/a s <a href="https://konsalting.cz/podminky-ochrany-osobnich-udaju">podmínkami ochrany osobních údajů</a>.</p>
-        <button class="btn brass" type="submit">Odeslat žádost o konzultaci</button>
+        <p class="consent"><span class="lock" aria-hidden="true"></span> Odesláním potvrzuji, že jsem se seznámil/a s <a href="https://konsalting.cz/podminky-ochrany-osobnich-udaju">podmínkami ochrany osobních údajů</a>. Údaje nikam dál nepředáváme.</p>
+        <button class="btn brass" type="submit">Chci, ať se ozvete</button>
       </form>
     </div>
   </div>
@@ -1044,13 +1031,12 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
         <p style="margin-top:18px;color:var(--on-dark-mute);font-size:15px;max-width:34ch">Účetnictví, mzdy a daňové poradenství pro firmy a podnikatele. Praha 9 – Vysočany.</p>
       </div>
       <div><h5>Navigace</h5><ul>
-        <li><a href="#o-nas">O nás</a></li>
+        <li><a href="#objednani">Objednat se</a></li>
         <li><a href="#sluzby">Služby</a></li>
-        <li><a href="#postup">Spolupráce</a></li>
-        <li><a href="#proc">Proč my</a></li>
-        <li><a href="#diagnostika">Diagnostika</a></li>
-        <li><a href="#kalendar">Daňový kalendář</a></li>
-        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#o-nas">O kanceláři</a></li>
+        <li><a href="#postup">Jak to chodí</a></li>
+        <li><a href="#kalendar">Účetní kalendář</a></li>
+        <li><a href="#faq">Otázky</a></li>
       </ul></div>
       <div><h5>Kontakt</h5><ul>
         <li><a class="num" href="tel:+420773966787">+420 773 966 787</a></li>
@@ -1377,7 +1363,7 @@ function updatePicked(){
   if(!pickDay){pickedEl.innerHTML='<b>Zatím nevybráno</b><em>Vyberte den a čas vlevo</em>';return}
   const dstr=pickDay.toLocaleDateString('cs-CZ',{weekday:'long',day:'numeric',month:'long'});
   pickedEl.innerHTML='<b>'+dstr+(pickTime&&pickTime!=='po domluvě'?', '+pickTime:'')+'</b>'+
-    '<em>'+(pickTime==='po domluvě'?'Čas doladíme telefonicky':'Úvodní konzultace, 45 minut, nezávazně')+'</em>';
+    '<em>'+(pickTime==='po domluvě'?'Čas doladíme telefonicky':'Nezávazné úvodní setkání')+'</em>';
 }
 renderDays();renderSlots();
 function bookingIcs(){
@@ -1421,43 +1407,12 @@ document.getElementById('bform').addEventListener('submit',e=>{
 });
 
 /* ============================================================
-   KALKULAČKA nákladů vlastní účetní
-   ============================================================ */
-(function(){
-  const el=id=>document.getElementById(id);
-  const doc=el('c-doc'),emp=el('c-emp'),sal=el('c-sal'),hrs=el('c-hrs');
-  if(!doc)return;
-  const fmt=n=>Math.round(n).toLocaleString('cs-CZ');
-  function calc(){
-    const D=+doc.value,E=+emp.value,S=+sal.value,H=+hrs.value;
-    el('c-doc-v').textContent=D;el('c-emp-v').textContent=E;
-    el('c-sal-v').textContent=fmt(S);el('c-hrs-v').textContent=H;
-    const load=1.338;                                  // odvody zaměstnavatele
-    const part=Math.min(1,(D/220)+(E/28));             // vytížení účetní podle objemu agendy
-    const wage=S*load*Math.max(.35,part);
-    const soft=900+E*60+(D>250?600:0);
-    const time=H*800;
-    el('c-l1').textContent=fmt(wage)+' Kč';
-    el('c-l2').textContent=fmt(soft)+' Kč';
-    el('c-l3').textContent=fmt(time)+' Kč';
-    const total=wage+soft+time;
-    const t=el('c-total');
-    const from=+t.dataset.v||0,to=total;t.dataset.v=to;
-    let s0=null;
-    function anim(ts){if(!s0)s0=ts;const k=Math.min(1,(ts-s0)/500);
-      t.textContent=fmt(from+(to-from)*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(anim)}
-    requestAnimationFrame(anim);
-  }
-  [doc,emp,sal,hrs].forEach(x=>x.addEventListener('input',calc));
-  calc();
-})();
-
-/* ============================================================
    Pás výhod, ukazatel scrollu, lepicí lišta, odchodová nabídka
    ============================================================ */
 (function(){
-  const items=['Termíny hlídáme za vás','Osobní účetní pro každého klienta','Pojištěná odpovědnost za zpracování',
-    'Rekonstrukce zanedbaného účetnictví','Mzdy a komunikace s úřady','Praha 9 — Vysočany','Převzetí agendy bez přerušení'];
+  const items=['Lhůty držíme na své straně','Voláte přímo svému účetnímu','Za zpracování ručíme',
+    'Papíry po někom jiném srovnáme','Mzdy i dopisy úřadům bereme na sebe','Praha 9 — Vysočany',
+    'Přechod bez přerušení agendy','Mlčenlivost samozřejmostí'];
   const t=document.getElementById('tick');
   if(t)t.innerHTML=(items.map(x=>'<span>'+x+'</span>').join('')).repeat(2);
 
@@ -1495,8 +1450,8 @@ document.getElementById('bform').addEventListener('submit',e=>{
     e.preventDefault();
     const tel=document.getElementById('e-tel').value.trim();
     if(tel.replace(/\D/g,'').length<9)return;
-    ex.querySelector('.exit-card').innerHTML='<p class="eyebrow">Děkujeme</p><h3>Ozveme se do 24 hodin</h3>'+
-      '<p style="color:var(--muted)">Volat budeme na '+tel+' v provozní době kanceláře.</p>'+
+    ex.querySelector('.exit-card').innerHTML='<p class="eyebrow">Děkujeme</p><h3>Máme váš telefon</h3>'+
+      '<p style="color:var(--muted)">Ozveme se na '+tel+' v provozní době kanceláře.</p>'+
       '<button class="btn brass" id="exit-ok">Zavřít</button>';
     document.getElementById('exit-ok').onclick=close;
     /* napojení na CRM se doplní zde */
@@ -1552,13 +1507,13 @@ document.getElementById('bform').addEventListener('submit',e=>{
   const KB=[
     {k:['dph','přiznání k dph','kontrolní'],a:'Přiznání k DPH i kontrolní hlášení se podávají do 25. dne po skončení zdaňovacího období — u měsíčních plátců za předchozí měsíc, u čtvrtletních za čtvrtletí. Ke stejnému dni je splatná i daň. U klientů termín hlídáme a podklady si vyžádáme s předstihem.'},
     {k:['mzd','zaměstnan','výplat','čssz'],a:'Mzdy zpracováváme kompletně: výpočet a výplatní pásky, přihlášky a odhlášky na ČSSZ a zdravotní pojišťovny, srážkovou i zálohovou daň, exekuční srážky a roční zúčtování. Odvody za předchozí měsíc jsou splatné do 20. dne.'},
-    {k:['cena','cenik','kolik stoj','nabídk'],a:'Cenu stavíme podle objemu dokladů, počtu zaměstnanců a rozsahu agendy — proto ji říkáme až po krátké konzultaci, kdy víme, co přesně přebíráme. Konzultace je nezávazná a zdarma; můžu vám rovnou najít termín.'},
+    {k:['cena','cenik','kolik stoj','nabídk'],a:'Cenu skládáme podle objemu dokladů, počtu zaměstnanců a rozsahu agendy — proto ji řekneme až po krátkém setkání, kdy víme, co přesně přebíráme. Setkání je nezávazné; můžu vám rovnou najít termín.'},
     {k:['přechod','převz','změnit účetní','přejít'],a:'Převzetí zvládneme kdykoli během roku, nejsnazší je k prvnímu dni měsíce. Vyžádáme si data od stávající účetní, odsouhlasíme zůstatky a navážeme — vy nemusíte nic řešit s předchozím dodavatelem.'},
     {k:['rekonstru','nepořádek','zanedb','dohled'],a:'Rekonstrukce zanedbaného účetnictví je jedna z našich specializací. Nejprve zmapujeme, co chybí, navrhneme postup a odhad rozsahu, teprve pak dohledáváme doklady a opravujeme.'},
     {k:['osvč','živnost','paušál','evidenc'],a:'Pro OSVČ vedeme daňovou evidenci: peněžní deník, evidenci majetku, přiznání a přehledy pro ČSSZ a zdravotní pojišťovnu. Posoudíme také, jestli se vám vyplatí paušální daň a jak jste daleko od limitu pro povinnou registraci k DPH.'},
     {k:['založ','s.r.o','sro','nová firma','zakládám'],a:'Poradíme s volbou právní formy, registrací u finančního úřadu i dalších institucí a nastavíme účetnictví od prvního dokladu. Řekneme také, jestli se registrovat k DPH hned, nebo počkat.'},
     {k:['adres','kde jste','kancelář','vysočan'],a:'Kancelář najdete na adrese Rubeška 383/4, 190 00 Praha 9 – Vysočany. Doklady ale většina klientů posílá elektronicky, takže osobní návštěva nutná není.'},
-    {k:['otevř','provozní','hodin','kdy máte'],a:'Provozní doba: úterý a čtvrtek 10:00–18:00 s pauzou 13:00–14:00. Pondělí a středa jsou vyhrazené objednaným klientům, pátek až neděle zavřeno. Termín vám můžu rovnou zarezervovat.'},
+    {k:['otevř','provozní','hodin','kdy máte'],a:'V úterý a ve čtvrtek jsme tu celý den s polední pauzou, pondělí a středa patří objednaným klientům, o víkendu máme zavřeno. Termín vám můžu rovnou zarezervovat.'},
     {k:['termín','lhůt','kalendář','kdy se podává'],a:'Pravidelné termíny: do 8. dne zálohy zdravotního pojištění OSVČ, do 20. dne odvody ze mezd a sociální pojištění, do 25. dne DPH a kontrolní hlášení. Roční přiznání do 1. dubna listinně a do 1. května elektronicky. Celý kalendář najdete na této stránce a dá se stáhnout do vašeho kalendáře.'},
     {k:['odpovědnost','pokut','chyb','ručí'],a:'Za zpracování odpovídáme a jsme pojištěni. Odpovědnost vůči správci daně nese ze zákona podnikatel, proto vám podklady vždy dáváme ke kontrole před odesláním.'},
     {k:['doklad','předáv','faktur','scan','sken'],a:'Doklady stačí posílat elektronicky — sken nebo fotka. Kdo chce, může je předat osobně v kanceláři na pravidelné schůzce.'}
@@ -1566,7 +1521,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
   const BOOK=['objedn','schůz','termín schůzky','rezerv','konzultac','sejít','domluvit'];
   function answer(q){
     const t=q.toLowerCase();
-    if(BOOK.some(k=>t.includes(k)))return{a:'Ráda vám najdu termín. Úvodní konzultace trvá 45 minut a je nezávazná — vyberte si den a čas v sekci objednání, hned pod tímto oknem.',go:'#objednani'};
+    if(BOOK.some(k=>t.includes(k)))return{a:'Ráda vám najdu termín. První setkání je nezávazné — vyberte si den a čas v sekci objednání, hned pod tímto oknem.',go:'#objednani'};
     let best=null,score=0;
     KB.forEach(item=>{const sc=item.k.reduce((n,k)=>n+(t.includes(k)?1:0),0);if(sc>score){score=sc;best=item}});
     if(best)return{a:best.a};
@@ -1594,7 +1549,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     panel.classList.add('on');fab.style.display='none';
     if(!opened){
       opened=true;renderChips();
-      setTimeout(()=>{big.speak();add('a','Dobrý den, jsem Klára z Konsalting Profi. Poradím s termíny, službami i cenou — a rovnou vám můžu zarezervovat konzultaci. S čím začneme?')},240);
+      setTimeout(()=>{big.speak();add('a','Dobrý den, jsem Klára z Konsalting Profi. Poradím s termíny i službami a rovnou vám můžu zarezervovat setkání. S čím začneme?')},240);
     }
     setTimeout(()=>input.focus(),320);
   }
@@ -1657,7 +1612,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
 <!-- ============ LEPICÍ VÝZVA ============ -->
 <div class="dock" id="dock">
   <div class="wrap">
-    <div class="txt"><b>Nezávazná konzultace zdarma</b><em>45 minut, bez závazku — řekneme si, co vaše firma potřebuje.</em></div>
+    <div class="txt"><b>Nezávazné setkání</b><em>Projdeme vaši agendu a řekneme, co s ní — bez závazku.</em></div>
     <a class="btn brass" href="#objednani">Vybrat termín</a>
     <a class="btn ghost" href="tel:+420773966787">Zavolat</a>
     <button class="x" id="dockx" aria-label="Zavřít lištu">×</button>
@@ -1694,8 +1649,8 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   <div class="exit-card">
     <button class="x" id="exitx" aria-label="Zavřít">×</button>
     <p class="eyebrow">Než odejdete</p>
-    <h3>Zavoláme vám zpět do 24 hodin</h3>
-    <p>Zanechte telefon. Řekneme si, jestli vám externí účetnictví dává smysl — nezávazně a bez prodejních řečí.</p>
+    <h3>Zavoláme vám zpět</h3>
+    <p>Zanechte telefon. Ozveme se v nejbližší provozní době a řekneme si, jestli vám změna účetní dává smysl.</p>
     <form id="exitform">
       <input id="e-tel" placeholder="Telefon" autocomplete="tel" required>
       <button class="btn brass" type="submit">Zavolejte mi</button>
