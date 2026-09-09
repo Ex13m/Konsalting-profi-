@@ -163,7 +163,7 @@ body.anim-done .hero-lede,body.anim-done .hero-cta,body.anim-done .hero h1 .ln b
 .hero-facts span::before{content:"";width:5px;height:5px;background:var(--brass);flex:none;transform:rotate(45deg)}
 
 /* ---------- pruh s termínem ---------- */
-.strip{position:relative;z-index:5;background:var(--ink);color:var(--on-dark)}
+.strip{position:relative;z-index:5;background:var(--navy-2);color:var(--on-dark)}
 .strip .wrap{display:flex;align-items:center;gap:clamp(16px,3vw,46px);padding-block:22px;flex-wrap:wrap}
 .strip .label{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-2);max-width:14ch;line-height:1.4}
 .strip .what{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(17px,2vw,23px);letter-spacing:-.01em;flex:1 1 240px}
@@ -345,7 +345,7 @@ body.dark{
   --muted:rgba(241,237,230,.68);
 }
 body.dark header.solid{background:rgba(13,21,38,.92)}
-body.dark nav.main{background:var(--paper)}
+@media(max-width:1180px){body.dark nav.main{background:var(--paper)}}   /* jen rozbalené mobilní menu */
 body.dark .btn{background:var(--brass);color:#fff}
 body.dark .btn:hover{background:var(--brass-2)}
 body.dark .btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
@@ -1282,8 +1282,8 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
   </div>
 </div>
 
-<script src="assets/i18n-data.js"></script>
-<script src="assets/i18n.js"></script>
+<script src="assets/i18n-data.js?v=2"></script>
+<script src="assets/i18n.js?v=2"></script>
 <script>
 /* Serverová funkce asistentky. Když není nasazená (chybí klíč k API),
    asistentka automaticky spadne zpět na vestavěné odpovědi. */
