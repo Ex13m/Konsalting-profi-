@@ -426,4 +426,6 @@ window.I18N = {
 "Česko a EU": ["Czechia and the EU", "Чехия и ЕС", "Чехія та ЄС", "Tschechien und EU", "Czechy i UE"],
 "Načítám aktuality…": ["Loading the wire…", "Загружаем ленту…", "Завантажуємо стрічку…", "Meldungen werden geladen…", "Wczytuję wiadomości…"],
 "Termín": ["Deadline", "Срок", "Термін", "Frist", "Termin"]
+,
+"Vrstvy účetních papírů v tlumeném světle": ["Layers of ledger paper in low light", "Слои бухгалтерских бумаг в приглушённом свете", "Шари бухгалтерських паперів у приглушеному світлі", "Schichten von Buchhaltungspapier im gedämpften Licht", "Warstwy papierów księgowych w przygaszonym świetle"]
 };
