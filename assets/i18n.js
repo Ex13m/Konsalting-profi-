@@ -426,6 +426,4 @@ window.I18N = {
 "Česko a EU": ["Czechia and the EU", "Чехия и ЕС", "Чехія та ЄС", "Tschechien und EU", "Czechy i UE"],
 "Načítám aktuality…": ["Loading the wire…", "Загружаем ленту…", "Завантажуємо стрічку…", "Meldungen werden geladen…", "Wczytuję wiadomości…"],
 "Termín": ["Deadline", "Срок", "Термін", "Frist", "Termin"]
-,
-"Kancelář": ["The office", "Офис", "Офіс", "Das Büro", "Biuro"]
 };

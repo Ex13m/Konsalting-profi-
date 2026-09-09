@@ -137,7 +137,7 @@ header:not(.solid) .hbar .btn:hover{background:rgba(244,241,235,.2)}
 .hero-inner{position:relative;z-index:2;padding-bottom:clamp(34px,5vw,64px)}
 .hero h1{max-width:15ch}
 @media(min-width:900px){.hero h1{font-size:clamp(38px,5.4vw,68px)}}
-.hero-media img,.step-media img{transition:opacity .6s}
+.hero-media img,.about-media img,.step-media img{transition:opacity .6s}
 .no-photo img{opacity:0}
 .hero h1 .ln{display:block;overflow:hidden}
 body.anim-done .hero h1 .ln{overflow:visible}
@@ -184,7 +184,10 @@ section{position:relative;padding-block:clamp(76px,9vw,136px)}
 /* ---------- o firmě ---------- */
 .about{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,6vw,84px);align-items:center}
 @media(max-width:900px){.about{grid-template-columns:1fr}}
-
+.about-media{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;box-shadow:var(--shadow);
+  background:linear-gradient(145deg,#22355F 0%,#16264F 48%,#0B1226 100%)}
+.about-media img{width:100%;height:100%;object-fit:cover;display:block}
+.about-media::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
 .pillars{display:grid;gap:2px;background:var(--line);border:1px solid var(--line);margin-top:36px;border-radius:var(--r);overflow:hidden}
 @media(min-width:620px){.pillars{grid-template-columns:1fr 1fr}}
 .pillars div{background:var(--paper);padding:22px 24px}
@@ -417,8 +420,10 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 @media(prefers-reduced-motion:reduce){.seal{animation:none}}
 .seal text{font-family:"IBM Plex Sans",sans-serif;font-size:8.4px;letter-spacing:.32em;fill:currentColor;text-transform:uppercase}
 .seal circle{fill:none;stroke:currentColor;stroke-width:.7}
+.about-media .seal{right:-14px;bottom:-14px;opacity:.5;color:var(--brass-2)}
 .book-r{position:relative;overflow:hidden}
 .book-r .seal{right:-30px;bottom:-26px;color:var(--brass-2);opacity:.2}
+.about-media{position:relative}
 
 
 /* --- přepínač jazyka --- */
@@ -439,18 +444,6 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .lang-menu button.on{background:var(--paper-3)}
 @media(max-width:1180px){.lang{margin-left:auto;order:-1}}
 
-
-
-/* --- karta kanceláře místo fotografie --- */
-.about-card{position:relative;overflow:hidden;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
-  padding:clamp(26px,3vw,40px);box-shadow:0 26px 60px -44px rgba(13,25,53,.55)}
-.about-card dl{display:grid;grid-template-columns:auto 1fr;gap:16px 24px;margin:0;font-size:16px;position:relative;z-index:1}
-.about-card dt{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-top:4px;white-space:nowrap}
-.about-card dd{margin:0;line-height:1.5}
-.about-card dd a{text-decoration:none;border-bottom:1px solid rgba(169,116,60,.5)}
-.about-card dd a:hover{border-bottom-color:var(--brass)}
-.about-card .seal{right:-26px;bottom:-24px;opacity:.14;color:var(--brass)}
-@media(max-width:620px){.about-card dl{grid-template-columns:1fr;gap:4px 0}.about-card dt{padding-top:14px}}
 
 /* --- ekonomický přehled (běžící pás) --- */
 .wire{position:relative;z-index:5;background:linear-gradient(90deg,var(--navy-2),var(--navy) 55%,var(--navy-2));
@@ -789,22 +782,15 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
         </div>
         <p class="microtrust">Mlčenlivost bereme jako součást řemesla — obsah vašich dokladů zůstává mezi námi.</p>
       </div>
-      <aside class="about-card reveal">
-        <p class="eyebrow">Kancelář</p>
-        <dl>
-          <dt>Adresa</dt><dd>Rubeška 383/4<br>190 00 Praha 9 – Vysočany</dd>
-          <dt>Telefon</dt><dd><a href="tel:+420773966787" class="num">+420 773 966 787</a></dd>
-          <dt>E-mail</dt><dd><a href="mailto:konsaltingprofi@gmail.com">konsaltingprofi@gmail.com</a></dd>
-          <dt>Provozní doba</dt><dd>Út, Čt — 10:00–18:00<br>Přestávka 13:00–14:00<br>Po, St — objednaní klienti<br>Pá, So, Ne — zavřeno</dd>
-          <dt>IČO</dt><dd class="num">25720121</dd>
-        </dl>
+      <div class="about-media reveal">
+        <img src="assets/office.webp" alt="Recepce kanceláře Konsalting Profi v Praze 9 – Vysočanech" loading="lazy">
         <svg class="seal" viewBox="0 0 132 132" aria-hidden="true">
         <circle cx="66" cy="66" r="62"/><circle cx="66" cy="66" r="52"/>
         <path id="spa" d="M66,66 m0,-44 a44,44 0 1,1 0,88 a44,44 0 1,1 0,-88" fill="none"/>
         <text><textPath href="#spa" startOffset="0">Konsalting Profi · Praha 9 · účetní kancelář · </textPath></text>
         <g transform="translate(66 66)"><path d="M-9 0l6 6 12-13" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
       </svg>
-      </aside>
+      </div>
     </div>
   </div>
 </section>
@@ -1335,7 +1321,7 @@ function result(){
 renderQ();
 
 /* chybějící fotografie: necháme jen barevnou plochu, ne rozbitý obrázek */
-document.querySelectorAll('.hero-media img,.step-media img').forEach(im=>{
+document.querySelectorAll('.hero-media img,.about-media img,.step-media img').forEach(im=>{
   const hide=()=>{im.alt='';im.parentElement.classList.add('no-photo')};
   im.addEventListener('error',hide,{once:true});
   if(im.complete&&!im.naturalWidth)hide();
