@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Konsalting Profi — účetnictví, mzdy a daně pro firmy v Praze</title>
 <meta name="description" content="Účetní kancelář Praha 9 – Vysočany. Vedení účetnictví, mzdová agenda, daňová evidence a poradenství při zakládání společnosti. Termíny hlídáme za vás.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="mask-icon" href="assets/favicon.svg" color="#A9743C">
 <meta name="theme-color" content="#16264F">
 <link rel="canonical" href="https://konsalting.cz/">
 <meta property="og:type" content="website">
@@ -86,6 +88,7 @@ header{position:fixed;inset:0 0 auto;z-index:60;border-bottom:1px solid transpar
   transition:background .35s,backdrop-filter .35s,border-color .35s,color .35s;color:var(--on-dark)}
 header.solid{background:rgba(247,244,239,.9);backdrop-filter:blur(16px) saturate(1.2);border-bottom-color:var(--line);color:var(--ink)}
 .hbar{display:flex;align-items:center;gap:26px;height:78px}
+.hbar .btn{white-space:nowrap}
 /* --- značka --- */
 .logo{display:inline-flex;align-items:center;gap:13px;text-decoration:none;flex:none}
 .mark{width:38px;height:38px;flex:none;position:relative;display:grid;place-items:center;
@@ -374,15 +377,26 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
   transform:translateX(-130%);transition:transform .7s cubic-bezier(.2,.8,.3,1)}
 .btn:hover::after{transform:translateX(130%)}
 
-/* --- pás s výhodami (marquee) --- */
-.ticker{background:var(--ink);color:var(--on-dark);overflow:hidden;border-block:1px solid var(--line-dark);padding-block:14px}
-.ticker-in{display:flex;gap:0;width:max-content;animation:slide 42s linear infinite}
-.ticker:hover .ticker-in{animation-play-state:paused}
-.ticker span{display:inline-flex;align-items:center;gap:16px;padding-inline:26px;font-size:13.5px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--on-dark-mute);white-space:nowrap}
-.ticker span::after{content:"";width:5px;height:5px;background:var(--brass);transform:rotate(45deg)}
-@keyframes slide{to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.ticker-in{animation:none}}
+/* --- tichý pás nejbližších termínů --- */
+.due{position:relative;z-index:5;display:flex;align-items:stretch;overflow:hidden;
+  background:var(--paper);color:var(--ink);border-bottom:1px solid var(--line-2)}
+.due-head{display:flex;align-items:baseline;gap:9px;padding:0 18px 0 var(--pad);flex:none;position:relative;z-index:2;
+  background:var(--paper);box-shadow:18px 0 22px -16px rgba(17,26,46,.22)}
+.due-head b{font-family:"Fraunces",serif;font-weight:600;font-size:12.5px;letter-spacing:.01em;align-self:center}
+.due-head em{font-style:normal;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);
+  white-space:nowrap;align-self:center}
+.due-track{display:flex;align-items:center;white-space:nowrap;padding-block:11px;width:max-content;
+  animation:duemove var(--dur,120s) linear infinite}
+.due:hover .due-track{animation-play-state:paused}
+@keyframes duemove{from{transform:translateX(0)}to{transform:translateX(calc(var(--half,-50%)))}}
+.due-item{display:inline-flex;align-items:baseline;gap:9px;padding-inline:20px;font-size:13px;color:var(--muted);
+  text-decoration:none;transition:color .2s}
+.due-item:hover{color:var(--ink)}
+.due-item u{text-decoration:none;font-variant-numeric:tabular-nums;color:var(--brass);font-weight:600;flex:none}
+.due-item::after{content:"";width:4px;height:4px;background:var(--line);transform:rotate(45deg);margin-left:20px;align-self:center}
+@media(prefers-reduced-motion:reduce){.due-track{animation:none;overflow-x:auto;width:auto}}
+@media(max-width:1200px){.due-head em{display:none}}
+@media(max-width:700px){.due-head{padding-left:16px}}
 
 /* --- lepicí spodní lišta s výzvou --- */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:65;background:rgba(13,25,53,.94);backdrop-filter:blur(14px);
@@ -445,30 +459,63 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 @media(max-width:1180px){.lang{margin-left:auto;order:-1}}
 
 
-/* --- ekonomický přehled (běžící pás) --- */
-.wire{position:relative;z-index:5;background:linear-gradient(90deg,var(--navy-2),var(--navy) 55%,var(--navy-2));
-  color:var(--on-dark);display:flex;align-items:stretch;border-bottom:1px solid var(--line-dark);overflow:hidden}
-.wire-head{display:flex;align-items:center;gap:10px;padding:0 20px 0 var(--pad);flex:none;position:relative;z-index:2;
-  background:var(--navy-2);box-shadow:22px 0 26px -18px rgba(9,17,38,.95)}
-.wire-head b{font-family:"Fraunces",serif;font-weight:600;font-size:13.5px;white-space:nowrap}
-.wire-head em{font-style:normal;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-dark-mute);white-space:nowrap}
-.live{width:8px;height:8px;border-radius:50%;background:#E0543C;flex:none;box-shadow:0 0 0 0 rgba(224,84,60,.75);animation:blip 2s infinite}
-@keyframes blip{70%{box-shadow:0 0 0 9px rgba(224,84,60,0)}100%{box-shadow:0 0 0 0 rgba(224,84,60,0)}}
-.wire-track{display:flex;align-items:center;gap:0;white-space:nowrap;padding-block:12px;width:max-content;
-  animation:wireslide 68s linear infinite}
+/* --- ekonomický přehled (klidný pás uvnitř kalendáře) --- */
+.wire{position:relative;margin-top:40px;display:flex;align-items:stretch;overflow:hidden;
+  background:var(--paper-2);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r)}
+.wire-head{display:flex;align-items:center;gap:9px;padding:0 18px;flex:none;position:relative;z-index:2;
+  background:var(--paper-2);box-shadow:18px 0 22px -16px rgba(17,26,46,.18)}
+.wire-head b{font-family:"Fraunces",serif;font-weight:600;font-size:13px;white-space:nowrap}
+.wire-head em{font-style:normal;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.live{width:6px;height:6px;border-radius:50%;background:var(--brass);flex:none;opacity:.75}
+.wire-track{display:flex;align-items:center;white-space:nowrap;padding-block:14px;width:max-content;
+  animation:wiremove var(--dur,150s) linear infinite}
 .wire:hover .wire-track{animation-play-state:paused}
-@keyframes wireslide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes wiremove{from{transform:translateX(0)}to{transform:translateX(calc(var(--half,-50%)))}}
 @media(prefers-reduced-motion:reduce){.wire-track{animation:none;overflow-x:auto;width:auto}}
-.wire-item{display:inline-flex;align-items:center;gap:11px;padding-inline:26px;font-size:14px;color:var(--on-dark);
-  text-decoration:none;border-right:1px solid var(--line-dark);transition:color .2s}
-.wire-item:hover{color:var(--brass-2)}
-.wire-item s{text-decoration:none;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-2);
-  border:1px solid rgba(192,143,78,.4);border-radius:99px;padding:3px 9px;flex:none}
-.wire-item i{font-style:normal;color:var(--on-dark-mute);font-size:12.5px;flex:none}
-.wire-item.fresh{animation:flash 2.4s ease-out 1}
-@keyframes flash{0%{background:rgba(192,143,78,.28)}100%{background:transparent}}
-.wire-load{padding-inline:26px;font-size:13.5px;color:var(--on-dark-mute)}
-@media(max-width:700px){.wire-head em{display:none}.wire-head{padding-left:16px}}
+.wire-item{display:inline-flex;align-items:baseline;gap:10px;padding-inline:22px;font-size:13.5px;color:var(--ink);
+  text-decoration:none;max-width:none;transition:color .2s}
+.wire-item:hover{color:var(--brass)}
+.wire-item s{text-decoration:none;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--brass);
+  border:1px solid var(--line);border-radius:99px;padding:2px 8px;flex:none;align-self:center}
+.wire-item q{quotes:none;color:var(--muted);font-size:12.5px}
+.wire-item q::before{content:"— "}
+.wire-item i{font-style:normal;color:var(--muted);opacity:.7;font-size:11.5px;flex:none}
+.wire-item::after{content:"";width:4px;height:4px;background:var(--line);transform:rotate(45deg);margin-left:22px;align-self:center}
+.wire-load{padding-inline:22px;font-size:13px;color:var(--muted)}
+.wire-note{margin:12px 0 0;font-size:13px;color:var(--muted);max-width:78ch}
+@media(max-width:700px){.wire-head em{display:none}.wire-head{padding-left:14px;padding-right:14px}}
+
+/* --- původní český název termínu (u cizích jazyků) --- */
+.ev .orig{display:block;margin-top:6px;font-size:12px;color:var(--muted);opacity:.75}
+
+/* --- právní dokumenty v okně --- */
+.legal-open{background:none;border:0;color:inherit;font:inherit;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;opacity:.85}
+.legal-open:hover{opacity:1}
+.legal{position:fixed;inset:0;z-index:120;display:none;place-items:center;padding:20px;
+  background:rgba(9,15,30,.62);backdrop-filter:blur(3px)}
+.legal.on{display:grid}
+.legal-box{background:var(--paper-2);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);
+  width:min(780px,100%);max-height:min(86vh,860px);display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 40px 90px -40px rgba(9,15,30,.7)}
+.legal-top{display:flex;align-items:center;gap:14px;padding:18px 20px;border-bottom:1px solid var(--line-2);flex:none}
+.legal-top h3{font-family:"Fraunces",serif;font-size:19px;font-weight:600;margin:0;flex:1}
+.legal-x{background:none;border:1px solid var(--line);border-radius:50%;width:32px;height:32px;cursor:pointer;
+  color:var(--muted);font-size:17px;line-height:1;flex:none}
+.legal-x:hover{color:var(--ink);border-color:var(--brass)}
+.legal-tabs{display:flex;gap:6px;padding:12px 20px 0;flex-wrap:wrap;flex:none}
+.legal-tabs button{background:none;border:1px solid var(--line);color:var(--muted);font:inherit;font-size:13px;
+  padding:7px 13px;border-radius:99px;cursor:pointer}
+.legal-tabs button.on{background:var(--brass);border-color:var(--brass);color:#fff}
+.legal-body{padding:18px 20px 26px;overflow:auto;font-size:14.5px;line-height:1.62;color:var(--muted)}
+.legal-body h4{font-family:"Fraunces",serif;font-size:15.5px;color:var(--ink);margin:20px 0 6px;font-weight:600}
+.legal-body h4:first-child{margin-top:4px}
+.legal-body p{margin:0 0 10px}
+.legal-body .fine{font-size:12.5px;opacity:.75;margin-top:18px}
+.legal-doc{display:none}
+.legal-doc.on{display:block}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);margin:4px 0 16px;cursor:pointer}
+.check input{margin:2px 0 0;accent-color:var(--brass);width:16px;height:16px;flex:none}
+.on-dark .check,.bookcard .check{color:var(--on-dark-mute)}
 
 /* --- daňový kalendář --- */
 .calbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:26px;align-items:center}
@@ -681,31 +728,22 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 <div class="strip">
   <div class="wrap">
     <div class="label">Nejbližší zákonný termín</div>
-    <div class="what" id="dlWhat">—<em id="dlDate"></em></div>
-    <div class="clock num" id="clock">
-      <div><b id="dD">–</b><i>dní</i></div>
-      <div><b id="dH">–</b><i>hodin</i></div>
-      <div><b id="dM">–</b><i>minut</i></div>
-      <div><b id="dS">–</b><i>sekund</i></div>
+    <div class="what dyn" id="dlWhat">—<em id="dlDate"></em></div>
+    <div class="clock" id="clock">
+      <div><b class="num" id="dD">–</b><i>dní</i></div>
+      <div><b class="num" id="dH">–</b><i>hodin</i></div>
+      <div><b class="num" id="dM">–</b><i>minut</i></div>
+      <div><b class="num" id="dS">–</b><i>sekund</i></div>
     </div>
   </div>
 </div>
 
 
 
-<!-- ============ EKONOMICKÝ PŘEHLED ============ -->
-<div class="wire" id="wire">
-  <div class="wire-head">
-    <span class="live" aria-hidden="true"></span>
-    <b>Ekonomický přehled</b>
-    <em>Česko a EU</em>
-  </div>
-  <div class="wire-track" id="wiretrack"><span class="wire-load">Načítám aktuality…</span></div>
-</div>
-
-<!-- ============ PÁS ============ -->
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-in" id="tick"></div>
+<!-- ============ CO SE BLÍŽÍ (tichý pás termínů) ============ -->
+<div class="due" id="due">
+  <div class="due-head"><b>Co se blíží</b><em>Nejbližší zákonné termíny</em></div>
+  <div class="due-track dyn" id="duetrack"></div>
 </div>
 
 <!-- ============ OBJEDNÁNÍ ============ -->
@@ -721,9 +759,9 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
     <div class="book reveal">
       <div class="book-l">
         <p class="eyebrow" style="color:var(--brass-2)">1 — Den</p>
-        <div class="days" id="days"></div>
+        <div class="days dyn" id="days"></div>
         <p class="eyebrow" style="color:var(--brass-2)">2 — Čas</p>
-        <div class="slots" id="slots"></div>
+        <div class="slots dyn" id="slots"></div>
         <p class="booknote" id="booknote">V úterý a ve čtvrtek si vybíráte čas sami. Pondělí a středa patří objednaným klientům — označte je a ozveme se s návrhem termínu.</p>
       </div>
       <div class="book-r">
@@ -735,13 +773,15 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
       </svg>
         <div id="bookform">
           <p class="eyebrow" style="color:var(--brass-2)">3 — Kontakt</p>
-          <div class="picked" id="picked"><b>Zatím nevybráno</b><em>Vyberte den a čas vlevo</em></div>
+          <div class="picked dyn" id="picked"><b>Zatím nevybráno</b><em>Vyberte den a čas vlevo</em></div>
           <p class="ctahint">Termín potvrdíme osobně, ne automatem</p>
           <form id="bform">
             <div class="field"><input id="b-name" placeholder=" " autocomplete="name" required><label for="b-name">Jméno a firma</label></div>
             <div class="field"><input id="b-tel" placeholder=" " autocomplete="tel" required><label for="b-tel">Telefon</label></div>
             <div class="field"><input id="b-mail" type="email" placeholder=" " autocomplete="email"><label for="b-mail">E-mail</label></div>
             <div class="field"><textarea id="b-msg" placeholder=" " style="min-height:84px"></textarea><label for="b-msg">Co potřebujete řešit</label></div>
+            <label class="check"><input type="checkbox" id="b-gdpr" required>
+              <span>Souhlasím se zpracováním uvedených údajů za účelem domluvení schůzky. Podrobnosti v <button type="button" class="legal-open" data-doc="gdpr">ochraně osobních údajů</button>.</span></label>
             <button class="btn brass" type="submit">Rezervovat termín</button>
             <p class="consent"><span class="lock" aria-hidden="true"></span> Nezávazně. Údaje zůstávají u nás a slouží jen k potvrzení schůzky.</p>
           </form>
@@ -749,7 +789,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
         <div class="bookdone" id="bookdone">
           <p class="eyebrow" style="color:var(--brass-2)">Hotovo</p>
           <h3 style="color:var(--on-dark);margin-bottom:12px">Termín je předběžně rezervovaný</h3>
-          <p style="color:var(--on-dark-mute);font-size:15px" id="donetext"></p>
+          <p class="dyn" style="color:var(--on-dark-mute);font-size:15px" id="donetext"></p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
             <button class="btn brass" id="dl-ics">Stáhnout do kalendáře</button>
             <button class="btn ghost" id="mailto-btn">Odeslat e-mailem</button>
@@ -996,7 +1036,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
     </div>
     <div class="quiz reveal" id="quiz">
       <div class="quiz-bar"><i id="qbar"></i></div>
-      <div class="quiz-body" id="qbody"></div>
+      <div class="quiz-body dyn" id="qbody"></div>
     </div>
   </div>
 </section>
@@ -1011,8 +1051,17 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
       </div>
       <p id="calYearNote">Vyberte měsíc. U každého termínu stojí, koho se týká a co se odevzdává — a stáhnete si ho k sobě do kalendáře, ať už jednotlivě, nebo celý rok najednou.</p>
     </div>
-    <div class="calbar reveal" id="calbar"></div>
-    <div class="evlist" id="evlist"></div>
+    <div class="calbar reveal dyn" id="calbar"></div>
+    <div class="evlist dyn" id="evlist"></div>
+    <div class="wire" id="wire">
+      <div class="wire-head">
+        <span class="live" aria-hidden="true"></span>
+        <b>Ekonomický přehled</b>
+        <em>Česko a EU</em>
+      </div>
+      <div class="wire-track dyn" id="wiretrack"><span class="wire-load">Načítám aktuality…</span></div>
+    </div>
+    <p class="wire-note">Novinky z Česka a EU, které se mohou dotknout vašeho účetnictví. Titulky přebíráme z veřejných zdrojů a doplňujeme krátké vysvětlení.</p>
     <p class="calnote">Přehled je orientační a vychází z pravidelných zákonných lhůt; připadne-li termín na víkend nebo svátek, posouvá se na nejbližší pracovní den. Konkrétní povinnosti se liší podle právní formy, registrace k DPH a počtu zaměstnanců — u našich klientů termíny hlídáme jmenovitě a hlásíme je s předstihem.</p>
   </div>
 </section>
@@ -1075,7 +1124,9 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
         <div class="field"><input id="f-mail" name="email" type="email" placeholder=" " autocomplete="email"><label for="f-mail">E-mail</label></div>
         <div class="field"><input id="f-tel" name="tel" type="tel" placeholder=" " autocomplete="tel" required><label for="f-tel">Telefon</label></div>
         <div class="field"><textarea id="f-msg" name="msg" placeholder=" "></textarea><label for="f-msg">Co potřebujete řešit</label></div>
-        <p class="consent"><span class="lock" aria-hidden="true"></span> Odesláním potvrzuji, že jsem se seznámil/a s <a href="https://konsalting.cz/podminky-ochrany-osobnich-udaju">podmínkami ochrany osobních údajů</a>. Údaje nikam dál nepředáváme.</p>
+        <label class="check"><input type="checkbox" id="f-gdpr" required>
+          <span>Souhlasím se zpracováním uvedených údajů za účelem vyřízení poptávky. Podrobnosti v <button type="button" class="legal-open" data-doc="gdpr">ochraně osobních údajů</button>.</span></label>
+        <p class="consent"><span class="lock" aria-hidden="true"></span> Údaje nikam dál nepředáváme.</p>
         <button class="btn brass" type="submit">Chci, ať se ozvete</button>
       </form>
     </div>
@@ -1113,7 +1164,9 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
     </div>
     <div class="fbot">
       <span>© <span id="yr"></span> Konsalting Profi</span>
-      <a href="https://konsalting.cz/podminky-ochrany-osobnich-udaju">Ochrana osobních údajů</a>
+      <button type="button" class="legal-open" data-doc="gdpr">Ochrana osobních údajů</button>
+      <button type="button" class="legal-open" data-doc="cookies">Cookies</button>
+      <button type="button" class="legal-open" data-doc="terms">Podmínky použití</button>
     </div>
   </div>
 </footer>
@@ -1148,8 +1201,8 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
     </span>
     <button class="x" id="assistx" aria-label="Zavřít">×</button>
   </div>
-  <div class="assist-log" id="alog"></div>
-  <div class="chips" id="achips"></div>
+  <div class="assist-log dyn" id="alog"></div>
+  <div class="chips dyn" id="achips"></div>
   <form class="assist-in" id="aform">
     <input id="ain" placeholder="Zeptejte se na termíny, služby nebo si domluvte schůzku" autocomplete="off">
     <button type="submit" aria-label="Odeslat"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
@@ -1168,10 +1221,68 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
       <input id="e-tel" placeholder="Telefon" autocomplete="tel" required>
       <button class="btn brass" type="submit">Zavolejte mi</button>
     </form>
+    <label class="check" style="margin-top:12px"><input type="checkbox" id="e-gdpr" required>
+      <span>Souhlasím se zpracováním telefonního čísla za účelem zpětného volání. Podrobnosti v <button type="button" class="legal-open" data-doc="gdpr">ochraně osobních údajů</button>.</span></label>
     <p class="consent" style="color:var(--muted);margin-top:14px">Nebo rovnou <a href="#objednani" id="exit-book" style="color:var(--brass)">vyberte termín schůzky</a>.</p>
   </div>
 </div>
 
+
+<!-- ============ PRÁVNÍ DOKUMENTY ============ -->
+<div class="legal" id="legal" role="dialog" aria-modal="true" aria-labelledby="legaltitle">
+  <div class="legal-box">
+    <div class="legal-top">
+      <h3 id="legaltitle">Ochrana osobních údajů</h3>
+      <button class="legal-x" id="legalx" aria-label="Zavřít">×</button>
+    </div>
+    <div class="legal-tabs" id="legaltabs">
+      <button data-doc="gdpr" class="on">Ochrana osobních údajů</button>
+      <button data-doc="cookies">Cookies</button>
+      <button data-doc="terms">Podmínky použití</button>
+    </div>
+    <div class="legal-body">
+      <div class="legal-doc on" data-doc="gdpr">
+        <h4>Kdo údaje zpracovává</h4>
+        <p>Konsalting Profi, Rubeška 383/4, 190 00 Praha 9 – Vysočany, IČO 25720121. Kontakt: konsaltingprofi@gmail.com, +420 773 966 787.</p>
+        <h4>Jaké údaje a proč</h4>
+        <p>Zpracováváme jméno, telefon, e-mail a text, který nám sami napíšete ve formuláři nebo v okně asistentky. Slouží k tomu, abychom se vám ozvali, domluvili schůzku a odpověděli na dotaz.</p>
+        <h4>Právní základ</h4>
+        <p>U poptávek jde o oprávněný zájem na jejich vyřízení, u klientů o plnění smlouvy a o zákonné povinnosti, které účetní kancelář má. Souhlas můžete kdykoli odvolat.</p>
+        <h4>Jak dlouho údaje držíme</h4>
+        <p>Nevyřízené poptávky nejdéle dvanáct měsíců. Účetní a daňové doklady po dobu, kterou stanoví zákon.</p>
+        <h4>Komu je předáváme</h4>
+        <p>Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a poskytovatel hostingu tohoto webu. Mimo Evropskou unii údaje nepředáváme.</p>
+        <h4>Vaše práva</h4>
+        <p>Máte právo na přístup k údajům, jejich opravu i výmaz, na omezení zpracování, na námitku a na přenositelnost. Stačí napsat na konsaltingprofi@gmail.com. Stížnost můžete podat u Úřadu pro ochranu osobních údajů.</p>
+        <h4>Automatizované rozhodování</h4>
+        <p>Web neprofiluje návštěvníky ani o nikom automatizovaně nerozhoduje.</p>
+        <p class="fine">Závazné je české znění. Překlady jsou informativní.</p>
+      </div>
+      <div class="legal-doc" data-doc="cookies">
+        <h4>Reklamní ani analytické cookies nepoužíváme</h4>
+        <p>Web nesleduje návštěvníky, nemá měřicí kódy a nepředává data reklamním sítím.</p>
+        <h4>Co si prohlížeč pamatuje</h4>
+        <p>Ukládáme jen vaši volbu jazyka a světlého či tmavého vzhledu. Zůstává to ve vašem prohlížeči a k nám se to nedostane. Bez toho stránka funguje stejně.</p>
+        <h4>Odkazy jinam</h4>
+        <p>Stránky, na které odkazujeme, mají vlastní pravidla — na ty naše se už nevztahují.</p>
+        <p class="fine">Závazné je české znění. Překlady jsou informativní.</p>
+      </div>
+      <div class="legal-doc" data-doc="terms">
+        <h4>K čemu web slouží</h4>
+        <p>Obsah má informativní charakter a nenahrazuje daňové ani právní poradenství pro konkrétní situaci.</p>
+        <h4>Účetní kalendář</h4>
+        <p>Vychází z pravidelných zákonných lhůt. Připadne-li termín na víkend nebo svátek, posouvá se na nejbližší pracovní den. Konkrétní povinnosti se liší podle právní formy, registrace k DPH a počtu zaměstnanců.</p>
+        <h4>Virtuální asistentka</h4>
+        <p>Odpovědi jsou orientační a slouží k rychlé navigaci. Závazné je vždy stanovisko účetního.</p>
+        <h4>Rezervace termínu</h4>
+        <p>Objednání přes web je předběžné. Schůzku potvrzujeme telefonicky.</p>
+        <p class="fine">Závazné je české znění. Překlady jsou informativní.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/i18n-data.js"></script>
 <script src="assets/i18n.js"></script>
 <script>
 /* Serverová funkce asistentky. Když není nasazená (chybí klíč k API),
@@ -1230,8 +1341,17 @@ accordion(document.getElementById('svc'));
 accordion(document.getElementById('faqbox'));
 addEventListener('resize',()=>document.querySelectorAll('.row[aria-expanded="true"] .panel').forEach(p=>p.style.height=p.firstElementChild.scrollHeight+'px'));
 
+/* ---------------- jazykové pomůcky ---------------- */
+const CS_MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+const T=s=>(window.KP&&s)?KP.t(s):s;
+const MON=()=>(window.KP&&KP.months[KP.lang])||CS_MONTHS;
+const MONS=()=>(window.KP&&KP.monthsShort[KP.lang])||CS_MONTHS.map(m=>m.slice(0,3));
+const DAYS=()=>(window.KP&&KP.days[KP.lang])||['ne','po','út','st','čt','pá','so'];
+const LOC=()=>(window.KP&&KP.locale[KP.lang])||'cs-CZ';
+const U=k=>(window.KP&&KP.ui[k])?KP.L(KP.ui[k]):'';
+const RER=f=>{if(window.KP)KP.rerender.push(f)};
+
 /* ---------------- daňové termíny ---------------- */
-const MONTHS=['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 function buildDeadlines(year){
   const out=[];
   for(let m=0;m<12;m++){
@@ -1251,8 +1371,12 @@ function buildDeadlines(year){
 const now=new Date(),Y=now.getFullYear();
 const all=[...buildDeadlines(Y),...buildDeadlines(Y+1)];
 const next=all.find(x=>x.d>now)||all[0];
-document.getElementById('dlWhat').firstChild.textContent=next.t;
-document.getElementById('dlDate').textContent=next.d.toLocaleDateString('cs-CZ',{day:'numeric',month:'long',year:'numeric'})+' — '+next.s;
+function renderStrip(){
+  document.getElementById('dlWhat').firstChild.textContent=T(next.t);
+  document.getElementById('dlDate').textContent=
+    next.d.toLocaleDateString(LOC(),{day:'numeric',month:'long',year:'numeric'})+' — '+T(next.s);
+}
+renderStrip();RER(renderStrip);
 const clock=document.getElementById('clock');
 function tick(){
   let ms=next.d-new Date();if(ms<0)ms=0;
@@ -1288,13 +1412,12 @@ function renderQ(){
   qbar.style.width=(step/Q.length*100)+'%';
   if(step<Q.length){
     const q=Q[step];
-    qbody.innerHTML='<div class="qstep on"><div class="qcount num">Otázka '+(step+1)+' ze '+Q.length+'</div>'+
-      '<div class="qtitle">'+q.q+'</div><div class="opts">'+
-      q.o.map(o=>'<button class="opt" data-v="'+o[0]+'"><span></span>'+o[1]+'</button>').join('')+'</div>'+
-      (step?'<button class="qback">Zpět na předchozí otázku</button>':'')+'</div>';
+    qbody.innerHTML='<div class="qstep on"><div class="qcount num">'+U('quizQ')+' '+(step+1)+' '+U('quizOf')+' '+Q.length+'</div>'+
+      '<div class="qtitle">'+T(q.q)+'</div><div class="opts">'+
+      q.o.map(o=>'<button class="opt" data-v="'+o[0]+'"><span></span>'+T(o[1])+'</button>').join('')+'</div>'+
+      (step?'<button class="qback">'+U('quizBack')+'</button>':'')+'</div>';
     qbody.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{A[step]=b.dataset.v;step++;renderQ()});
     const back=qbody.querySelector('.qback');if(back)back.onclick=()=>{step--;renderQ()};
-    if(window.kpTranslate)kpTranslate();
   } else result();
 }
 function result(){
@@ -1307,18 +1430,18 @@ function result(){
   else if(form==='osvc')r=rules.osvc;
   else r=rules.sro;
   const line=pains[pain]||'';
-  qbody.innerHTML='<div class="qstep on result"><span class="tag">'+r.tag+'</span><h3>'+r.h+'</h3>'+
-    '<p style="color:var(--muted);max-width:52ch">'+line+'</p><ul>'+r.l.map(x=>'<li>'+x+'</li>').join('')+'</ul>'+
-    '<div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn brass" href="#kontakt" id="qgo">Domluvit nezávaznou konzultaci</a>'+
-    '<button class="btn ghost" id="qrst">Projít znovu</button></div></div>';
+  qbody.innerHTML='<div class="qstep on result"><span class="tag">'+T(r.tag)+'</span><h3>'+T(r.h)+'</h3>'+
+    '<p style="color:var(--muted);max-width:52ch">'+T(line)+'</p><ul>'+r.l.map(x=>'<li>'+T(x)+'</li>').join('')+'</ul>'+
+    '<div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn brass" href="#kontakt" id="qgo">'+U('quizBook')+'</a>'+
+    '<button class="btn ghost" id="qrst">'+U('quizAgain')+'</button></div></div>';
   const map={osvc:'OSVČ',sro:'s.r.o.',zaklad:'teprve zakládám firmu',jine:'jiná právní forma'};
   const smap={'0':'bez zaměstnanců','1_5':'1–5 zaměstnanců','6_20':'6–20 zaměstnanců','20p':'víc než 20 zaměstnanců'};
   const wmap={sam:'vedu si to sám',ucetni:'mám externí účetní',interni:'mám vlastní účetní',nikdo:'účetnictví je v nepořádku'};
   document.getElementById('f-msg').value=
-    'Diagnostika: '+(map[form]||'')+', '+(smap[staff]||'')+', '+(wmap[who]||'')+'. Doporučení: '+r.h+'.';
+    U('quizSummary')+': '+T(map[form]||'')+', '+T(smap[staff]||'')+', '+T(wmap[who]||'')+'. '+U('quizRec')+': '+T(r.h)+'.';
   document.getElementById('qrst').onclick=()=>{step=0;renderQ()};
 }
-renderQ();
+renderQ();RER(renderQ);
 
 /* chybějící fotografie: necháme jen barevnou plochu, ne rozbitý obrázek */
 document.querySelectorAll('.hero-media img,.about-media img,.step-media img').forEach(im=>{
@@ -1389,9 +1512,9 @@ function icsBody(events,year){
     const f=x=>x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate());
     L.push('BEGIN:VEVENT','UID:kp-'+year+'-'+e.m+'-'+e.d+'-'+i+'@konsalting.cz',
       'DTSTAMP:'+f(new Date())+'T090000Z','DTSTART;VALUE=DATE:'+f(dt),'DTEND;VALUE=DATE:'+f(nx),
-      'SUMMARY:'+e.t+' ('+e.who+')',
-      'DESCRIPTION:'+e.w.replace(/[,;]/g,m=>'\\'+m),
-      'BEGIN:VALARM','TRIGGER:-P3D','ACTION:DISPLAY','DESCRIPTION:Blíží se termín: '+e.t,'END:VALARM','END:VEVENT');
+      'SUMMARY:'+T(e.t)+' ('+T(e.who)+')',
+      'DESCRIPTION:'+(T(e.w)+(KP&&KP.lang!=='cs'?' ['+e.t+']':'')).replace(/[,;]/g,m=>'\\'+m),
+      'BEGIN:VALARM','TRIGGER:-P3D','ACTION:DISPLAY','DESCRIPTION:'+T(e.t),'END:VALARM','END:VEVENT');
   });
   L.push('END:VCALENDAR');
   return L.join('\r\n');
@@ -1403,19 +1526,20 @@ function download(name,text,mime){
   setTimeout(()=>URL.revokeObjectURL(u),1500);
 }
 function renderCal(){
-  calbar.innerHTML=MONTHS.map((n,i)=>'<button class="mbtn'+(i===curM?' on':'')+(YEARLY.some(y=>y.m===i)?' has':'')+'" data-m="'+i+'">'+n+'</button>').join('')+
+  calbar.innerHTML=MON().map((n,i)=>'<button class="mbtn'+(i===curM?' on':'')+(YEARLY.some(y=>y.m===i)?' has':'')+'" data-m="'+i+'">'+n+'</button>').join('')+
     '<span class="sp"></span>'+
-    '<button class="btn ghost exp" id="exp-m">Stáhnout měsíc</button>'+
-    '<button class="btn exp" id="exp-y">Celý rok do kalendáře</button>';
+    '<button class="btn ghost exp" id="exp-m">'+T('Stáhnout měsíc')+'</button>'+
+    '<button class="btn exp" id="exp-y">'+T('Celý rok do kalendáře')+'</button>';
   calbar.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{curM=+b.dataset.m;renderCal()});
   const evs=eventsFor(curM);
   const today=new Date();
   evlist.innerHTML=evs.map((e,i)=>{
     const done=(curM<today.getMonth())||(curM===today.getMonth()&&e.d<today.getDate());
     return '<div class="ev'+(done?' done':'')+'">'+
-      '<div class="d num">'+e.d+'.<small>'+MONTHS[curM].slice(0,3)+'</small></div>'+
-      '<div><h4>'+e.t+'</h4><p>'+e.w+'</p><span class="who">'+e.who+'</span></div>'+
-      '<button class="ics" data-i="'+i+'">+ do kalendáře</button></div>';
+      '<div class="d num">'+e.d+'.<small>'+MONS()[curM]+'</small></div>'+
+      '<div><h4>'+T(e.t)+'</h4><p>'+T(e.w)+'</p><span class="who">'+T(e.who)+'</span>'+
+      (window.KP&&KP.lang!=='cs'?'<span class="orig">'+U('origName')+': '+e.t+'</span>':'')+'</div>'+
+      '<button class="ics" data-i="'+i+'">'+T('+ do kalendáře')+'</button></div>';
   }).join('');
   evlist.querySelectorAll('.ics').forEach(b=>b.onclick=()=>{
     const e=evs[+b.dataset.i];
@@ -1428,13 +1552,12 @@ function renderCal(){
   };
   if(window.kpTranslate)kpTranslate();
 }
-renderCal();
+renderCal();RER(renderCal);
 
 /* ============================================================
    OBJEDNÁNÍ TERMÍNU — provozní doba kanceláře
    Út a Čt 10:00–13:00 a 14:00–18:00 · Po a St po domluvě
    ============================================================ */
-const DAYNAMES=['ne','po','út','st','čt','pá','so'];
 const OPEN={2:[[10,13],[14,18]],4:[[10,13],[14,18]]};   // úterý, čtvrtek
 const ONREQ=[1,3];                                       // pondělí, středa
 function nextDays(count){
@@ -1454,20 +1577,19 @@ function renderDays(){
   daysEl.innerHTML=list.map((x,i)=>{
     const req=ONREQ.includes(x.getDay());
     return '<button class="day" data-i="'+i+'"><b class="num">'+x.getDate()+'. '+(x.getMonth()+1)+'.</b>'+
-      '<i>'+DAYNAMES[x.getDay()]+(req?' · na dotaz':'')+'</i></button>';
+      '<i>'+DAYS()[x.getDay()]+(req?' · '+U('onRequest'):'')+'</i></button>';
   }).join('');
   daysEl.querySelectorAll('.day').forEach(b=>b.onclick=()=>{
     daysEl.querySelectorAll('.day').forEach(o=>o.classList.remove('on'));
     b.classList.add('on');pickDay=list[+b.dataset.i];pickTime=null;renderSlots();updatePicked();
   });
-  if(window.kpTranslate)kpTranslate();
 }
 function renderSlots(){
-  if(!pickDay){slotsEl.innerHTML='<p class="booknote" style="margin:0">Nejprve vyberte den.</p>';return}
+  if(!pickDay){slotsEl.innerHTML='<p class="booknote" style="margin:0">'+U('pickDayFirst')+'</p>';return}
   const w=pickDay.getDay();
   if(!OPEN[w]){
-    slotsEl.innerHTML='<p class="booknote" style="margin:0">Tento den je vyhrazený objednaným klientům. Vyplňte kontakt a ozveme se s návrhem času.</p>';
-    pickTime='po domluvě';updatePicked();if(window.kpTranslate)kpTranslate();return;
+    slotsEl.innerHTML='<p class="booknote" style="margin:0">'+U('dayOnRequest')+'</p>';
+    pickTime='po domluvě';updatePicked();return;
   }
   let html='';
   OPEN[w].forEach(([a,b])=>{for(let h=a;h<b;h++){html+='<button class="slot" data-t="'+pad(h)+':00">'+pad(h)+':00</button>';
@@ -1479,12 +1601,13 @@ function renderSlots(){
   });
 }
 function updatePicked(){
-  if(!pickDay){pickedEl.innerHTML='<b>Zatím nevybráno</b><em>Vyberte den a čas vlevo</em>';return}
-  const dstr=pickDay.toLocaleDateString('cs-CZ',{weekday:'long',day:'numeric',month:'long'});
+  if(!pickDay){pickedEl.innerHTML='<b>'+T('Zatím nevybráno')+'</b><em>'+T('Vyberte den a čas vlevo')+'</em>';return}
+  const dstr=pickDay.toLocaleDateString(LOC(),{weekday:'long',day:'numeric',month:'long'});
   pickedEl.innerHTML='<b>'+dstr+(pickTime&&pickTime!=='po domluvě'?', '+pickTime:'')+'</b>'+
-    '<em>'+(pickTime==='po domluvě'?'Čas doladíme telefonicky':'Nezávazné úvodní setkání')+'</em>';
+    '<em>'+(pickTime==='po domluvě'?T('Čas doladíme telefonicky'):T('Nezávazné úvodní setkání'))+'</em>';
 }
-renderDays();renderSlots();
+function renderBooking(){renderDays();renderSlots();updatePicked()}
+renderBooking();RER(renderBooking);
 function bookingIcs(){
   const t=(pickTime&&pickTime!=='po domluvě')?pickTime:'10:00';
   const [hh,mm]=t.split(':').map(Number);
@@ -1505,14 +1628,15 @@ document.getElementById('bform').addEventListener('submit',e=>{
         tel=document.getElementById('b-tel').value.trim(),
         mail=document.getElementById('b-mail').value.trim(),
         msg=document.getElementById('b-msg').value.trim();
-  if(!pickDay){alert('Vyberte prosím den schůzky.');return}
-  if(name.length<2||tel.replace(/\D/g,'').length<9){alert('Doplňte prosím jméno a telefon.');return}
-  const dstr=pickDay.toLocaleDateString('cs-CZ',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if(!document.getElementById('b-gdpr').checked){alert(U('needConsent'));return}
+  if(!pickDay){alert(U('needDay'));return}
+  if(name.length<2||tel.replace(/\D/g,'').length<9){alert(U('needContact'));return}
+  const dstr=pickDay.toLocaleDateString(LOC(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('bookform').style.display='none';
   const done=document.getElementById('bookdone');done.classList.add('on');
   document.getElementById('donetext').textContent=
-    dstr+(pickTime&&pickTime!=='po domluvě'?' v '+pickTime:' — čas doladíme telefonicky')+
-    '. Ozveme se na '+tel+' a rezervaci potvrdíme.';
+    dstr+(pickTime&&pickTime!=='po domluvě'?' '+U('atTime')+' '+pickTime:' — '+U('timeAgreed'))+
+    '. '+U('willCall')+' '+tel+' '+U('andConfirm');
   document.getElementById('dl-ics').onclick=()=>download('konzultace-konsalting-profi.ics',bookingIcs());
   document.getElementById('mailto-btn').onclick=()=>{
     const body='Dobrý den,%0D%0A%0D%0Arezervuji si termín konzultace: '+encodeURIComponent(dstr+
@@ -1529,11 +1653,6 @@ document.getElementById('bform').addEventListener('submit',e=>{
    Pás výhod, ukazatel scrollu, lepicí lišta, odchodová nabídka
    ============================================================ */
 (function(){
-  const items=['Lhůty držíme na své straně','Voláte přímo svému účetnímu','Za zpracování ručíme',
-    'Papíry po někom jiném srovnáme','Mzdy i dopisy úřadům bereme na sebe','Praha 9 — Vysočany',
-    'Přechod bez přerušení agendy','Mlčenlivost samozřejmostí'];
-  const t=document.getElementById('tick');
-  if(t)t.innerHTML=(items.map(x=>'<span>'+x+'</span>').join('')).repeat(2);
 
   const pr=document.getElementById('prog');
   addEventListener('scroll',()=>{
@@ -1568,10 +1687,11 @@ document.getElementById('bform').addEventListener('submit',e=>{
   document.getElementById('exitform').addEventListener('submit',e=>{
     e.preventDefault();
     const tel=document.getElementById('e-tel').value.trim();
+    if(!document.getElementById('e-gdpr').checked){alert(U('needConsent'));return}
     if(tel.replace(/\D/g,'').length<9)return;
-    ex.querySelector('.exit-card').innerHTML='<p class="eyebrow">Děkujeme</p><h3>Máme váš telefon</h3>'+
-      '<p style="color:var(--muted)">Ozveme se na '+tel+' v provozní době kanceláře.</p>'+
-      '<button class="btn brass" id="exit-ok">Zavřít</button>';
+    ex.querySelector('.exit-card').innerHTML='<p class="eyebrow">'+U('thanks')+'</p><h3>'+T('Máme váš telefon')+'</h3>'+
+      '<p style="color:var(--muted)">'+U('weWillCallAt')+' '+tel+' '+U('inHours')+'</p>'+
+      '<button class="btn brass" id="exit-ok">'+T('Zavřít')+'</button>';
     document.getElementById('exit-ok').onclick=close;
     /* napojení na CRM se doplní zde */
   });
@@ -1624,27 +1744,28 @@ document.getElementById('bform').addEventListener('submit',e=>{
 
   /* --- znalostní báze (bez API) --- */
   const KB=[
-    {k:['dph','přiznání k dph','kontrolní'],a:'Přiznání k DPH i kontrolní hlášení se podávají do 25. dne po skončení zdaňovacího období — u měsíčních plátců za předchozí měsíc, u čtvrtletních za čtvrtletí. Ke stejnému dni je splatná i daň. U klientů termín hlídáme a podklady si vyžádáme s předstihem.'},
-    {k:['mzd','zaměstnan','výplat','čssz'],a:'Mzdy zpracováváme kompletně: výpočet a výplatní pásky, přihlášky a odhlášky na ČSSZ a zdravotní pojišťovny, srážkovou i zálohovou daň, exekuční srážky a roční zúčtování. Odvody za předchozí měsíc jsou splatné do 20. dne.'},
-    {k:['cena','cenik','kolik stoj','nabídk'],a:'Cenu skládáme podle objemu dokladů, počtu zaměstnanců a rozsahu agendy — proto ji řekneme až po krátkém setkání, kdy víme, co přesně přebíráme. Setkání je nezávazné; můžu vám rovnou najít termín.'},
-    {k:['přechod','převz','změnit účetní','přejít'],a:'Převzetí zvládneme kdykoli během roku, nejsnazší je k prvnímu dni měsíce. Vyžádáme si data od stávající účetní, odsouhlasíme zůstatky a navážeme — vy nemusíte nic řešit s předchozím dodavatelem.'},
-    {k:['rekonstru','nepořádek','zanedb','dohled'],a:'Rekonstrukce zanedbaného účetnictví je jedna z našich specializací. Nejprve zmapujeme, co chybí, navrhneme postup a odhad rozsahu, teprve pak dohledáváme doklady a opravujeme.'},
-    {k:['osvč','živnost','paušál','evidenc'],a:'Pro OSVČ vedeme daňovou evidenci: peněžní deník, evidenci majetku, přiznání a přehledy pro ČSSZ a zdravotní pojišťovnu. Posoudíme také, jestli se vám vyplatí paušální daň a jak jste daleko od limitu pro povinnou registraci k DPH.'},
-    {k:['založ','s.r.o','sro','nová firma','zakládám'],a:'Poradíme s volbou právní formy, registrací u finančního úřadu i dalších institucí a nastavíme účetnictví od prvního dokladu. Řekneme také, jestli se registrovat k DPH hned, nebo počkat.'},
-    {k:['adres','kde jste','kancelář','vysočan'],a:'Kancelář najdete na adrese Rubeška 383/4, 190 00 Praha 9 – Vysočany. Doklady ale většina klientů posílá elektronicky, takže osobní návštěva nutná není.'},
-    {k:['otevř','provozní','hodin','kdy máte'],a:'V úterý a ve čtvrtek jsme tu celý den s polední pauzou, pondělí a středa patří objednaným klientům, o víkendu máme zavřeno. Termín vám můžu rovnou zarezervovat.'},
-    {k:['termín','lhůt','kalendář','kdy se podává'],a:'Pravidelné termíny: do 8. dne zálohy zdravotního pojištění OSVČ, do 20. dne odvody ze mezd a sociální pojištění, do 25. dne DPH a kontrolní hlášení. Roční přiznání do 1. dubna listinně a do 1. května elektronicky. Celý kalendář najdete na této stránce a dá se stáhnout do vašeho kalendáře.'},
-    {k:['odpovědnost','pokut','chyb','ručí'],a:'Za zpracování odpovídáme a jsme pojištěni. Odpovědnost vůči správci daně nese ze zákona podnikatel, proto vám podklady vždy dáváme ke kontrole před odesláním.'},
-    {k:['doklad','předáv','faktur','scan','sken'],a:'Doklady stačí posílat elektronicky — sken nebo fotka. Kdo chce, může je předat osobně v kanceláři na pravidelné schůzce.'}
+    {k:['dph','vat','ндс','пдв','umsatzsteuer','mehrwertsteuer','kontroln','контрольн'],a:'Přiznání k DPH i kontrolní hlášení se podávají do 25. dne po skončení zdaňovacího období — u měsíčních plátců za předchozí měsíc, u čtvrtletních za čtvrtletí. Ke stejnému dni je splatná i daň. U klientů termín hlídáme a podklady si vyžádáme s předstihem.'},
+    {k:['mzd','zaměstnan','výplat','čssz','payroll','wage','salar','зарплат','зарплн','сотрудник','працівник','lohn','gehalt','płac','pracownik'],a:'Mzdy zpracováváme kompletně: výpočet a výplatní pásky, přihlášky a odhlášky na ČSSZ a zdravotní pojišťovny, srážkovou i zálohovou daň, exekuční srážky a roční zúčtování. Odvody za předchozí měsíc jsou splatné do 20. dne.'},
+    {k:['cena','cenik','kolik stoj','nabídk','price','cost','how much','цен','стоит','стоимост','вартіст','коштує','preis','kostet','koszt','ile to'],a:'Cenu skládáme podle objemu dokladů, počtu zaměstnanců a rozsahu agendy — proto ji řekneme až po krátkém setkání, kdy víme, co přesně přebíráme. Setkání je nezávazné; můžu vám rovnou najít termín.'},
+    {k:['přechod','převz','změnit účetní','přejít','handover','switch','переход','перейти','сменить','перехід','змінити','wechsel','übergang','przejści','zmienić'],a:'Převzetí zvládneme kdykoli během roku, nejsnazší je k prvnímu dni měsíce. Vyžádáme si data od stávající účetní, odsouhlasíme zůstatky a navážeme — vy nemusíte nic řešit s předchozím dodavatelem.'},
+    {k:['rekonstru','nepořádek','zanedb','dohled','mess','restore','восстанов','беспорядок','запущен','відновл','безлад','rekonstruktion','unordnung','odtworz','bałagan'],a:'Rekonstrukce zanedbaného účetnictví je jedna z našich specializací. Nejprve zmapujeme, co chybí, navrhneme postup a odhad rozsahu, teprve pak dohledáváme doklady a opravujeme.'},
+    {k:['osvč','živnost','paušál','evidenc','sole trader','self-employ','ип','самозанят','фоп','підприєм','selbständ','gewerbe','samozatrudni','ryczałt'],a:'Pro OSVČ vedeme daňovou evidenci: peněžní deník, evidenci majetku, přiznání a přehledy pro ČSSZ a zdravotní pojišťovnu. Posoudíme také, jestli se vám vyplatí paušální daň a jak jste daleko od limitu pro povinnou registraci k DPH.'},
+    {k:['založ','s.r.o','sro','nová firma','zakládám','set up','incorporat','открыт','регистрац','ооо','відкрит','реєстрац','тов','gründ','gmbh','założ','sp. z o'],a:'Poradíme s volbou právní formy, registrací u finančního úřadu i dalších institucí a nastavíme účetnictví od prvního dokladu. Řekneme také, jestli se registrovat k DPH hned, nebo počkat.'},
+    {k:['adres','kde jste','kancelář','vysočan','address','office','where are','адрес','офис','офіс','адрес','büro','anschrift','biuro'],a:'Kancelář najdete na adrese Rubeška 383/4, 190 00 Praha 9 – Vysočany. Doklady ale většina klientů posílá elektronicky, takže osobní návštěva nutná není.'},
+    {k:['otevř','provozní','hodin','kdy máte','opening','office hours','часы','режим работ','когда работ','години','коли працю','öffnungs','sprechzeit','godzin','otwarte'],a:'V úterý a ve čtvrtek jsme tu celý den s polední pauzou, pondělí a středa patří objednaným klientům, o víkendu máme zavřeno. Termín vám můžu rovnou zarezervovat.'},
+    {k:['termín','lhůt','kalendář','kdy se podává','deadline','due date','срок','сроки','календар','термін','frist','termin','kalender','kalendarz'],a:'Pravidelné termíny: do 8. dne zálohy zdravotního pojištění OSVČ, do 20. dne odvody ze mezd a sociální pojištění, do 25. dne DPH a kontrolní hlášení. Roční přiznání do 1. dubna listinně a do 1. května elektronicky. Celý kalendář najdete na této stránce a dá se stáhnout do vašeho kalendáře.'},
+    {k:['odpovědnost','pokut','chyb','ručí','liab','penalt','ответственн','штраф','ошибк','відповідальн','штраф','помилк','haftung','strafe','fehler','odpowiedzialn','kara','błęd'],a:'Za zpracování odpovídáme a jsme pojištěni. Odpovědnost vůči správci daně nese ze zákona podnikatel, proto vám podklady vždy dáváme ke kontrole před odesláním.'},
+    {k:['doklad','předáv','faktur','scan','sken','invoice','receipt','документ','счет','счёт','накладн','документ','рахунок','beleg','rechnung','dokument','faktur'],a:'Doklady stačí posílat elektronicky — sken nebo fotka. Kdo chce, může je předat osobně v kanceláři na pravidelné schůzce.'}
   ];
-  const BOOK=['objedn','schůz','termín schůzky','rezerv','konzultac','sejít','domluvit'];
+  const BOOK=['objedn','schůz','termín schůzky','rezerv','konzultac','sejít','domluvit',
+    'book','appointment','meeting','запис','встреч','консультац','зустріч','termin','buchen','beratung','umów','spotkan'];
   function answer(q){
     const t=q.toLowerCase();
-    if(BOOK.some(k=>t.includes(k)))return{a:'Ráda vám najdu termín. První setkání je nezávazné — vyberte si den a čas v sekci objednání, hned pod tímto oknem.',go:'#objednani'};
+    if(BOOK.some(k=>t.includes(k)))return{a:T('Ráda vám najdu termín. První setkání je nezávazné — vyberte si den a čas v sekci objednání, hned pod tímto oknem.'),go:'#objednani'};
     let best=null,score=0;
     KB.forEach(item=>{const sc=item.k.reduce((n,k)=>n+(t.includes(k)?1:0),0);if(sc>score){score=sc;best=item}});
-    if(best)return{a:best.a};
-    return{a:'Na tohle vám radši odpoví účetní napřímo — daňové posouzení se odvíjí od konkrétní situace vaší firmy. Můžu vám najít termín konzultace, nebo zavolejte na +420 773 966 787.',go:'#objednani'};
+    if(best)return{a:T(best.a)};
+    return{a:T('Na tohle vám radši odpoví účetní napřímo — daňové posouzení se odvíjí od konkrétní situace vaší firmy. Můžu vám najít termín konzultace, nebo zavolejte na +420 773 966 787.'),go:'#objednani'};
   }
 
   const fab=document.getElementById('fab'),panel=document.getElementById('assist'),
@@ -1661,15 +1782,15 @@ document.getElementById('bform').addEventListener('submit',e=>{
   }
   const CHIPS=['Chci se objednat','Kolik to stojí?','Jak probíhá přechod?','Termíny pro DPH','Vedete i mzdy?'];
   function renderChips(){
-    chips.innerHTML=CHIPS.map(c=>'<button class="chip">'+c+'</button>').join('');
+    chips.innerHTML=CHIPS.map(c=>'<button class="chip">'+T(c)+'</button>').join('');
     chips.querySelectorAll('.chip').forEach(b=>b.onclick=()=>ask(b.textContent));
-    if(window.kpTranslate)kpTranslate();
   }
+  RER(()=>{if(opened)renderChips()});
   function open(){
     panel.classList.add('on');fab.style.display='none';
     if(!opened){
       opened=true;renderChips();
-      setTimeout(()=>{big.speak();add('a','Dobrý den, jsem Klára z Konsalting Profi. Poradím s termíny i službami a rovnou vám můžu zarezervovat setkání. S čím začneme?')},240);
+      setTimeout(()=>{big.speak();add('a',T('Dobrý den, jsem Klára z Konsalting Profi. Poradím s termíny i službami a rovnou vám můžu zarezervovat setkání. S čím začneme?'))},240);
     }
     setTimeout(()=>input.focus(),320);
   }
@@ -1685,7 +1806,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     if(ep){
       try{
         const r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({question:q})});
+          body:JSON.stringify({question:q,lang:(window.KP&&KP.lang)||'cs'})});
         const j=await r.json();res={a:j.answer||answer(q).a,go:j.go};
       }catch(e){res=answer(q)}
     } else {
@@ -1695,7 +1816,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     t.remove();big.speak();mini.speak();
     add('a',res.a);
     if(res.go){
-      const b=document.createElement('button');b.className='chip';b.textContent='Otevřít objednání →';
+      const b=document.createElement('button');b.className='chip';b.textContent=T('Otevřít objednání →');
       b.style.margin='2px 0 0';b.onclick=()=>{close();document.querySelector(res.go).scrollIntoView({behavior:'smooth'})};
       const wrap=document.createElement('div');wrap.style.alignSelf='flex-start';wrap.appendChild(b);
       log.appendChild(wrap);log.scrollTop=log.scrollHeight;
@@ -1743,7 +1864,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     const it=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{
       acceptNode(n){
         const p=n.parentElement;
-        if(!p||p.closest('script,style,code,.num'))return NodeFilter.FILTER_REJECT;
+        if(!p||p.closest('script,style,code,.num,.dyn'))return NodeFilter.FILTER_REJECT;
         return n.nodeValue.trim().length>1?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
       }});
     const nodes=[];while(it.nextNode())nodes.push(it.currentNode);
@@ -1768,9 +1889,11 @@ document.getElementById('bform').addEventListener('submit',e=>{
   menu.innerHTML=LANGS.map(l=>'<button data-l="'+l[0]+'"><b>'+l[0].toUpperCase()+'</b>'+l[1]+'</button>').join('');
   function apply(l){
     cur=l;cap.textContent=l.toUpperCase();
+    if(window.KP)KP.lang=l;
     document.documentElement.lang=l;
     menu.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
     walk(document.body);
+    if(window.KP)KP.refresh();
     try{localStorage.setItem('kp-lang',l)}catch(e){}
   }
   btn.onclick=e=>{e.stopPropagation();box.classList.toggle('open');
@@ -1782,6 +1905,79 @@ document.getElementById('bform').addEventListener('submit',e=>{
 
 
 /* ============================================================
+   Právní dokumenty v okně
+   ============================================================ */
+(function(){
+  const box=document.getElementById('legal');
+  if(!box)return;
+  const tabs=document.getElementById('legaltabs'),title=document.getElementById('legaltitle');
+  let back=null;
+  function show(doc){
+    box.querySelectorAll('.legal-doc').forEach(d=>d.classList.toggle('on',d.dataset.doc===doc));
+    tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.doc===doc));
+    const t=tabs.querySelector('button.on');
+    if(t)title.textContent=t.textContent;
+  }
+  function open(doc){
+    show(doc||'gdpr');box.classList.add('on');
+    back=document.activeElement;
+    document.body.style.overflow='hidden';
+    const x=document.getElementById('legalx');if(x)x.focus();
+  }
+  function close(){box.classList.remove('on');document.body.style.overflow='';if(back)back.focus()}
+  document.addEventListener('click',e=>{
+    const t=e.target.closest('.legal-open');
+    if(t){e.preventDefault();open(t.dataset.doc)}
+  });
+  tabs.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.doc)});
+  document.getElementById('legalx').onclick=close;
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('on'))close()});
+})();
+
+/* ============================================================
+   Běžící pásy — společná mechanika
+   Sadu položek zopakujeme tak, aby byla vždy širší než okno,
+   pak ji zdvojíme a posun načasujeme podle šířky: stejná,
+   klidná rychlost bez ohledu na množství textu.
+   ============================================================ */
+function marquee(track,html,pxPerSec){
+  if(!track||!html)return;
+  const box=track.parentElement,w=box?box.clientWidth:0;
+  track.style.animation='none';
+  let set=html;
+  track.innerHTML=set;
+  let guard=0;
+  while(track.scrollWidth&&track.scrollWidth<w+240&&guard<14){set+=html;track.innerHTML=set;guard++}
+  const half=track.scrollWidth;          /* šířka jedné sady */
+  track.innerHTML=set+set;               /* zdvojení kvůli plynulé smyčce */
+  track.style.setProperty('--half','-'+half+'px');
+  track.style.setProperty('--dur',Math.max(40,Math.round(half/(pxPerSec||26)))+'s');
+  track.style.animation='';
+}
+
+/* ============================================================
+   CO SE BLÍŽÍ — tichý pás nejbližších zákonných termínů
+   ============================================================ */
+(function(){
+  const track=document.getElementById('duetrack');
+  if(!track)return;
+  function build(){
+    const now=new Date(),out=[];
+    for(let k=0;k<3&&out.length<9;k++){
+      const m=(now.getMonth()+k)%12;
+      eventsFor(m).forEach(e=>{
+        if(k===0&&e.d<now.getDate())return;
+        if(out.length<9)out.push('<a class="due-item" href="#kalendar"><u>'+e.d+'. '+MONS()[m]+'</u>'+T(e.t)+'</a>');
+      });
+    }
+    marquee(track,out.join(''),26);
+  }
+  build();RER(build);
+  addEventListener('resize',()=>{clearTimeout(window.__dueT);window.__dueT=setTimeout(build,250)},{passive:true});
+})();
+
+/* ============================================================
    EKONOMICKÝ PŘEHLED — běžící pás zpráv z ČR a EU
    Data přicházejí ze serverové funkce /api/news (RSS zdroje).
    Když funkce není nasazená, pás ukáže nejbližší zákonné termíny.
@@ -1789,40 +1985,47 @@ document.getElementById('bform').addEventListener('submit',e=>{
 (function(){
   const track=document.getElementById('wiretrack');
   if(!track)return;
-  const esc=t=>t.replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-  function item(x,fresh){
-    const tag=esc(x.tag||'ČR'),ttl=esc(x.title||''),src=esc(x.source||''),
+  const esc=t=>String(t).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+  const lang=()=>(window.KP&&KP.lang)||'cs';
+  /* server může poslat překlady a krátké vysvětlení; když ne, ukážeme originál */
+  const pick=(v)=>{
+    if(v==null)return '';
+    if(typeof v==='string')return v;
+    return v[lang()]||v.cs||v.en||'';
+  };
+  let data=[];
+  function item(x){
+    const tag=esc(pick(x.tag)||'ČR'),ttl=esc(pick(x.title)),why=esc(pick(x.why)),src=esc(x.source||''),
           ext=/^https?:/i.test(x.link||''),
           href=x.link?' href="'+esc(x.link)+'"'+(ext?' target="_blank" rel="noopener"':''):'';
-    return '<a class="wire-item'+(fresh?' fresh':'')+'"'+href+'><s>'+tag+'</s>'+ttl+(src?'<i>'+src+'</i>':'')+'</a>';
+    if(!ttl)return '';
+    return '<a class="wire-item"'+href+'><s>'+tag+'</s>'+ttl+(why?'<q>'+why+'</q>':'')+(src?'<i>'+src+'</i>':'')+'</a>';
   }
-  function paint(list,fresh){
-    if(!list.length)return;
-    const html=list.map(x=>item(x,fresh)).join('');
-    track.innerHTML=html+html;   /* zdvojeno kvůli plynulé smyčce */
-    if(window.kpTranslate)kpTranslate();
+  function paint(){
+    marquee(track,data.map(item).join(''),22);
   }
-  /* záložní obsah: skutečné nejbližší termíny z účetního kalendáře */
-  function fallback(){
-    if(typeof MONTHLY==='undefined')return[];
-    const now=new Date(),out=[];
-    for(let k=0;k<2;k++){
-      const m=(now.getMonth()+k)%12;
-      eventsFor(m).forEach(e=>{
-        if(k===0&&e.d<now.getDate())return;
-        out.push({tag:'Termín',title:e.d+'. '+MONTHS[m]+' — '+e.t,source:e.who,link:'#kalendar'});
-      });
-    }
-    return out.slice(0,10);
+  /* Bez nasazené funkce /api/news pás nemá co ukazovat — termíny už běží
+     nahoře, takže ho radši skryjeme, než abychom je opakovali podruhé. */
+  const box=document.getElementById('wire'),note=document.querySelector('.wire-note');
+  function toggle(on){
+    if(box)box.style.display=on?'':'none';
+    if(note)note.style.display=on?'':'none';
   }
-  paint(fallback(),false);
+  let live=null;
+  function render(){
+    toggle(!!(live&&live.length));
+    if(!live||!live.length)return;
+    data=live;paint();
+  }
+  toggle(false);RER(render);
+  addEventListener('resize',()=>{clearTimeout(window.__wireT);window.__wireT=setTimeout(render,250)},{passive:true});
 
   async function load(){
     try{
       const r=await fetch('/api/news',{headers:{'Accept':'application/json'}});
       if(!r.ok)throw 0;
       const j=await r.json();
-      if(Array.isArray(j.items)&&j.items.length)paint(j.items.slice(0,14),true);
+      if(Array.isArray(j.items)&&j.items.length){live=j.items.slice(0,12);render()}
     }catch(e){ /* zůstávají termíny z kalendáře */ }
   }
   load();
@@ -1834,12 +2037,15 @@ const fnote=document.getElementById('fnote');
 document.getElementById('leadform').addEventListener('submit',e=>{
   e.preventDefault();
   const f=e.target,tel=f.tel.value.trim(),name=f.name.value.trim();
+  if(!document.getElementById('f-gdpr').checked){
+    fnote.className='formnote on';fnote.textContent=U('needConsent');return;
+  }
   if(name.length<2||tel.replace(/\D/g,'').length<9){
-    fnote.className='formnote on';fnote.textContent='Doplňte prosím jméno a telefonní číslo — bez nich se nemáme jak ozvat.';return;
+    fnote.className='formnote on';fnote.textContent=U('formErr');return;
   }
   fnote.className='formnote on';
-  fnote.textContent='Děkujeme, '+name.split(' ')[0]+'. Ozveme se na '+tel+' v nejbližší provozní době.';
-  f.reset();
+  fnote.textContent=U('thanks')+', '+name.split(' ')[0]+'. '+U('weWillCallAt')+' '+tel+' '+U('inHours');
+  f.reset();document.getElementById('f-gdpr').checked=false;
   /* napojení na backend / CRM se doplní zde */
 });
 </script>

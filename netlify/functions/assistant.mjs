@@ -37,13 +37,17 @@ Jak odpovídáš:
 
 const BOOKING_HINTS = ["objedn", "schůz", "rezerv", "konzultac", "termín schůzky", "cena", "kolik stoj", "převz", "přejít"];
 
+const LANG_NAMES = { cs: "čeština", en: "angličtina", ru: "ruština", uk: "ukrajinština", de: "němčina", pl: "polština" };
+
 export default async (req) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
   let question = "";
+  let lang = "cs";
   try {
     const body = await req.json();
     question = String(body.question || "").slice(0, 600).trim();
+    lang = ["cs", "en", "ru", "uk", "de", "pl"].includes(body.lang) ? body.lang : "cs";
   } catch {
     return Response.json({ error: "bad request" }, { status: 400 });
   }
@@ -53,7 +57,10 @@ export default async (req) => {
     const message = await client.messages.create({
       model: MODEL,
       max_tokens: 400,
-      system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
+      system: [
+        { type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } },
+        { type: "text", text: "Odpověz v jazyce: " + LANG_NAMES[lang] + "." },
+      ],
       messages: [{ role: "user", content: question }],
     });
 
