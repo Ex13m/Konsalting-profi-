@@ -47,7 +47,7 @@
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
-  margin:0;background:var(--paper);color:var(--ink);
+  margin:0;background:var(--paper);color:var(--ink);overflow-x:clip;
   font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
   font-size:17px;line-height:1.65;overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
@@ -116,13 +116,30 @@ nav.main a:hover::after{transform:none}
 header:not(.solid) .hbar .btn{background:rgba(244,241,235,.12);color:var(--on-dark);box-shadow:inset 0 0 0 1px var(--line-dark)}
 header:not(.solid) .hbar .btn:hover{background:rgba(244,241,235,.2)}
 @media(max-width:1180px){
-  nav.main{position:fixed;inset:78px 0 auto;flex-direction:column;gap:0;background:var(--paper);color:var(--ink);
+  /* pořadí zleva doprava: značka — jazyk — motiv — menu */
+  .hbar{gap:8px}
+  .logo{margin-right:auto;order:0}
+  nav.main{position:fixed;inset:var(--hbarh,78px) 0 auto;flex-direction:column;gap:0;background:var(--paper);color:var(--ink);
     padding:8px var(--pad) 28px;border-bottom:1px solid var(--line);transform:translateY(-125%);transition:transform .42s cubic-bezier(.3,.9,.3,1)}
   nav.main.open{transform:none}
   nav.main a{padding:15px 0;border-bottom:1px solid var(--line-2);font-size:18px;opacity:1}
   .hbar .btn{display:none}
-  .burger{display:block;margin-left:auto}
-  .tswitch{margin-left:0}
+  .lang{order:2;margin-left:0;flex:none}
+  .tswitch{order:3;margin-left:0}
+  .burger{display:block;order:4;margin-left:0;padding:8px}
+}
+@media(max-width:480px){
+  :root{--hbarh:64px}
+  .hbar{height:64px;gap:6px}
+  .mark{width:32px;height:32px}
+  .mark span{font-size:15px}
+  .logo{gap:10px}
+  .logo-w b{font-size:19px;letter-spacing:.05em}
+  .logo-w i{font-size:8px;letter-spacing:.3em;text-indent:.3em}
+  .lang-btn{padding:7px 9px;font-size:12px}
+  .tswitch{width:34px;height:34px}
+  .burger{padding:6px}
+  .burger svg{width:23px;height:23px}
 }
 
 /* ---------- hero ---------- */
@@ -396,7 +413,16 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .due-item::after{content:"";width:4px;height:4px;background:var(--line);transform:rotate(45deg);margin-left:20px;align-self:center}
 @media(prefers-reduced-motion:reduce){.due-track{animation:none;overflow-x:auto;width:auto}}
 @media(max-width:1200px){.due-head em{display:none}}
-@media(max-width:700px){.due-head{padding-left:16px}}
+@media(max-width:560px){
+  /* na mobilu si popisek vezme vlastní řádek, ať zbyde šířka na text */
+  .due{flex-direction:column;align-items:stretch}
+  .due-head{padding:9px var(--pad) 0;box-shadow:none}
+  .due-head b{font-family:"IBM Plex Sans",sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted)}
+  .due-track{padding-block:7px 11px}
+  .due-item{font-size:13.5px;padding-inline:0 0}
+  .due-item::after{margin-left:18px;margin-right:18px}
+}
 
 /* --- lepicí spodní lišta s výzvou --- */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:65;background:rgba(13,25,53,.94);backdrop-filter:blur(14px);
@@ -456,7 +482,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .lang-menu button:hover{background:var(--paper)}
 .lang-menu button b{font-size:11px;letter-spacing:.1em;color:var(--brass);font-weight:600;width:22px;flex:none}
 .lang-menu button.on{background:var(--paper-3)}
-@media(max-width:1180px){.lang{margin-left:auto;order:-1}}
+
 
 
 /* --- ekonomický přehled (klidný pás uvnitř kalendáře) --- */
@@ -483,7 +509,20 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .wire-item::after{content:"";width:4px;height:4px;background:var(--line);transform:rotate(45deg);margin-left:22px;align-self:center}
 .wire-load{padding-inline:22px;font-size:13px;color:var(--muted)}
 .wire-note{margin:12px 0 0;font-size:13px;color:var(--muted);max-width:78ch}
-@media(max-width:700px){.wire-head em{display:none}.wire-head{padding-left:14px;padding-right:14px}}
+@media(max-width:760px){
+  /* na úzkém displeji se běžící titulky nedají číst — poskládáme je pod sebe */
+  .wire{flex-direction:column;align-items:stretch;margin-top:32px}
+  .wire-head{padding:13px 15px;box-shadow:none;border-bottom:1px solid var(--line-2)}
+  .wire-head em{display:none}
+  .wire-track{display:block;width:auto;white-space:normal;padding:0;animation:none}
+  .wire-item{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:13px 15px;font-size:14px;line-height:1.45;
+    border-bottom:1px solid var(--line-2)}
+  .wire-item:last-child{border-bottom:0}
+  .wire-item::after{display:none}
+  .wire-item q{flex:1 1 100%;font-size:12.5px;line-height:1.5}
+  .wire-item q::before{content:""}
+  .wire-item i{flex:1 1 100%;font-size:11.5px}
+}
 
 /* --- původní český název termínu (u cizích jazyků) --- */
 .ev .orig{display:block;margin-top:6px;font-size:12px;color:var(--muted);opacity:.75}
@@ -1941,8 +1980,11 @@ document.getElementById('bform').addEventListener('submit',e=>{
    pak ji zdvojíme a posun načasujeme podle šířky: stejná,
    klidná rychlost bez ohledu na množství textu.
    ============================================================ */
-function marquee(track,html,pxPerSec){
+function marquee(track,html,pxPerSec,stackUnder){
   if(!track||!html)return;
+  if(stackUnder&&innerWidth<=stackUnder){          /* úzký displej: statický seznam */
+    track.style.animation='none';track.innerHTML=html;return;
+  }
   const box=track.parentElement,w=box?box.clientWidth:0;
   track.style.animation='none';
   let set=html;
@@ -2002,7 +2044,7 @@ function marquee(track,html,pxPerSec){
     return '<a class="wire-item"'+href+'><s>'+tag+'</s>'+ttl+(why?'<q>'+why+'</q>':'')+(src?'<i>'+src+'</i>':'')+'</a>';
   }
   function paint(){
-    marquee(track,data.map(item).join(''),22);
+    marquee(track,data.map(item).join(''),22,760);
   }
   /* Bez nasazené funkce /api/news pás nemá co ukazovat — termíny už běží
      nahoře, takže ho radši skryjeme, než abychom je opakovali podruhé. */
