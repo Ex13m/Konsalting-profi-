@@ -347,7 +347,10 @@ footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:15p
 footer a{text-decoration:none;color:var(--on-dark-mute);transition:color .2s}
 footer a:hover{color:var(--on-dark)}
 .fbot{margin-top:48px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:13px;color:var(--on-dark-mute);
-  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.fbot .by{flex-basis:100%;display:flex;align-items:baseline;gap:6px;font-size:12px;letter-spacing:.02em;
+  opacity:.6;padding-top:12px;margin-top:2px;border-top:1px solid var(--line-dark)}
+.fbot .by b{font-weight:500;color:var(--brass-2);letter-spacing:.05em}
 
 /* ---------- odhalování ---------- */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.8,.3,1),transform .8s cubic-bezier(.2,.8,.3,1)}
@@ -1206,6 +1209,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
       <button type="button" class="legal-open" data-doc="gdpr">Ochrana osobních údajů</button>
       <button type="button" class="legal-open" data-doc="cookies">Cookies</button>
       <button type="button" class="legal-open" data-doc="terms">Podmínky použití</button>
+      <span class="by">© <span class="num" id="yr2"></span> <b>Gausse Holler Custom Lab</b></span>
     </div>
   </div>
 </footer>
@@ -1333,7 +1337,7 @@ const hdr=document.getElementById('hdr'),nav=document.getElementById('nav'),burg
 addEventListener('scroll',()=>hdr.classList.toggle('solid',scrollY>40),{passive:true});
 burger.onclick=()=>{const o=nav.classList.toggle('open');burger.setAttribute('aria-expanded',o)};
 nav.querySelectorAll('a').forEach(a=>a.onclick=()=>{nav.classList.remove('open');burger.setAttribute('aria-expanded','false')});
-document.getElementById('yr').textContent=new Date().getFullYear();
+document.getElementById('yr').textContent=document.getElementById('yr2').textContent=new Date().getFullYear();
 setTimeout(()=>document.body.classList.add('anim-done'),1400);
 
 /* motiv: uložená volba, jinak podle systému */
