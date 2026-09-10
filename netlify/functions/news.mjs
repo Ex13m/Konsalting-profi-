@@ -14,6 +14,8 @@ const SOURCES = [
   { tag: "ČR", source: "Ministerstvo financí", url: "https://www.mfcr.cz/cs/rss/tiskove-zpravy" },
 ];
 
+import { createHash } from "node:crypto";
+
 const LANGS = ["cs", "en", "ru", "uk", "de", "pl"];
 const TAGS = {
   "ČNB": { cs: "ČNB", en: "CNB", ru: "ЧНБ", uk: "ЧНБ", de: "ČNB", pl: "ČNB" },
@@ -22,7 +24,8 @@ const TAGS = {
   "ČR":  { cs: "ČR", en: "CZ", ru: "ЧР", uk: "ЧР", de: "CZ", pl: "CZ" },
 };
 
-const TTL = 60 * 60 * 1000;      // hodina: RSS i překlad
+const TTL = 20 * 60 * 1000;      // titulky obnovujeme po 20 minutách;
+                                 // překlady drží zásoba, takže to nic nestojí
 let cache = { at: 0, items: [] };
 
 const strip = (s) =>
@@ -64,13 +67,63 @@ async function fetchOne(meta) {
   return parse(await r.text(), meta);
 }
 
+/* --- trvalá zásoba překladů ---------------------------------------
+   Titulky se v kanálech opakují celé hodiny. Bez zásoby bychom je
+   překládali znovu při každém obnovení; s ní platíme jen za to, co
+   jsme ještě neviděli. Když úložiště není k dispozici (lokální běh),
+   funkce jede dál, jen bez úspory. */
+const idOf = (t) => createHash("sha256").update(t).digest("hex").slice(0, 20);
+
+async function store() {
+  try {
+    const { getStore } = await import("@netlify/blobs");
+    return getStore({ name: "news-i18n", consistency: "eventual" });
+  } catch {
+    return null;
+  }
+}
+
+async function fromStore(s, items) {
+  if (!s) return new Map();
+  const found = new Map();
+  await Promise.all(
+    items.map(async (x) => {
+      try {
+        const v = await s.get(idOf(x.title), { type: "json" });
+        if (v && v.title) found.set(x.title, v);
+      } catch { /* chybějící klíč není chyba */ }
+    })
+  );
+  return found;
+}
+
+async function toStore(s, rows) {
+  if (!s) return;
+  await Promise.all(
+    rows.map(([cs, v]) => s.setJSON(idOf(cs), v).catch(() => {}))
+  );
+}
+
 /* --- překlad titulků a krátké vysvětlení, co z toho plyne --- */
 async function enrich(items) {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key || process.env.NEWS_TRANSLATE === "0" || !items.length) return items;
 
+  const s = await store();
+  const cached = await fromStore(s, items);
+  cached.forEach((v, cs) => {
+    const it = items.find((x) => x.title === cs);
+    if (!it) return;
+    it.title = v.title;
+    if (v.why) it.why = v.why;
+    it._done = true;
+  });
+
+  const todo = items.filter((x) => !x._done);
+  if (!todo.length) return items.map(({ _done, ...x }) => x);
+
   const model = process.env.NEWS_MODEL || "claude-haiku-4-5-20251001";
-  const list = items.map((x, i) => `${i}. [${x.source}] ${x.title}`).join("\n");
+  const list = todo.map((x, i) => `${i}. [${x.source}] ${x.title}`).join("\n");
 
   const prompt =
     "Níže jsou titulky z českých a evropských veřejných zdrojů pro klienty účetní kanceláře.\n" +
@@ -105,22 +158,27 @@ async function enrich(items) {
     if (!m) throw new Error("no json");
     const rows = JSON.parse(m[0]);
 
+    const fresh = [];
     rows.forEach((row) => {
-      const it = items[row.i];
+      const it = todo[row.i];
       if (!it) return;
       const t = {}, w = {};
       LANGS.forEach((l) => {
         if (row.title && row.title[l]) t[l] = String(row.title[l]).slice(0, 150);
         if (row.why && row.why[l]) w[l] = String(row.why[l]).slice(0, 120);
       });
-      t.cs = t.cs || it.title;
-      it.title = t;
-      if (Object.keys(w).length) it.why = w;
+      const cs = it.title;
+      t.cs = t.cs || cs;
+      const rec = Object.keys(w).length ? { title: t, why: w } : { title: t };
+      it.title = rec.title;
+      if (rec.why) it.why = rec.why;
+      fresh.push([cs, rec]);
     });
+    await toStore(s, fresh);
   } catch (e) {
     /* překlad je nadstavba: bez něj pošleme originální titulky */
   }
-  return items;
+  return items.map(({ _done, ...x }) => x);
 }
 
 export default async () => {
@@ -145,7 +203,7 @@ export default async () => {
     status: 200,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "public, max-age=1800",
+      "Cache-Control": "public, max-age=600",
     },
   });
 };
