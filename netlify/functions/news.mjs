@@ -46,15 +46,34 @@ const TTL = 20 * 60 * 1000;      // titulky obnovujeme po 20 minutách;
                                  // překlady drží zásoba, takže to nic nestojí
 const cache = new Map();      /* jazyk -> { at, items } */
 
-const strip = (s) =>
-  s
-    .replace(/<!\[CDATA\[|\]\]>/g, "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (m) =>
-      ({ "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'", "&nbsp;": " " }[m] || " ")
-    )
-    .replace(/\s+/g, " ")
-    .trim();
+/* Zdroje sypou entity v obou tvarech: pojmenované (&amp;) i číselné
+   (&#xE1; = á, &#x159; = ř). Ministerstvo financí navíc někdy zakóduje
+   ampersand ještě jednou, proto dekódujeme dvakrát. */
+const NAMED = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", shy: "",
+  hellip: "…", mdash: "—", ndash: "–", minus: "−",
+  laquo: "«", raquo: "»", bdquo: "„", ldquo: "“", rdquo: "”",
+  sbquo: "‚", lsquo: "‘", rsquo: "’", euro: "€", copy: "©", deg: "°",
+};
+
+const decodeOnce = (s) =>
+  s.replace(/&(#[0-9]+|#[xX][0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]{1,31});/g, (m, g) => {
+    if (g[0] === "#") {
+      const n = g[1] === "x" || g[1] === "X"
+        ? parseInt(g.slice(2), 16)
+        : parseInt(g.slice(1), 10);
+      if (!Number.isFinite(n) || n <= 0 || n > 0x10ffff) return m;
+      try { return String.fromCodePoint(n); } catch { return m; }
+    }
+    const v = NAMED[g.toLowerCase()];
+    return v === undefined ? m : v;
+  });
+
+const strip = (s) => {
+  let t = String(s).replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]*>/g, "");
+  t = decodeOnce(decodeOnce(t));
+  return t.replace(/\s+/g, " ").trim();
+};
 
 function parse(xml, meta) {
   const blocks = xml.split(/<(?:item|entry)[\s>]/i).slice(1, 7);
