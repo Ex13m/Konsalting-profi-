@@ -785,7 +785,7 @@ body.dark .holo-fig img{filter:brightness(1.1) contrast(1.1) saturate(.78) drop-
 /* řádkování jen přes postavu, ne přes obdélník */
 .holo-fig::after{content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 3px,rgba(4,8,20,.34) 3px 5px);
-  -webkit-mask-image:url(assets/klara.webp);mask-image:url(assets/klara.webp);
+  -webkit-mask-image:url(assets/klara.webp?v=2);mask-image:url(assets/klara.webp?v=2);
   -webkit-mask-size:100% 100%;mask-size:100% 100%;
   animation:holo-scan 2.1s linear infinite}
 body.dark .holo-fig::after{background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 3px,rgba(4,8,20,.34) 3px 5px)}
@@ -1403,7 +1403,7 @@ body.dark .holo-mute{background:#101B36;color:#C08F4E}
 <div class="holo-dim" id="holodim" aria-hidden="true"></div>
 <div class="holo" id="holo" aria-hidden="true">
   <p class="holo-cap dyn" id="holocap" aria-live="polite"></p>
-  <span class="holo-fig" aria-hidden="true"><img src="assets/klara.webp" alt=""></span>
+  <span class="holo-fig" aria-hidden="true"><img src="assets/klara.webp?v=2" alt=""></span>
 </div>
 
 <!-- ============ NABÍDKA PŘI ODCHODU ============ -->
