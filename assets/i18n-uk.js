@@ -382,5 +382,8 @@ window.KP_DICTS.uk={
 "Odpovědi jsou orientační a slouží k rychlé navigaci. Závazné je vždy stanovisko účetního.":"Відповіді орієнтовні й слугують для швидкої навігації. Обов'язковою завжди є думка бухгалтера.",
 "Rezervace termínu":"Резервування часу",
 "Objednání přes web je předběžné. Schůzku potvrzujeme telefonicky.":"Запис через сайт попередній. Зустріч підтверджуємо телефоном.",
-"Údaje nikam dál nepředáváme.":"Дані нікуди далі не передаємо."
+"Údaje nikam dál nepředáváme.":"Дані нікуди далі не передаємо.",
+"Úplné znění zásad zpracování osobních údajů":"Повний текст політики обробки персональних даних",
+"Úplné znění GDPR":"Повний текст GDPR",
+"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"Нікому поза нашою конторою. Виняток — відомства, перед якими в нас є законний обов'язок, і технічні постачальники (хостинг, пошта). Обробку тримаємо в Євросоюзі; де це неможливо, передача покрита стандартними договірними положеннями."
 };

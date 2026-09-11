@@ -382,5 +382,8 @@ window.KP_DICTS.de={
 "Odpovědi jsou orientační a slouží k rychlé navigaci. Závazné je vždy stanovisko účetního.":"Die Antworten sind Anhaltspunkte und dienen der schnellen Orientierung. Verbindlich ist stets die Auskunft des Buchhalters.",
 "Rezervace termínu":"Terminreservierung",
 "Objednání přes web je předběžné. Schůzku potvrzujeme telefonicky.":"Die Buchung über die Website ist vorläufig. Den Termin bestätigen wir telefonisch.",
-"Údaje nikam dál nepředáváme.":"Wir geben die Daten nicht weiter."
+"Údaje nikam dál nepředáváme.":"Wir geben die Daten nicht weiter.",
+"Úplné znění zásad zpracování osobních údajů":"Vollständige Datenschutzerklärung",
+"Úplné znění GDPR":"Vollständige Datenschutzerklärung",
+"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"An niemanden außerhalb unseres Büros. Ausnahmen sind Behörden, denen gegenüber wir gesetzlich verpflichtet sind, und technische Dienstleister (Hosting, E-Mail). Die Verarbeitung halten wir in der Europäischen Union; wo das nicht geht, ist die Übermittlung durch Standardvertragsklauseln gedeckt."
 };
