@@ -385,5 +385,14 @@ window.KP_DICTS.de={
 "Údaje nikam dál nepředáváme.":"Wir geben die Daten nicht weiter.",
 "Úplné znění zásad zpracování osobních údajů":"Vollständige Datenschutzerklärung",
 "Úplné znění GDPR":"Vollständige Datenschutzerklärung",
-"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"An niemanden außerhalb unseres Büros. Ausnahmen sind Behörden, denen gegenüber wir gesetzlich verpflichtet sind, und technische Dienstleister (Hosting, E-Mail). Die Verarbeitung halten wir in der Europäischen Union; wo das nicht geht, ist die Übermittlung durch Standardvertragsklauseln gedeckt."
+"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"An niemanden außerhalb unseres Büros. Ausnahmen sind Behörden, denen gegenüber wir gesetzlich verpflichtet sind, und technische Dienstleister (Hosting, E-Mail). Die Verarbeitung halten wir in der Europäischen Union; wo das nicht geht, ist die Übermittlung durch Standardvertragsklauseln gedeckt.",
+"Jazyk / Language":"Sprache / Language",
+"Konsalting Profi — úvod":"Konsalting Profi — Startseite",
+"Odeslat":"Senden",
+"Otevřít menu":"Menü öffnen",
+"Otevřít virtuální asistentku":"Virtuelle Assistentin öffnen",
+"Přepnout světlý a tmavý motiv":"Zwischen hellem und dunklem Design wechseln",
+"Virtuální asistentka Klára":"Virtuelle Assistentin Klára",
+"Zavřít lištu":"Leiste schließen",
+"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Fragen Sie nach Terminen, Leistungen oder vereinbaren Sie ein Treffen"
 };

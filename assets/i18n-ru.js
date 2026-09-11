@@ -193,8 +193,8 @@ window.KP_DICTS.ru={
 "vyberte termín schůzky":"выберите время встречи",
 "Máme váš telefon":"Телефон у нас",
 "Zavřít":"Закрыть",
-"Zeptat se asistentky":"Спросить ассистента",
-"virtuální asistentka kanceláře":"виртуальный ассистент бюро",
+"Zeptat se asistentky":"Спросить ассистентку",
+"virtuální asistentka kanceláře":"виртуальная ассистентка бюро",
 "Klára odpovídá orientačně podle aktuálních pravidel a umí vás objednat. Konkrétní daňové posouzení vždy potvrdí účetní.":"Клара отвечает ориентировочно по действующим правилам и может записать вас на приём. Конкретную налоговую оценку всегда подтверждает бухгалтер.",
 "Dobrý den, jsem Klára z Konsalting Profi. Poradím s termíny i službami a rovnou vám můžu zarezervovat setkání. S čím začneme?":"Здравствуйте, я Клара из Konsalting Profi. Помогу со сроками и услугами и сразу запишу на встречу. С чего начнём?",
 "Chci se objednat":"Хочу записаться",
@@ -385,5 +385,14 @@ window.KP_DICTS.ru={
 "Údaje nikam dál nepředáváme.":"Данные никуда дальше не передаём.",
 "Úplné znění zásad zpracování osobních údajů":"Полный текст политики обработки персональных данных",
 "Úplné znění GDPR":"Полный текст GDPR",
-"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"Никому за пределами нашей конторы. Исключение — ведомства, перед которыми у нас есть законная обязанность, и технические поставщики (хостинг, почта). Обработку держим в Евросоюзе; где это невозможно, передача покрыта стандартными договорными положениями."
+"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"Никому за пределами нашей конторы. Исключение — ведомства, перед которыми у нас есть законная обязанность, и технические поставщики (хостинг, почта). Обработку держим в Евросоюзе; где это невозможно, передача покрыта стандартными договорными положениями.",
+"Jazyk / Language":"Язык / Language",
+"Konsalting Profi — úvod":"Konsalting Profi — главная",
+"Odeslat":"Отправить",
+"Otevřít menu":"Открыть меню",
+"Otevřít virtuální asistentku":"Открыть виртуальную ассистентку",
+"Přepnout světlý a tmavý motiv":"Переключить светлую и тёмную тему",
+"Virtuální asistentka Klára":"Виртуальная ассистентка Клара",
+"Zavřít lištu":"Закрыть строку",
+"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Спросите о сроках, услугах или запишитесь на встречу"
 };

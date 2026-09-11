@@ -193,8 +193,8 @@ window.KP_DICTS.uk={
 "vyberte termín schůzky":"оберіть час зустрічі",
 "Máme váš telefon":"Телефон у нас",
 "Zavřít":"Закрити",
-"Zeptat se asistentky":"Запитати асистента",
-"virtuální asistentka kanceláře":"віртуальний асистент бюро",
+"Zeptat se asistentky":"Запитати асистентку",
+"virtuální asistentka kanceláře":"віртуальна асистентка бюро",
 "Klára odpovídá orientačně podle aktuálních pravidel a umí vás objednat. Konkrétní daňové posouzení vždy potvrdí účetní.":"Клара відповідає орієнтовно за чинними правилами та може записати вас на прийом. Конкретну податкову оцінку завжди підтверджує бухгалтер.",
 "Dobrý den, jsem Klára z Konsalting Profi. Poradím s termíny i službami a rovnou vám můžu zarezervovat setkání. S čím začneme?":"Вітаю, я Клара з Konsalting Profi. Допоможу з термінами та послугами і одразу запишу на зустріч. З чого почнемо?",
 "Chci se objednat":"Хочу записатися",
@@ -385,5 +385,14 @@ window.KP_DICTS.uk={
 "Údaje nikam dál nepředáváme.":"Дані нікуди далі не передаємо.",
 "Úplné znění zásad zpracování osobních údajů":"Повний текст політики обробки персональних даних",
 "Úplné znění GDPR":"Повний текст GDPR",
-"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"Нікому поза нашою конторою. Виняток — відомства, перед якими в нас є законний обов'язок, і технічні постачальники (хостинг, пошта). Обробку тримаємо в Євросоюзі; де це неможливо, передача покрита стандартними договірними положеннями."
+"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"Нікому поза нашою конторою. Виняток — відомства, перед якими в нас є законний обов'язок, і технічні постачальники (хостинг, пошта). Обробку тримаємо в Євросоюзі; де це неможливо, передача покрита стандартними договірними положеннями.",
+"Jazyk / Language":"Мова / Language",
+"Konsalting Profi — úvod":"Konsalting Profi — головна",
+"Odeslat":"Надіслати",
+"Otevřít menu":"Відкрити меню",
+"Otevřít virtuální asistentku":"Відкрити віртуальну асистентку",
+"Přepnout světlý a tmavý motiv":"Перемкнути світлу й темну тему",
+"Virtuální asistentka Klára":"Віртуальна асистентка Клара",
+"Zavřít lištu":"Закрити стрічку",
+"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Запитайте про терміни, послуги або запишіться на зустріч"
 };

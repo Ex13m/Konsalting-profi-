@@ -385,5 +385,14 @@ window.KP_DICTS.en={
 "Údaje nikam dál nepředáváme.":"We pass the data on to nobody.",
 "Úplné znění zásad zpracování osobních údajů":"Full privacy notice",
 "Úplné znění GDPR":"Full privacy notice",
-"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"To nobody outside our office. The exceptions are the authorities we have a statutory duty towards and technical providers (hosting, e-mail). We keep processing within the European Union; where that is not possible, the transfer is covered by standard contractual clauses."
+"Nikomu mimo naši kancelář. Výjimkou jsou úřady, vůči nimž máme zákonnou povinnost, a techničtí poskytovatelé (hosting, e-mail). Zpracování držíme v Evropské unii; kde to nejde, je předání kryté standardními smluvními doložkami.":"To nobody outside our office. The exceptions are the authorities we have a statutory duty towards and technical providers (hosting, e-mail). We keep processing within the European Union; where that is not possible, the transfer is covered by standard contractual clauses.",
+"Jazyk / Language":"Language",
+"Konsalting Profi — úvod":"Konsalting Profi — home",
+"Odeslat":"Send",
+"Otevřít menu":"Open menu",
+"Otevřít virtuální asistentku":"Open the virtual assistant",
+"Přepnout světlý a tmavý motiv":"Switch light and dark theme",
+"Virtuální asistentka Klára":"Virtual assistant Klára",
+"Zavřít lištu":"Close the bar",
+"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Ask about dates, services or book a meeting"
 };
