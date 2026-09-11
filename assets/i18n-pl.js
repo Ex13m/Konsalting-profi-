@@ -394,5 +394,14 @@ window.KP_DICTS.pl={
 "Přepnout světlý a tmavý motiv":"Przełącz jasny i ciemny motyw",
 "Virtuální asistentka Klára":"Wirtualna asystentka Klára",
 "Zavřít lištu":"Zamknij pasek",
-"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Zapytaj o terminy, usługi lub umów spotkanie"
+"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Zapytaj o terminy, usługi lub umów spotkanie",
+"Dobrý den, jsem Klára — holografická asistentka Konsalting Profi.":"Dzień dobry, jestem Klára — holograficzna asystentka Konsalting Profi.",
+"Hlídám termíny podání a stav vašich dokladů.":"Pilnuję terminów złożenia i stanu Państwa dokumentów.",
+"Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.":"Na razie jestem tylko projekcją. Porozmawiać ze mną będzie można wkrótce.",
+"Účetní vás uvidí v kalendáři hned, jak se objednáte.":"Księgowa zobaczy Państwa w kalendarzu od razu po umówieniu.",
+"Zapnout hologram":"Włącz hologram",
+"Vypnout hologram":"Wyłącz hologram",
+"Ztlumit zvuk":"Wycisz dźwięk",
+"Zapnout zvuk":"Włącz dźwięk",
+"Holografická projekce Klára":"Projekcja holograficzna Klára"
 };

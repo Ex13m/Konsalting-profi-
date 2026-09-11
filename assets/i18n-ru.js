@@ -394,5 +394,14 @@ window.KP_DICTS.ru={
 "Přepnout světlý a tmavý motiv":"Переключить светлую и тёмную тему",
 "Virtuální asistentka Klára":"Виртуальная ассистентка Клара",
 "Zavřít lištu":"Закрыть строку",
-"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Спросите о сроках, услугах или запишитесь на встречу"
+"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Спросите о сроках, услугах или запишитесь на встречу",
+"Dobrý den, jsem Klára — holografická asistentka Konsalting Profi.":"Здравствуйте, я Клара — голографическая ассистентка Konsalting Profi.",
+"Hlídám termíny podání a stav vašich dokladů.":"Слежу за сроками подачи и состоянием ваших документов.",
+"Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.":"Пока я только проекция. Говорить со мной можно будет скоро.",
+"Účetní vás uvidí v kalendáři hned, jak se objednáte.":"Бухгалтер увидит вас в календаре сразу, как запишетесь.",
+"Zapnout hologram":"Включить голограмму",
+"Vypnout hologram":"Выключить голограмму",
+"Ztlumit zvuk":"Выключить звук",
+"Zapnout zvuk":"Включить звук",
+"Holografická projekce Klára":"Голографическая проекция Клара"
 };

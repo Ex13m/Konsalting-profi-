@@ -752,6 +752,87 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
   letter-spacing:-.02em;color:var(--brass);margin-bottom:8px;font-variant-numeric:tabular-nums}
 .stats span{font-size:14px;color:var(--muted);line-height:1.45;display:block}
 
+/* ---- holografická projekce ---------------------------------------- */
+.holo-fab{position:fixed;right:22px;bottom:80px;z-index:66;width:46px;height:46px;border-radius:50%;
+  border:1px solid rgba(192,143,78,.45);background:linear-gradient(180deg,#16264F,#0C1730);
+  display:grid;place-items:center;cursor:pointer;padding:0;
+  box-shadow:0 8px 22px rgba(8,14,30,.38);transition:transform .25s,box-shadow .25s,border-color .25s}
+.holo-fab svg{width:21px;height:21px;fill:none;stroke:#C08F4E;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.holo-fab:hover{transform:translateY(-3px)}
+.holo-fab.on{border-color:rgba(192,143,78,.85);box-shadow:0 0 0 2px rgba(192,143,78,.22),0 10px 28px rgba(192,143,78,.3)}
+.holo-fab.on svg{stroke:#E0B173}
+
+.holo{position:fixed;right:22px;bottom:138px;z-index:65;width:262px;
+  border-radius:16px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 118%,#1B2C58 0%,#0B1128 52%,#060A19 100%);
+  border:1px solid rgba(192,143,78,.2);box-shadow:0 24px 60px rgba(4,8,20,.5);
+  opacity:0;pointer-events:none;transform:translateY(14px) scale(.95);
+  transition:opacity .3s ease,transform .3s ease}
+.holo.on{opacity:1;pointer-events:auto;transform:none}
+.holo-stage{position:relative;height:300px;overflow:hidden}
+
+/* světelný kužel z projektoru */
+.holo-beam{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(214,166,102,.42),rgba(192,143,78,.14) 46%,transparent 82%);
+  clip-path:polygon(45% 100%,55% 100%,92% 0%,8% 0%);opacity:0;mix-blend-mode:screen}
+.holo.on .holo-beam{animation:holo-beam .9s cubic-bezier(.2,.8,.3,1) forwards}
+
+/* samotná projekce */
+.holo-fig{position:absolute;left:50%;top:0;height:100%;transform:translateX(-50%);
+  mix-blend-mode:screen;opacity:0;will-change:transform,opacity}
+.holo.on .holo-fig{animation:holo-in .85s .18s cubic-bezier(.2,.8,.3,1) forwards,
+  holo-breathe 7.5s 1.1s ease-in-out infinite,holo-flicker 4.3s 1.1s steps(1,end) infinite}
+
+/* řádkování a mírné chvění obrazu */
+.holo-scan{position:absolute;inset:0;pointer-events:none;opacity:.28;
+  background:repeating-linear-gradient(to bottom,rgba(6,10,25,0) 0 2px,rgba(6,10,25,.85) 2px 4px);
+  animation:holo-scan 1.6s linear infinite}
+.holo-glow{position:absolute;left:50%;bottom:-4px;width:150px;height:26px;transform:translateX(-50%);
+  border-radius:50%;background:radial-gradient(ellipse,rgba(224,177,115,.85),rgba(192,143,78,0) 72%);
+  opacity:0;filter:blur(1px)}
+.holo.on .holo-glow{animation:holo-disc .5s .05s ease-out forwards,holo-disc-pulse 3.4s .6s ease-in-out infinite}
+
+.holo-cap{min-height:56px;padding:11px 14px 13px;border-top:1px solid rgba(192,143,78,.16);
+  font-size:12.5px;line-height:1.45;color:#D9E0F0;background:rgba(6,10,25,.5)}
+.holo-cap b{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:#C08F4E;font-weight:600;margin-bottom:4px}
+.holo-cap span{opacity:0;animation:holo-say .45s forwards}
+.holo-mute{position:absolute;right:8px;top:8px;width:26px;height:26px;border-radius:50%;padding:0;
+  border:1px solid rgba(192,143,78,.28);background:rgba(8,14,32,.6);color:#C08F4E;
+  font-size:12px;cursor:pointer;display:grid;place-items:center;line-height:1}
+.holo-mute:hover{border-color:rgba(192,143,78,.6)}
+
+@keyframes holo-beam{
+  0%{clip-path:polygon(48% 100%,52% 100%,53% 88%,47% 88%);opacity:0}
+  30%{opacity:.95}
+  100%{clip-path:polygon(45% 100%,55% 100%,92% 0%,8% 0%);opacity:.6}}
+@keyframes holo-in{
+  0%{clip-path:inset(100% 0 0 0);opacity:0;filter:brightness(2.6) blur(4px)}
+  35%{opacity:1;filter:brightness(1.7) blur(1px)}
+  48%{transform:translateX(calc(-50% - 4px))}
+  56%{transform:translateX(calc(-50% + 3px))}
+  64%{transform:translateX(calc(-50% - 1px))}
+  100%{clip-path:inset(0 0 0 0);opacity:.92;filter:none;transform:translateX(-50%)}}
+@keyframes holo-breathe{
+  0%,100%{transform:translateX(-50%) translateY(0) scale(1)}
+  50%{transform:translateX(-50%) translateY(-5px) scale(1.014)}}
+@keyframes holo-flicker{
+  0%,100%{opacity:.92}38%{opacity:.86}41%{opacity:.97}44%{opacity:.88}
+  70%{opacity:.94}72%{opacity:.83}74%{opacity:.92}}
+@keyframes holo-scan{0%{background-position:0 0}100%{background-position:0 4px}}
+@keyframes holo-disc{to{opacity:.9}}
+@keyframes holo-disc-pulse{0%,100%{opacity:.9}50%{opacity:.62}}
+@keyframes holo-say{to{opacity:1}}
+
+@media(max-width:700px){
+  .holo-fab{right:14px;bottom:134px;width:42px;height:42px}
+  .holo{right:14px;bottom:186px;width:214px}
+  .holo-stage{height:246px}}
+@media(prefers-reduced-motion:reduce){
+  .holo-fig,.holo-beam,.holo-scan,.holo-glow,.holo-cap span{animation:none!important}
+  .holo.on .holo-fig{opacity:.92}
+  .holo.on .holo-beam{opacity:.6}
+  .holo.on .holo-glow{opacity:.9}}
 </style>
 </head>
 <body>
@@ -1312,6 +1393,24 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
   </form>
   <p class="assist-foot">Klára odpovídá orientačně podle aktuálních pravidel a umí vás objednat. Konkrétní daňové posouzení vždy potvrdí účetní.</p>
 </div>
+
+<button class="holo-fab" id="holobtn" aria-label="Zapnout hologram" aria-pressed="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 20h14"/><path d="M12 20V9"/><path d="M7.5 20 12 9l4.5 11"/><circle cx="12" cy="6" r="2.2"/>
+  </svg>
+</button>
+
+<div class="holo" id="holo" role="dialog" aria-label="Holografická projekce Klára" aria-hidden="true">
+  <div class="holo-stage">
+    <span class="holo-beam" aria-hidden="true"></span>
+    <img class="holo-fig" src="assets/klara.webp" alt="" aria-hidden="true" loading="lazy">
+    <span class="holo-scan" aria-hidden="true"></span>
+    <span class="holo-glow" aria-hidden="true"></span>
+    <button class="holo-mute" id="holomute" aria-label="Ztlumit zvuk">◼</button>
+  </div>
+  <p class="holo-cap dyn" id="holocap" aria-live="polite"></p>
+</div>
+
 
 <!-- ============ NABÍDKA PŘI ODCHODU ============ -->
 <div class="exit" id="exit">
@@ -2184,6 +2283,125 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   f.reset();document.getElementById('f-gdpr').checked=false;
   /* napojení na backend / CRM se doplní zde */
 });
+/* ---- holografická projekce ----------------------------------------
+   Zatím jen obraz a zvuk, žádná AI. Tlačítko zapíná a vypíná projekci,
+   zvuk se skládá ve Web Audio, aby se nemusel stahovat žádný soubor. */
+(function(){
+  const btn=document.getElementById('holobtn'),box=document.getElementById('holo'),
+        cap=document.getElementById('holocap'),mute=document.getElementById('holomute');
+  if(!btn||!box)return;
+
+  const REPLIKY=[
+    'Dobrý den, jsem Klára — holografická asistentka Konsalting Profi.',
+    'Hlídám termíny podání a stav vašich dokladů.',
+    'Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.',
+    'Účetní vás uvidí v kalendáři hned, jak se objednáte.'
+  ];
+  const t=s=>(window.KP&&KP.t)?KP.t(s):s;
+
+  /* ---- zvuk ---- */
+  let ac=null,hum=null,humGain=null,ticho=false;
+  try{ticho=localStorage.getItem('kp-holo-ticho')==='ano'}catch(e){}
+  const ctx=()=>{
+    if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A()}
+    if(ac.state==='suspended')ac.resume();
+    return ac;
+  };
+  function sweep(zHz,naHz,delka,hlasitost){
+    const a=ctx();if(!a||ticho)return;
+    const o=a.createOscillator(),g=a.createGain();
+    o.type='sawtooth';
+    o.frequency.setValueAtTime(zHz,a.currentTime);
+    o.frequency.exponentialRampToValueAtTime(naHz,a.currentTime+delka);
+    g.gain.setValueAtTime(0.0001,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(hlasitost,a.currentTime+delka*0.25);
+    g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+delka);
+    o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+delka+0.05);
+  }
+  function sum(delka,hlasitost){          // krátký šum, ať to lupne jako výboj
+    const a=ctx();if(!a||ticho)return;
+    const n=Math.floor(a.sampleRate*delka),b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
+    const src=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();
+    src.buffer=b;f.type='bandpass';f.frequency.value=1700;f.Q.value=0.8;
+    g.gain.value=hlasitost;
+    src.connect(f);f.connect(g);g.connect(a.destination);src.start();
+  }
+  function humZap(){                      // tiché bzučení, sotva slyšitelné
+    const a=ctx();if(!a||ticho||hum)return;
+    const o1=a.createOscillator(),o2=a.createOscillator(),
+          lfo=a.createOscillator(),lfoG=a.createGain();
+    humGain=a.createGain();
+    o1.type='sine';o1.frequency.value=68;
+    o2.type='sine';o2.frequency.value=137;
+    lfo.type='sine';lfo.frequency.value=0.27;lfoG.gain.value=0.006;
+    humGain.gain.setValueAtTime(0.0001,a.currentTime);
+    humGain.gain.exponentialRampToValueAtTime(0.016,a.currentTime+0.8);
+    lfo.connect(lfoG);lfoG.connect(humGain.gain);
+    o1.connect(humGain);o2.connect(humGain);humGain.connect(a.destination);
+    o1.start();o2.start();lfo.start();
+    hum={o1,o2,lfo};
+  }
+  function humVyp(){
+    if(!hum)return;
+    const a=ac,konec=a?a.currentTime+0.35:0;
+    try{humGain.gain.exponentialRampToValueAtTime(0.0001,konec)}catch(e){}
+    const h=hum;hum=null;
+    setTimeout(()=>{['o1','o2','lfo'].forEach(k=>{try{h[k].stop()}catch(e){}})},420);
+  }
+
+  /* ---- repliky ---- */
+  let casovace=[];
+  const zrus=()=>{casovace.forEach(clearTimeout);casovace=[]};
+  function rekni(i){
+    cap.innerHTML='<b>Klára</b><span>'+t(REPLIKY[i])+'</span>';
+    if(!ticho)sweep(2200,1400,0.07,0.006);
+  }
+  function povidej(){
+    zrus();
+    REPLIKY.forEach((_,i)=>casovace.push(setTimeout(()=>rekni(i),900+i*4200)));
+    casovace.push(setTimeout(()=>{cap.innerHTML='<b>Klára</b><span>'+t(REPLIKY[0])+'</span>'},900+REPLIKY.length*4200));
+  }
+
+  /* ---- zapnutí a vypnutí ---- */
+  let zapnuto=false;
+  function zap(){
+    zapnuto=true;
+    box.classList.remove('on');void box.offsetWidth;   // restart animací
+    box.classList.add('on');box.setAttribute('aria-hidden','false');
+    btn.classList.add('on');btn.setAttribute('aria-pressed','true');
+    btn.setAttribute('aria-label',t('Vypnout hologram'));
+    sum(0.14,0.05);sweep(90,900,0.42,0.035);
+    setTimeout(humZap,260);
+    povidej();
+  }
+  function vyp(){
+    zapnuto=false;zrus();
+    box.classList.remove('on');box.setAttribute('aria-hidden','true');
+    btn.classList.remove('on');btn.setAttribute('aria-pressed','false');
+    btn.setAttribute('aria-label',t('Zapnout hologram'));
+    sweep(700,70,0.3,0.03);humVyp();
+    setTimeout(()=>{if(!zapnuto)cap.innerHTML=''},320);
+  }
+  btn.onclick=()=>zapnuto?vyp():zap();
+
+  mute.textContent=ticho?'▶':'◼';
+  mute.onclick=e=>{
+    e.stopPropagation();
+    ticho=!ticho;mute.textContent=ticho?'▶':'◼';
+    mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
+    try{localStorage.setItem('kp-holo-ticho',ticho?'ano':'ne')}catch(e){}
+    if(ticho)humVyp(); else if(zapnuto)humZap();
+  };
+
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&zapnuto)vyp()});
+  if(window.KP&&KP.rerender)KP.rerender.push(()=>{
+    btn.setAttribute('aria-label',t(zapnuto?'Vypnout hologram':'Zapnout hologram'));
+    mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
+    if(zapnuto&&cap.querySelector('span'))povidej();
+  });
+})();
+
 </script>
 
 </body>

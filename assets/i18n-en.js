@@ -394,5 +394,14 @@ window.KP_DICTS.en={
 "Přepnout světlý a tmavý motiv":"Switch light and dark theme",
 "Virtuální asistentka Klára":"Virtual assistant Klára",
 "Zavřít lištu":"Close the bar",
-"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Ask about dates, services or book a meeting"
+"Zeptejte se na termíny, služby nebo si domluvte schůzku":"Ask about dates, services or book a meeting",
+"Dobrý den, jsem Klára — holografická asistentka Konsalting Profi.":"Hello, I am Klára — the holographic assistant of Konsalting Profi.",
+"Hlídám termíny podání a stav vašich dokladů.":"I keep an eye on filing deadlines and the state of your paperwork.",
+"Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.":"For now I am only a projection. You will be able to talk to me soon.",
+"Účetní vás uvidí v kalendáři hned, jak se objednáte.":"The accountant sees you in the calendar the moment you book.",
+"Zapnout hologram":"Turn the hologram on",
+"Vypnout hologram":"Turn the hologram off",
+"Ztlumit zvuk":"Mute the sound",
+"Zapnout zvuk":"Unmute the sound",
+"Holografická projekce Klára":"Holographic projection Klára"
 };
