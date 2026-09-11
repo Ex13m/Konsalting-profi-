@@ -19,12 +19,25 @@
    bliknula česky a teprve pak se přepsala. Slovník je na jazyk zvlášť,
    takže se stahuje ~17 kB, ne celá knihovna. */
 (function(){
-  var L=['cs','en','ru','uk','de','pl'],c='cs';
+  var L=['cs','en','ru','uk','de','pl'],c='cs',pick=null;
   try{
     var s=localStorage.getItem('kp-lang');
     if(s&&L.indexOf(s)>-1)c=s;
-    else{var n=(navigator.language||'cs').slice(0,2).toLowerCase();if(L.indexOf(n)>-1)c=n}
+    else{
+      /* Jazyk podle prohlížeče nenastavujeme: telefon nastavený polsky
+         ještě neznamená, že člověk čte polsky, a stránka v cizím jazyce
+         navíc svádí prohlížeč k vlastnímu strojovému překladu.
+         Zůstaneme česky a jen nenápadně nabídneme. */
+      var ls=navigator.languages||[navigator.language||''];
+      for(var i=0;i<ls.length;i++){
+        var n=String(ls[i]).slice(0,2).toLowerCase();
+        if(n==='cs')break;
+        if(L.indexOf(n)>-1){pick=n;break}
+      }
+      if(localStorage.getItem('kp-lang-nabidka')==='ne')pick=null;
+    }
   }catch(e){}
+  window.KP_SUGGEST=pick;
   var d=document.documentElement;
   d.lang=window.KP_LANG=c;
   window.KP_DICTS={};
@@ -41,7 +54,7 @@
   if(c==='cs'){window.KP_DICT_READY=Promise.resolve();return}
   d.classList.add('i18n-wait');
   window.KP_DICT_READY=window.kpLoadDict(c);
-  setTimeout(window.kpReveal,2500);          /* pojistka, ať stránka nezůstane schovaná */
+  setTimeout(window.kpReveal,4000);          /* pojistka, ať stránka nezůstane schovaná */
 })();
 </script>
 <style>html.i18n-wait body{visibility:hidden}</style>
@@ -561,6 +574,21 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 /* --- původní český název termínu (u cizích jazyků) --- */
 .ev .orig{display:block;margin-top:6px;font-size:12px;color:var(--muted);opacity:.75}
 
+/* --- nenápadná nabídka jiného jazyka --- */
+.langbar{position:fixed;left:50%;transform:translate(-50%,120%);bottom:18px;z-index:95;
+  display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);
+  background:var(--paper-2);color:var(--ink);border:1px solid var(--line);border-radius:99px;
+  padding:9px 10px 9px 18px;font-size:13.5px;box-shadow:0 18px 40px -22px rgba(9,15,30,.55);
+  transition:transform .5s cubic-bezier(.2,.8,.3,1);opacity:.98}
+.langbar.on{transform:translate(-50%,0)}
+.langbar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.langbar button{font:inherit;cursor:pointer;border-radius:99px;flex:none}
+.langbar .go{background:var(--brass);color:#fff;border:0;padding:7px 15px;font-weight:500}
+.langbar .go:hover{background:var(--brass-2)}
+.langbar .no{background:none;border:0;color:var(--muted);width:28px;height:28px;font-size:17px;line-height:1}
+.langbar .no:hover{color:var(--ink)}
+@media(max-width:560px){.langbar{font-size:12.5px;padding-left:14px;gap:8px;bottom:14px}}
+
 /* --- právní dokumenty v okně --- */
 .legal-open{background:none;border:0;color:inherit;font:inherit;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;opacity:.85}
 .legal-open:hover{opacity:1}
@@ -734,7 +762,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
   <div class="wrap hbar">
     <a class="logo" href="#top" aria-label="Konsalting Profi — úvod">
       <span class="mark" aria-hidden="true"><span>KP</span></span>
-      <span class="logo-w"><b>Konsalting</b><i>PROFI</i></span>
+      <span class="logo-w" translate="no"><b>Konsalting</b><i>PROFI</i></span>
     </a>
     <button class="burger" id="burger" aria-label="Otevřít menu" aria-expanded="false">
       <svg width="26" height="26" viewBox="0 0 26 26" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M3 8h20M3 18h20"/></svg>
@@ -1214,7 +1242,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
       <div style="flex:1 1 260px">
         <a class="logo" href="#top" aria-label="Konsalting Profi — úvod">
           <span class="mark" aria-hidden="true"><span>KP</span></span>
-          <span class="logo-w"><b>Konsalting</b><i>PROFI</i></span>
+          <span class="logo-w" translate="no"><b>Konsalting</b><i>PROFI</i></span>
         </a>
         <p style="margin-top:18px;color:var(--on-dark-mute);font-size:15px;max-width:34ch">Účetnictví, mzdy a daňové poradenství pro firmy a podnikatele. Praha 9 – Vysočany.</p>
       </div>
@@ -1967,7 +1995,34 @@ document.getElementById('bform').addEventListener('submit',e=>{
     window.kpLoadDict(l).then(()=>apply(l));
   });
   /* první vykreslení až se slovníkem — jinak by stránka bliknula česky */
-  (window.KP_DICT_READY||Promise.resolve()).then(()=>{apply(cur);window.kpReveal&&kpReveal()});
+  (window.KP_DICT_READY||Promise.resolve()).then(()=>{apply(cur);window.kpReveal&&kpReveal();nabidka()});
+
+  /* Nenápadná nabídka jazyka. Stránku nepřepínáme sami — jen řekneme,
+     že existuje, a rozhodnutí necháme na návštěvníkovi. */
+  function nabidka(){
+    const l=window.KP_SUGGEST;
+    if(!l||l===cur)return;
+    const uzke=innerWidth<560;                 /* na mobilu se dlouhá věta ořízne */
+    const T={
+      en:[uzke?'Also in English.':'This page is also available in English.','English','Dismiss'],
+      ru:[uzke?'Есть русская версия.':'Эта страница есть и на русском.','Русский','Закрыть'],
+      uk:[uzke?'Є українська версія.':'Ця сторінка є і українською.','Українська','Закрити'],
+      de:[uzke?'Auch auf Deutsch.':'Diese Seite gibt es auch auf Deutsch.','Deutsch','Schließen'],
+      pl:[uzke?'Też po polsku.':'Ta strona jest też po polsku.','Polski','Zamknij']
+    }[l];
+    if(!T)return;
+    const bar=document.createElement('div');
+    bar.className='langbar';bar.lang=l;bar.setAttribute('role','region');
+    bar.innerHTML='<span>'+T[0]+'</span><button class="go">'+T[1]+'</button>'+
+      '<button class="no" aria-label="'+T[2]+'">×</button>';
+    document.body.appendChild(bar);
+    const hide=()=>{bar.classList.remove('on');setTimeout(()=>bar.remove(),600)};
+    const nikdy=()=>{try{localStorage.setItem('kp-lang-nabidka','ne')}catch(e){}};
+    bar.querySelector('.go').onclick=()=>{nikdy();hide();window.kpLoadDict(l).then(()=>apply(l))};
+    bar.querySelector('.no').onclick=()=>{nikdy();hide()};
+    setTimeout(()=>bar.classList.add('on'),1200);
+    setTimeout(()=>{if(bar.isConnected)hide()},14000);
+  }
 })();
 
 
