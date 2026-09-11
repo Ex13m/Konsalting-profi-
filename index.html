@@ -14,6 +14,37 @@
 <meta property="og:title" content="Konsalting Profi — účetnictví, mzdy a daně pro firmy v Praze">
 <meta property="og:description" content="Účetní kancelář v Praze 9 – Vysočanech. Vedení účetnictví, mzdy, daňová evidence a poradenství při zakládání společnosti.">
 <meta property="og:image" content="assets/hero.webp">
+<script>
+/* Jazyk volíme dřív, než se cokoli vykreslí: bez toho stránka nejdřív
+   bliknula česky a teprve pak se přepsala. Slovník je na jazyk zvlášť,
+   takže se stahuje ~17 kB, ne celá knihovna. */
+(function(){
+  var L=['cs','en','ru','uk','de','pl'],c='cs';
+  try{
+    var s=localStorage.getItem('kp-lang');
+    if(s&&L.indexOf(s)>-1)c=s;
+    else{var n=(navigator.language||'cs').slice(0,2).toLowerCase();if(L.indexOf(n)>-1)c=n}
+  }catch(e){}
+  var d=document.documentElement;
+  d.lang=window.KP_LANG=c;
+  window.KP_DICTS={};
+  window.kpLoadDict=function(l){
+    if(l==='cs'||window.KP_DICTS[l])return Promise.resolve();
+    return new Promise(function(done){
+      var e=document.createElement('script');
+      e.src='assets/i18n-'+l+'.js?v=3';
+      e.onload=e.onerror=function(){done()};
+      (document.head||d).appendChild(e);
+    });
+  };
+  window.kpReveal=function(){d.classList.remove('i18n-wait')};
+  if(c==='cs'){window.KP_DICT_READY=Promise.resolve();return}
+  d.classList.add('i18n-wait');
+  window.KP_DICT_READY=window.kpLoadDict(c);
+  setTimeout(window.kpReveal,2500);          /* pojistka, ať stránka nezůstane schovaná */
+})();
+</script>
+<style>html.i18n-wait body{visibility:hidden}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1325,8 +1356,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
   </div>
 </div>
 
-<script src="assets/i18n-data.js?v=2"></script>
-<script src="assets/i18n.js?v=2"></script>
+<script src="assets/i18n-data.js?v=3"></script>
 <script>
 /* Serverová funkce asistentky. Když není nasazená (chybí klíč k API),
    asistentka automaticky spadne zpět na vestavěné odpovědi. */
@@ -1884,23 +1914,13 @@ document.getElementById('bform').addEventListener('submit',e=>{
    Slovník je v assets/i18n.js; nepřeložené řetězce zůstávají česky.
    ============================================================ */
 (function(){
-  if(typeof I18N==='undefined')return;
   const LANGS=[['cs','Čeština'],['en','English'],['ru','Русский'],['uk','Українська'],['de','Deutsch'],['pl','Polski']];
-  const IDX={en:0,ru:1,uk:2,de:3,pl:4};
-  let cur='cs';
-  try{
-    const saved=localStorage.getItem('kp-lang');
-    if(saved&&LANGS.some(l=>l[0]===saved))cur=saved;
-    else{const n=(navigator.language||'cs').slice(0,2).toLowerCase();
-      if(LANGS.some(l=>l[0]===n))cur=n;}
-  }catch(e){}
+  let cur=window.KP_LANG||'cs';
 
   function tr(txt){
     if(cur==='cs')return null;
-    const rec=I18N[txt.trim()];
-    if(!rec)return null;
-    const v=rec[IDX[cur]];
-    return v||null;
+    const d=window.KP_DICTS&&window.KP_DICTS[cur];
+    return (d&&d[txt.trim()])||null;
   }
   /* originální české texty si držíme na uzlu, aby šlo přepínat tam i zpět */
   function walk(root){
@@ -1942,8 +1962,12 @@ document.getElementById('bform').addEventListener('submit',e=>{
   btn.onclick=e=>{e.stopPropagation();box.classList.toggle('open');
     btn.setAttribute('aria-expanded',box.classList.contains('open'))};
   document.addEventListener('click',()=>box.classList.remove('open'));
-  menu.querySelectorAll('button').forEach(b=>b.onclick=()=>{apply(b.dataset.l);box.classList.remove('open')});
-  apply(cur);
+  menu.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const l=b.dataset.l;box.classList.remove('open');
+    window.kpLoadDict(l).then(()=>apply(l));
+  });
+  /* první vykreslení až se slovníkem — jinak by stránka bliknula česky */
+  (window.KP_DICT_READY||Promise.resolve()).then(()=>{apply(cur);window.kpReveal&&kpReveal()});
 })();
 
 

@@ -86,9 +86,8 @@ window.KP = {
 /* pomocník: překlad českého řetězce přes slovník z assets/i18n.js */
 window.KP.t=function(cs){
   if(this.lang==="cs")return cs;
-  var r=window.I18N&&window.I18N[cs];
-  var i=["en","ru","uk","de","pl"].indexOf(this.lang);
-  return (r&&i>=0&&r[i])||cs;
+  var d=window.KP_DICTS&&window.KP_DICTS[this.lang];
+  return (d&&d[cs])||cs;
 };
 window.KP.rerender=[];
 window.KP.refresh=function(){this.rerender.forEach(function(f){try{f()}catch(e){}})};
