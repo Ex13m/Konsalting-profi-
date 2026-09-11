@@ -116,7 +116,7 @@ img{max-width:100%}
   font-family:"IBM Plex Sans";font-size:15px;font-weight:600;letter-spacing:.01em;padding:15px 26px;border-radius:var(--r);
   text-decoration:none;background:var(--navy);color:var(--on-dark);
   transition:transform .18s cubic-bezier(.2,.8,.3,1),background .22s,box-shadow .22s;
-  box-shadow:0 10px 24px -16px rgba(13,25,53,.9)}
+  box-shadow:0 10px 24px -16px rgba(13,25,53,.9);max-width:100%}
 .btn:hover{background:var(--ink);transform:translateY(-2px)}
 .btn.brass{background:var(--brass);color:#fff}
 .btn.brass:hover{background:#94622F}
@@ -154,9 +154,9 @@ nav.main a:hover::after{transform:none}
   cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:none;opacity:.7;transition:opacity .2s,background .2s}
 .tswitch:hover{opacity:1;background:rgba(169,116,60,.14)}
 .tswitch svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6}
-.tswitch .moon,.tswitch .retro{display:none}
+.tswitch .moon,.tswitch .classic{display:none}
 .burger{display:none;margin-left:auto;background:none;border:0;color:inherit;padding:10px;cursor:pointer}
-.hbar .btn{padding:12px 22px;font-size:14px}
+.hbar .btn{padding:12px 22px;font-size:14px;flex:none;white-space:nowrap}
 header:not(.solid) .hbar .btn{background:rgba(244,241,235,.12);color:var(--on-dark);box-shadow:inset 0 0 0 1px var(--line-dark)}
 header:not(.solid) .hbar .btn:hover{background:rgba(244,241,235,.2)}
 @media(max-width:1180px){
@@ -189,7 +189,7 @@ header:not(.solid) .hbar .btn:hover{background:rgba(244,241,235,.2)}
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:min(100svh,880px);display:flex;flex-direction:column;justify-content:flex-end;
   overflow:hidden;padding-top:120px;background:var(--navy-2);color:var(--on-dark)}
-.hero-media{position:absolute;inset:0;z-index:0;background:
+.hero-media{position:absolute;inset:0;z-index:0;overflow:hidden;background:
   radial-gradient(120% 100% at 78% 12%,#22355F 0%,#16264F 42%,#0B1226 100%)}
 .hero-media img{width:100%;height:100%;object-fit:cover;object-position:center 70%;display:block;transform:scale(1.06);
   animation:heroZoom 18s ease-out forwards}
@@ -397,6 +397,13 @@ footer a:hover{color:var(--on-dark)}
 .fbot .by b{font-weight:500;color:var(--brass-2);letter-spacing:.05em}
 
 /* ---------- odhalování ---------- */
+/* němčina umí slova, která rozstrčí i širokou kolonku — necháme je zlomit
+   a stránce zakážeme vodorovný posuv (clip, ne hidden, aby držel sticky) */
+html{overflow-x:clip}
+body{overflow-wrap:break-word;overflow-x:clip}
+.btn{white-space:normal}
+h1,h2,h3,p,li,label,figcaption,.eyebrow{hyphens:auto;-webkit-hyphens:auto}
+
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.8,.3,1),transform .8s cubic-bezier(.2,.8,.3,1)}
 .reveal.seen{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
@@ -421,8 +428,8 @@ body.dark .opt:hover{background:var(--paper-3)}
 body.dark .cal .m{background:var(--paper-2)}
 body.dark .tswitch .moon{display:block}
 body.dark .tswitch .sun{display:none}
-body.retro .tswitch .retro{display:block}
-body.retro .tswitch .sun,body.retro .tswitch .moon{display:none}
+body.classic .tswitch .classic{display:block}
+body.classic .tswitch .sun,body.classic .tswitch .moon{display:none}
 body.dark ::selection{background:var(--brass);color:#fff}
 
 /* ============================================================
@@ -757,7 +764,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 /* ---- holografická projekce ----------------------------------------
    Klára nestojí v rámečku, ale přímo na stránce: pozadí snímku je
    vyříznuté do alfy, světlo vychází z tlačítka pod ní. */
-.holo-fab{position:fixed;right:262px;bottom:24px;z-index:67;width:52px;height:52px;border-radius:50%;
+.holo-fab{position:fixed;right:22px;bottom:88px;z-index:67;width:52px;height:52px;border-radius:50%;
   border:1px solid rgba(192,143,78,.5);background:linear-gradient(180deg,#1B2C58,#0C1730);
   display:grid;place-items:center;cursor:pointer;padding:0;
   box-shadow:0 8px 22px rgba(8,14,30,.38);transition:transform .25s,box-shadow .25s,border-color .25s}
@@ -804,7 +811,7 @@ body.dark .holo-cap{color:#F2E7D6}
   color:#D6A666;font-weight:600;margin-bottom:4px}
 body.dark .holo-cap b{color:#E0B173}
 .holo-cap span{display:block;opacity:0;animation:holo-say .5s forwards}
-.holo-mute{position:fixed;right:322px;bottom:36px;z-index:67;width:28px;height:28px;border-radius:50%;padding:0;
+.holo-mute{position:fixed;right:80px;bottom:97px;z-index:67;width:28px;height:28px;border-radius:50%;padding:0;
   border:1px solid rgba(192,143,78,.3);background:var(--paper);color:#A9743C;
   font-size:11px;cursor:pointer;display:none;place-items:center;line-height:1}
 body.dark .holo-mute{background:#101B36;color:#C08F4E}
@@ -826,67 +833,56 @@ body.dark .holo-mute{background:#101B36;color:#C08F4E}
 .holo-fig.vypadek{animation:none!important;opacity:.24;transform:translateX(3px) skewX(-1.2deg);filter:brightness(2.1) blur(1.4px)}
 @keyframes holo-scan{0%{background-position:0 0}100%{background-position:0 5px}}
 @keyframes holo-say{to{opacity:1}}
-/* ---- třetí vzhled: kancelářský web, jak se dělaly v nultých letech ----
-   Papír místo bílé, samé rámečky, žádné stíny ani kulaté rohy, patkové
-   písmo i v ovládání a podtržené odkazy. */
-body.retro{
-  --paper:#EFE9DC;
-  --paper-2:#F7F3EA;
-  --paper-3:#E3DBC9;
-  --ink:#2A2419;
-  --navy:#1F3A6E;
-  --navy-2:#16294E;
-  --brass:#7A4B1E;
-  --brass-2:#9C6A32;
-  --signal:#8A2420;
-  --line:rgba(42,36,25,.32);
-  --line-2:rgba(42,36,25,.18);
-  --muted:rgba(42,36,25,.74);
-  --on-dark:#F2EDE0;
-  --on-dark-mute:rgba(242,237,224,.78);
-  --line-dark:rgba(242,237,224,.3);
-  --r:0px;
-  --shadow:none;
-  background-image:
-    repeating-linear-gradient(0deg,rgba(42,36,25,.022) 0 2px,transparent 2px 4px);
+/* ---- třetí vzhled: podoba dnešního konsalting.cz --------------------
+   Bílý podklad, bezpatkové písmo i v nadpisech, sytě modrý text, azurový
+   akcent, kulaté karty s tenkým rámečkem a plné modré tlačítko. */
+body.classic{
+  --paper:#FFFFFF;
+  --paper-2:#FFFFFF;
+  --paper-3:#F4F7FC;
+  --ink:#0E2A6B;
+  --navy:#0B2A6B;
+  --navy-2:#081F52;
+  --brass:#0EA5F9;
+  --brass-2:#38BDF8;
+  --signal:#E11D48;
+  --line:rgba(99,110,200,.22);
+  --line-2:rgba(99,110,200,.12);
+  --muted:#6B7A9E;
+  --on-dark:#FFFFFF;
+  --on-dark-mute:rgba(255,255,255,.82);
+  --line-dark:rgba(255,255,255,.26);
+  --r:12px;
+  --shadow:0 10px 30px -18px rgba(14,42,107,.35);
 }
-body.retro,body.retro input,body.retro textarea,body.retro button,body.retro select{
-  font-family:Georgia,"Times New Roman",Times,serif}
-body.retro h1,body.retro h2,body.retro h3,body.retro .logo{
-  font-family:Georgia,"Times New Roman",Times,serif;letter-spacing:0}
-body.retro h2{border-bottom:2px solid var(--brass);padding-bottom:8px;display:inline-block}
-/* všechno je v rámečku a nic nevrhá stín */
-body.retro *{box-shadow:none!important;border-radius:0!important}
-body.retro .btn{
-  border:1px solid var(--ink);background:linear-gradient(#F7F3EA,#DED5C1);
-  color:var(--ink);font-weight:700;letter-spacing:.02em;
-  box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 rgba(42,36,25,.25)!important}
-body.retro .btn:hover{background:linear-gradient(#FFFDF7,#E8E0CE)}
-body.retro .btn:not(.ghost){background:linear-gradient(#3A5E9E,#1F3A6E);color:#F7F3EA;border-color:#16294E}
-body.retro .btn:not(.ghost):hover{background:linear-gradient(#456BAF,#254474)}
-body.retro nav.main a{text-decoration:underline;text-underline-offset:3px;opacity:.95}
-body.retro nav.main a::after{display:none}
-body.retro a:not(.btn){color:#1F3A6E;text-decoration:underline}
-body.retro a:not(.btn):visited{color:#5C3070}
-body.retro .pillars div,body.retro .opt,body.retro .cal .m,body.retro article,
-body.retro .tint,body.retro .field{border:1px solid var(--line)}
-body.retro img{border:1px solid var(--line);filter:saturate(.72) contrast(1.06) sepia(.16)}
-body.retro .eyebrow{font-variant:small-caps;letter-spacing:.04em;text-transform:none}
-body.retro header.solid{background:var(--paper-2);border-bottom:2px solid var(--brass)}
-body.retro .strip{background:var(--navy-2)}
-/* tmavé pruhy se na papír nehodí — v retru jsou světlé s rámečkem */
-body.retro .on-dark,body.retro .contact,body.retro .book{
-  background:var(--paper-3);color:var(--ink);border-top:2px solid var(--brass);border-bottom:2px solid var(--brass)}
-body.retro .on-dark .sec-head p,body.retro .on-dark .muted,
-body.retro .contact .microtrust,body.retro .book .microtrust,
-body.retro .on-dark .microtrust{color:var(--muted)}
-body.retro .on-dark .btn.ghost,body.retro .contact .btn.ghost{
-  color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)!important}
-body.retro .trustline{color:var(--muted);border-top-color:var(--line)}
-body.retro .trustline svg{stroke:var(--brass)}
-
-/* projekce se v tomto vzhledu nehodí — je to web z doby před hologramy */
-body.retro .holo-fab,body.retro .holo,body.retro .holo-dim,body.retro .holo-mute{display:none}
+body.classic h1,body.classic h2,body.classic h3,body.classic .logo{
+  font-family:"IBM Plex Sans",system-ui,sans-serif;font-weight:600;letter-spacing:-.015em}
+body.classic h1{line-height:1.18}
+body.classic h1 em,body.classic h2 em{font-style:normal;color:var(--brass)}
+/* karty: bílé, kulaté, tenký rámeček, stín až na najetí */
+body.classic .pillars div,body.classic .opt,body.classic .cal .m,
+body.classic #adv article,body.classic .faq details,body.classic .step-media{
+  background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:none;
+  transition:box-shadow .25s,border-color .25s}
+body.classic .pillars div:hover,body.classic .opt:hover,body.classic #adv article:hover{
+  border-color:rgba(14,165,249,.5);box-shadow:0 12px 28px -18px rgba(14,42,107,.45)}
+/* tlačítko: plná azurová, bílý text, kulaté */
+body.classic .btn{border-radius:10px;font-weight:600;letter-spacing:0}
+body.classic .btn:not(.ghost){background:var(--brass);color:#fff;box-shadow:none}
+body.classic .btn:not(.ghost):hover{background:#0B93E0}
+body.classic .btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+body.classic .btn.ghost:hover{background:var(--paper-3)}
+body.classic img{border-radius:14px}
+body.classic .eyebrow{color:var(--brass);letter-spacing:.08em}
+body.classic header.solid{background:rgba(255,255,255,.94);border-bottom:1px solid var(--line)}
+body.classic nav.main a{opacity:.92}
+body.classic nav.main a::after{background:var(--brass)}
+/* modré pruhy zůstávají modré, ale v jejich odstínu */
+body.classic .on-dark,body.classic .contact,body.classic .strip{background:var(--navy)}
+body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){background:var(--brass)}
+body.classic .trustline svg{stroke:var(--brass-2)}
+/* projekce se sem hodí — jen ať na bílém není přesvětlená */
+body.classic .holo-fig img{filter:brightness(.92) contrast(1.15) saturate(.85)}
 
 @media(max-width:700px){
   /* asistentka je široká přes půl obrazovky — projektor patří nad ni, ne vedle */
@@ -930,7 +926,7 @@ body.retro .holo-fab,body.retro .holo,body.retro .holo-dim,body.retro .holo-mute
     <button class="tswitch" id="tsw" aria-label="Přepnout vzhled stránek">
       <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
       <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
-      <svg class="retro" viewBox="0 0 24 24"><path d="M3.5 5.5h17v13h-17z"/><path d="M6.5 9h7M6.5 12h7M6.5 15h4M16 9h1.5M16 12h1.5"/></svg>
+      <svg class="classic" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M7 9.5h6M7 13h9M7 16.5h4"/><circle cx="17" cy="9.5" r="1.3"/></svg>
     </button>
     <a class="btn" href="#objednani">Vybrat termín</a>
   </div>
@@ -1563,13 +1559,13 @@ setTimeout(()=>document.body.classList.add('anim-done'),1400);
 
 /* vzhled: tlačítko přepíná dokola světlý -> tmavý -> retro */
 (function(){
-  const VZHLEDY=['light','dark','retro'];
+  const VZHLEDY=['light','dark','classic'];
   let saved=null;try{saved=localStorage.getItem('kp-theme')}catch(e){}
   if(VZHLEDY.indexOf(saved)<0)
     saved=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
   const nasad=v=>{
     document.body.classList.toggle('dark',v==='dark');
-    document.body.classList.toggle('retro',v==='retro');
+    document.body.classList.toggle('classic',v==='classic');
     try{localStorage.setItem('kp-theme',v)}catch(e){}
   };
   nasad(saved);
@@ -2469,70 +2465,104 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     tuk.connect(tukG);ven(a,tukG,0.4,0.6);tuk.start(z);tuk.stop(z+0.35);
   }
 
-  /* bzučení — hluboké, na hranici slyšitelnosti */
+  /* hudba pod projekcí — místo bzučení.
+     Pomalý puls pod osmdesát tepů, durová harmonie I-vi-IV-V po osmi
+     vteřinách a občasný tón shora z pentatoniky. Hlasitost je na hranici
+     slyšitelnosti: má vytvořit klid a důvěru, ne zaujmout.
+     Žádné podprahové techniky — ty zakazuje čl. 5 AI Actu. */
+  const AKORDY=[
+    [65.41,130.81,164.81,196.00],   // C
+    [110.0,164.81,220.00,261.63],   // Am
+    [87.31,174.61,220.00,261.63],   // F
+    [98.00,196.00,246.94,293.66]    // G
+  ];
+  const ZVONKY=[523.25,587.33,659.25,783.99,880.00];
+  let akord=0,akordCas=null,zvonekCas=null;
+
   function humZap(){
     const a=ctx();if(!a||ticho||hum)return;
     const t=a.currentTime;
     humG=a.createGain();humG.gain.setValueAtTime(0.0001,t);
-    humG.gain.exponentialRampToValueAtTime(0.034,t+1.6);
+    humG.gain.exponentialRampToValueAtTime(0.028,t+2.4);   // hudba nastupuje pomalu
 
     const filtr=a.createBiquadFilter();filtr.type='lowpass';
-    filtr.frequency.value=520;filtr.Q.value=0.6;
-    filtr.connect(humG);ven(a,humG,0.5,0.35);
+    filtr.frequency.value=1400;filtr.Q.value=0.5;
+    filtr.connect(humG);ven(a,humG,0.45,0.55);             // hodně do dozvuku, ať je to daleko
 
-    const slozky=[
-      {typ:'sine', f:47,    g:0.55},
-      {typ:'sine', f:47.35, g:0.45},   // rozdíl 0,35 Hz — velmi pomalé svírání
-      {typ:'sine', f:94,    g:0.12}
-    ].map(v=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.type=v.typ;o.frequency.value=v.f;g.gain.value=v.g;
-      o.connect(g);g.connect(filtr);o.start(t);
-      return o;
-    });
+    // pomalé dýchání hlasitosti, zhruba dvanáct nádechů za minutu
+    const dech=a.createOscillator(),dechG=a.createGain();
+    dech.type='sine';dech.frequency.value=0.2;dechG.gain.value=0.006;
+    dech.connect(dechG);dechG.connect(humG.gain);dech.start(t);
 
-    const vz=a.createBufferSource();vz.buffer=sumBuf(a,3,'rovny');vz.loop=true;
-    const vzF=a.createBiquadFilter(),vzG=a.createGain();
-    vzF.type='lowpass';vzF.frequency.value=700;vzF.Q.value=0.5;
-    vzG.gain.value=0.07;
-    vz.connect(vzF);vzF.connect(vzG);vzG.connect(filtr);vz.start(t);
+    const drzene=[];
+    const nasadAkord=()=>{
+      if(!hum)return;
+      const n=ac.currentTime,tony=AKORDY[akord];
+      akord=(akord+1)%AKORDY.length;
+      // starý akord osm vteřin doznívá, nový mezitím nastupuje — nikdy to nesekne
+      tony.forEach((f,i)=>{
+        const o=ac.createOscillator(),g=ac.createGain();
+        o.type=i===0?'sine':'triangle';
+        o.frequency.value=f;o.detune.value=(Math.random()-0.5)*5;
+        g.gain.setValueAtTime(0.0001,n);
+        g.gain.exponentialRampToValueAtTime(i===0?0.5:0.2/i,n+2.2);
+        g.gain.setValueAtTime(i===0?0.5:0.2/i,n+6);
+        g.gain.exponentialRampToValueAtTime(0.0001,n+9.5);
+        o.connect(g);g.connect(filtr);o.start(n);o.stop(n+10);
+        drzene.push(o);
+      });
+      akordCas=setTimeout(nasadAkord,8000);
+    };
+    nasadAkord();
 
-    const lfoA=a.createOscillator(),lfoAG=a.createGain();
-    lfoA.type='sine';lfoA.frequency.value=0.16;lfoAG.gain.value=0.008;
-    lfoA.connect(lfoAG);lfoAG.connect(humG.gain);lfoA.start(t);
+    // ojedinělý tón shora, ať to není jen ploché podbarvení
+    const zvonek=()=>{
+      if(!hum)return;
+      const n=ac.currentTime,f=ZVONKY[Math.floor(Math.random()*ZVONKY.length)];
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.type='sine';o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,n);
+      g.gain.exponentialRampToValueAtTime(0.06,n+0.04);
+      g.gain.exponentialRampToValueAtTime(0.0001,n+3.2);
+      o.connect(g);g.connect(filtr);o.start(n);o.stop(n+3.4);
+      zvonekCas=setTimeout(zvonek,5000+Math.random()*8000);
+    };
+    zvonekCas=setTimeout(zvonek,3500);
 
-    hum={slozky,vz,lfoA,filtr};
+    hum={drzene,dech,filtr};
 
-    // projekce občas ztratí signál — zvuk a obraz škubnou zároveň
+    // projekce občas ztratí signál — hudba se na okamžik propadne a obraz škubne
     const fig=box.querySelector('.holo-fig');
     const vypadek=()=>{
       if(!hum)return;
-      const n=ac.currentTime,delka=0.04+Math.random()*0.05;
+      const n=ac.currentTime,delka=0.05+Math.random()*0.06;
       try{
         humG.gain.cancelScheduledValues(n);
         humG.gain.setValueAtTime(humG.gain.value,n);
-        humG.gain.exponentialRampToValueAtTime(0.005,n+0.015);
-        humG.gain.exponentialRampToValueAtTime(0.034,n+delka+0.22);
+        humG.gain.exponentialRampToValueAtTime(0.004,n+0.02);
+        humG.gain.exponentialRampToValueAtTime(0.028,n+delka+0.5);
       }catch(e){}
       if(fig){fig.classList.add('vypadek');setTimeout(()=>fig.classList.remove('vypadek'),delka*1000)}
-      vypadky=setTimeout(vypadek,4200+Math.random()*6000);
+      vypadky=setTimeout(vypadek,7000+Math.random()*9000);
     };
-    vypadky=setTimeout(vypadek,4000+Math.random()*4000);
+    vypadky=setTimeout(vypadek,6000+Math.random()*5000);
   }
+
   function humVyp(){
-    clearTimeout(vypadky);vypadky=null;
+    [vypadky,akordCas,zvonekCas].forEach(clearTimeout);
+    vypadky=akordCas=zvonekCas=null;
     if(!hum)return;
-    const a=ac,konec=a?a.currentTime+0.5:0,h=hum;hum=null;
+    const a=ac,konec=a?a.currentTime+0.8:0,h=hum;hum=null;akord=0;
     try{
       humG.gain.cancelScheduledValues(a.currentTime);
       humG.gain.setValueAtTime(humG.gain.value,a.currentTime);
       humG.gain.exponentialRampToValueAtTime(0.0001,konec);
-      h.filtr.frequency.exponentialRampToValueAtTime(140,konec);
+      h.filtr.frequency.exponentialRampToValueAtTime(240,konec);
     }catch(e){}
     setTimeout(()=>{
-      h.slozky.forEach(o=>{try{o.stop()}catch(e){}});
-      [h.vz,h.lfoA].forEach(o=>{try{o&&o.stop()}catch(e){}});
-    },560);
+      h.drzene.forEach(o=>{try{o.stop()}catch(e){}});
+      try{h.dech.stop()}catch(e){}
+    },900);
   }
 
   /* vypnutí — vzduch vydechne a spodek doklesne */
