@@ -869,7 +869,7 @@ body.classic{
   --signal:#E11D48;
   --line:rgba(99,110,200,.22);
   --line-2:rgba(99,110,200,.12);
-  --muted:#6B7A9E;
+  --muted:#5F6E85;   /* světlejší odstíny nedávaly ani 4,5 na světlém podkladu */
   --on-dark:#FFFFFF;
   --on-dark-mute:rgba(255,255,255,.82);
   --line-dark:rgba(255,255,255,.26);
@@ -924,6 +924,84 @@ body.classic .holo-fig img{filter:brightness(.92) contrast(1.15) saturate(.85)}
 @media(prefers-reduced-motion:reduce){
   .holo-fig,.holo-fig::after,.holo-cap span{animation:none!important}
   .holo.on .holo-fig{opacity:.95}}
+/* tlačítka nad fotkou v hlavičce a v hero měla vlastní průhledné pozadí
+   — po sjednocení barvy by zbledla, proto jim ji vracíme výslovně */
+.hero .btn:not(.ghost),header:not(.solid) .hbar .btn:not(.ghost),
+header .hbar .btn:not(.ghost){background:var(--brass-btn);color:#fff;box-shadow:none}
+.hero .btn:not(.ghost):hover,header .hbar .btn:not(.ghost):hover{background:var(--brass)}
+body.classic .hero .btn:not(.ghost),body.classic header .hbar .btn:not(.ghost){background:var(--brass-btn)}
+body.classic .hero .btn:not(.ghost):hover,body.classic header .hbar .btn:not(.ghost):hover{background:#0EA5F9}
+
+/* mosaz jako barva textu: na papíru dávala 3,65 a na modré 3,69 —
+   plochy a linky si firemní tón nechávají, drobné popisky dostávají
+   kontrastnější odstín téže barvy */
+.eyebrow,nav.main a{color:#8F5F2E}
+.on-dark .eyebrow,.contact .eyebrow,.book .eyebrow,.hero .eyebrow,
+.strip .eyebrow,footer .eyebrow{color:#C08F4E}
+body.dark .eyebrow{color:#C08F4E}
+header:not(.solid) nav.main a{color:var(--on-dark)}
+body.dark nav.main a{color:inherit}
+
+/* poslední body pod hranicí AA: odkazy v patě, text tlačítek a duch v liště */
+footer a:not(.btn),.contact a:not(.btn),.on-dark a:not(.btn){color:var(--brass-2)}
+body.classic footer a:not(.btn){color:#7CC6F2}
+.btn:not(.ghost){color:#fff}
+.dock .btn.ghost{background:var(--paper);color:var(--ink);box-shadow:none}
+
+/* standardizace: ve třetím vzhledu se potulovaly čtyři různé rádiusy */
+body.classic .pillars div,body.classic .opt,body.classic .cal .m,
+body.classic #adv article,body.classic .faq details,body.classic .step-media,
+body.classic img,body.classic .field input,body.classic .field textarea,
+body.classic .btn{border-radius:12px}
+
+/* souhlas s GDPR sedí v tmavém pruhu, ale bral světlou variantu textu
+   — na tmavém podkladu byl prakticky neviditelný */
+.on-dark .chk span,.book .chk span,.contact .chk span,
+.on-dark label,.book label,.contact label{color:var(--on-dark-mute)}
+.on-dark .legal-open,.book .legal-open,.contact .legal-open{color:var(--brass-2)}
+
+/* ve třetím vzhledu je akcent tmavý — v tmavých pruzích proto světlá varianta */
+body.classic .hero .eyebrow,body.classic .hero h1 em,
+body.classic .on-dark .eyebrow,body.classic .on-dark h2 em,
+body.classic .contact .eyebrow,body.classic .contact h2 em,
+body.classic .book .eyebrow,body.classic .book h2 em,
+body.classic .on-dark a:not(.btn),body.classic .contact a:not(.btn),
+body.classic .book a:not(.btn),body.classic .hero a:not(.btn){color:#7CC6F2}
+
+/* azurová jako barva textu má na bílé jen 2,7 — drobné popisky
+   a odkazy proto berou tmavší odstín, plochy si azurovou nechávají */
+/* akcent jako text: na světlém tmavý odstín, na tmavém světlý */
+body.classic .eyebrow,body.classic h1 em,body.classic h2 em{color:#0A6FA8}
+body.classic header:not(.solid) nav.main a,
+body.classic header:not(.solid) .hbar a:not(.btn){color:var(--on-dark)}
+body.classic header.solid nav.main a{color:var(--ink)}
+body.classic .on-dark .eyebrow,body.classic .contact .eyebrow,body.classic .strip{color:#7CC6F2}
+body.classic .pillars svg,body.classic #adv article svg,body.classic .step svg,
+body.classic .trustline svg{stroke:#0EA5F9}
+body.classic .btn:not(.ghost):hover{background:#0B7CBE}
+
+/* kontrast podle WCAG AA: bílý text na firemní mosazi dával jen 4,0
+   a na azurové jen 2,7. Tlačítka proto dostávají tmavší odstín téže
+   barvy, akcenty a ikony si firemní tón nechávají. */
+:root{--brass-btn:#9B6733}
+body.dark{--brass-btn:#9B6733}
+body.classic{--brass-btn:#0B7CBE}
+.btn:not(.ghost){background:var(--brass-btn)}
+.btn:not(.ghost):hover{background:var(--brass)}
+body.dark .btn{background:var(--brass-btn)}
+body.dark .btn:hover{background:var(--brass)}
+body.dark .hero .btn:not(.ghost){background:var(--brass-btn)}
+body.classic .btn:not(.ghost){background:var(--brass-btn)}
+body.classic .btn:not(.ghost):hover{background:#0EA5F9}
+body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){background:var(--brass-btn)}
+
+/* dotykové cíle: ovládání v hlavičce bylo pod 40 px */
+@media(max-width:1180px){
+  .burger{padding:12px;min-width:44px;min-height:44px}
+  .tswitch{width:42px;height:42px}
+  .lang button{min-height:42px}}
+.due-item{padding-block:8px}
+
 </style>
 </head>
 <body>
