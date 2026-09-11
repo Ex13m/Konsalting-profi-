@@ -825,11 +825,13 @@ body.dark .holo-mute{background:#101B36;color:#C08F4E}
 @keyframes holo-scan{0%{background-position:0 0}100%{background-position:0 5px}}
 @keyframes holo-say{to{opacity:1}}
 @media(max-width:700px){
-  .holo-fab{right:196px;bottom:80px;width:46px;height:46px}
-  .holo{right:0;bottom:140px;width:390px;height:326px}
-  .holo-fig{right:118px;width:196px;height:261px}
-  .holo-cap{right:102px;width:228px;font-size:12px}
-  .holo-mute{right:250px;bottom:90px}}
+  /* asistentka je široká přes půl obrazovky — projektor patří nad ni, ne vedle */
+  .holo-fab{right:14px;bottom:136px;width:46px;height:46px}
+  .holo-mute{right:70px;bottom:145px}
+  /* nad tlačítkem u kraje se postava nevejde, na úzké obrazovce stojí na střed */
+  .holo{left:0;right:0;bottom:196px;width:100%;height:300px}
+  .holo-fig{left:0;right:0;margin:0 auto;width:190px;height:253px}
+  .holo-cap{left:0;right:0;margin:0 auto;width:min(266px,82vw);font-size:12px;top:-6px}}
 @media(prefers-reduced-motion:reduce){
   .holo-fig,.holo-fig::after,.holo-cap span{animation:none!important}
   .holo.on .holo-fig{opacity:.95}}
@@ -2347,93 +2349,69 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     return b;
   }
 
-  /* zapnutí — relé, podbas, nájezd, rozsvícení, dozvonění */
+  /* zapnutí — nádech vzduchu, spodek a tichý sklovitý akord.
+     Žádné pily ani relé: projekce na webu účetní kanceláře má působit
+     draze, ne jako přístroj z laboratoře. */
   function zvukZap(){
     const a=ctx();if(!a||ticho)return;
     const t=a.currentTime;
 
-    // 1) cvaknutí relé
-    const rel=a.createBufferSource();rel.buffer=sumBuf(a,0.05,'dozniva');
-    const relF=a.createBiquadFilter();relF.type='highpass';relF.frequency.value=2600;
-    const relG=a.createGain();relG.gain.setValueAtTime(0.5,t);relG.gain.exponentialRampToValueAtTime(0.001,t+0.05);
-    rel.connect(relF);relF.connect(relG);ven(a,relG,0.8,0.3);rel.start(t);
-
-    // 2) podbas, jak se to chytne
-    const sub=a.createOscillator(),subG=a.createGain();
-    sub.type='sine';sub.frequency.setValueAtTime(58,t+0.02);
-    sub.frequency.exponentialRampToValueAtTime(28,t+0.55);
-    subG.gain.setValueAtTime(0.0001,t+0.02);
-    subG.gain.exponentialRampToValueAtTime(0.5,t+0.07);
-    subG.gain.exponentialRampToValueAtTime(0.0001,t+0.62);
-    sub.connect(subG);ven(a,subG,0.55,0.08);sub.start(t+0.02);sub.stop(t+0.7);
-
-    // 3) nájezd — pila přes rezonanční filtr, obojí stoupá
-    const naj=a.createOscillator(),najF=a.createBiquadFilter(),najG=a.createGain();
-    naj.type='sawtooth';
-    naj.frequency.setValueAtTime(62,t+0.05);naj.frequency.exponentialRampToValueAtTime(760,t+0.62);
-    najF.type='lowpass';najF.Q.value=9;
-    najF.frequency.setValueAtTime(180,t+0.05);najF.frequency.exponentialRampToValueAtTime(5200,t+0.66);
-    najG.gain.setValueAtTime(0.0001,t+0.05);
-    najG.gain.exponentialRampToValueAtTime(0.16,t+0.3);
-    najG.gain.exponentialRampToValueAtTime(0.0001,t+0.78);
-    naj.connect(najF);najF.connect(najG);ven(a,najG,0.7,0.35);naj.start(t+0.05);naj.stop(t+0.85);
-
-    // 4) nabití — FM dvojice v neharmonickém poměru, odtud ten skleněný nádech
-    const nos=a.createOscillator(),mod=a.createOscillator(),modG=a.createGain(),nabG=a.createGain();
-    nos.type='sine';nos.frequency.value=430;
-    mod.type='sine';mod.frequency.value=430*1.414;
-    modG.gain.setValueAtTime(40,t+0.1);modG.gain.linearRampToValueAtTime(620,t+0.72);
-    nabG.gain.setValueAtTime(0.0001,t+0.1);
-    nabG.gain.exponentialRampToValueAtTime(0.1,t+0.5);
-    nabG.gain.exponentialRampToValueAtTime(0.0001,t+0.95);
-    mod.connect(modG);modG.connect(nos.frequency);nos.connect(nabG);
-    ven(a,nabG,0.6,0.45);mod.start(t+0.1);nos.start(t+0.1);mod.stop(t+1);nos.stop(t+1);
-
-    // 5) vzduch — šum přes pásmovku, která vyletí nahoru
-    const vz=a.createBufferSource();vz.buffer=sumBuf(a,0.55,'dozniva');
+    // 1) vzduch se nadechne — šum otevírající a zase zavírající lowpass
+    const vz=a.createBufferSource();vz.buffer=sumBuf(a,1.3,'dozniva');
     const vzF=a.createBiquadFilter(),vzG=a.createGain();
-    vzF.type='bandpass';vzF.Q.value=1.1;
-    vzF.frequency.setValueAtTime(380,t+0.32);vzF.frequency.exponentialRampToValueAtTime(6400,t+0.8);
-    vzG.gain.setValueAtTime(0.22,t+0.32);vzG.gain.exponentialRampToValueAtTime(0.001,t+0.88);
-    vz.connect(vzF);vzF.connect(vzG);ven(a,vzG,0.5,0.5);vz.start(t+0.32);
+    vzF.type='lowpass';vzF.Q.value=0.7;
+    vzF.frequency.setValueAtTime(220,t);
+    vzF.frequency.exponentialRampToValueAtTime(3400,t+0.5);
+    vzF.frequency.exponentialRampToValueAtTime(900,t+1.25);
+    vzG.gain.setValueAtTime(0.0001,t);
+    vzG.gain.exponentialRampToValueAtTime(0.3,t+0.34);
+    vzG.gain.exponentialRampToValueAtTime(0.0001,t+1.3);
+    vz.connect(vzF);vzF.connect(vzG);ven(a,vzG,0.5,0.55);vz.start(t);
 
-    // 6) dozvonění — tři neladěné složky, projekce se ustálila
-    [[905,0.09],[1278,0.055],[1810,0.032]].forEach(([f,g],i)=>{
-      const o=a.createOscillator(),og=a.createGain(),z=t+0.72+i*0.012;
-      o.type='sine';o.frequency.setValueAtTime(f,z);
-      o.detune.setValueAtTime((i-1)*7,z);
+    // 2) spodek — měkký nájezd, ne úder
+    const sub=a.createOscillator(),subG=a.createGain();
+    sub.type='sine';
+    sub.frequency.setValueAtTime(44,t);sub.frequency.exponentialRampToValueAtTime(31,t+0.9);
+    subG.gain.setValueAtTime(0.0001,t);
+    subG.gain.exponentialRampToValueAtTime(0.34,t+0.2);
+    subG.gain.exponentialRampToValueAtTime(0.0001,t+1.05);
+    sub.connect(subG);ven(a,subG,0.55,0.12);sub.start(t);sub.stop(t+1.15);
+
+    // 3) sklovitý akord — čisté složky, kvinta a oktáva, nic disonantního
+    [[523.25,0.052,0],[784,0.036,0.05],[1046.5,0.024,0.1]].forEach(([f,g,zp])=>{
+      const o=a.createOscillator(),og=a.createGain(),z=t+0.3+zp;
+      o.type='sine';o.frequency.value=f;o.detune.value=(Math.random()-0.5)*6;
       og.gain.setValueAtTime(0.0001,z);
-      og.gain.exponentialRampToValueAtTime(g,z+0.015);
-      og.gain.exponentialRampToValueAtTime(0.0001,z+0.9);
-      o.connect(og);ven(a,og,0.5,0.6);o.start(z);o.stop(z+1);
+      og.gain.exponentialRampToValueAtTime(g,z+0.12);
+      og.gain.exponentialRampToValueAtTime(0.0001,z+1.5);
+      o.connect(og);ven(a,og,0.45,0.7);o.start(z);o.stop(z+1.6);
     });
 
-    // 7) dvě škubnutí signálu na konec
-    [0.86,0.98].forEach((z,i)=>{
-      const g=a.createBufferSource();g.buffer=sumBuf(a,0.022,'dozniva');
-      const gf=a.createBiquadFilter(),gg=a.createGain();
-      gf.type='bandpass';gf.frequency.value=i?2100:1350;gf.Q.value=3;
-      gg.gain.setValueAtTime(0.2,t+z);gg.gain.exponentialRampToValueAtTime(0.001,t+z+0.022);
-      g.connect(gf);gf.connect(gg);ven(a,gg,0.7,0.25);g.start(t+z);
-    });
+    // 4) jediné tiché ťuknutí, když se obraz ustálí
+    const tuk=a.createOscillator(),tukG=a.createGain(),z=t+0.86;
+    tuk.type='sine';
+    tuk.frequency.setValueAtTime(1320,z);tuk.frequency.exponentialRampToValueAtTime(880,z+0.1);
+    tukG.gain.setValueAtTime(0.0001,z);
+    tukG.gain.exponentialRampToValueAtTime(0.03,z+0.01);
+    tukG.gain.exponentialRampToValueAtTime(0.0001,z+0.32);
+    tuk.connect(tukG);ven(a,tukG,0.4,0.6);tuk.start(z);tuk.stop(z+0.35);
   }
 
-  /* bzučení — tři rozladěné složky, vzduch a občasný výpadek */
+  /* bzučení — hluboké, na hranici slyšitelnosti */
   function humZap(){
     const a=ctx();if(!a||ticho||hum)return;
     const t=a.currentTime;
     humG=a.createGain();humG.gain.setValueAtTime(0.0001,t);
-    humG.gain.exponentialRampToValueAtTime(0.055,t+1.1);
+    humG.gain.exponentialRampToValueAtTime(0.034,t+1.6);
 
     const filtr=a.createBiquadFilter();filtr.type='lowpass';
-    filtr.frequency.value=900;filtr.Q.value=0.9;
-    filtr.connect(humG);ven(a,humG,0.5,0.3);
+    filtr.frequency.value=520;filtr.Q.value=0.6;
+    filtr.connect(humG);ven(a,humG,0.5,0.35);
 
     const slozky=[
-      {typ:'sine',     f:61,    g:0.5},
-      {typ:'sine',     f:61.7,  g:0.42},   // rozdíl dělá pomalé svírání
-      {typ:'triangle', f:122,   g:0.16},
-      {typ:'sawtooth', f:183,   g:0.05}    // špetka elektriky
+      {typ:'sine', f:47,    g:0.55},
+      {typ:'sine', f:47.35, g:0.45},   // rozdíl 0,35 Hz — velmi pomalé svírání
+      {typ:'sine', f:94,    g:0.12}
     ].map(v=>{
       const o=a.createOscillator(),g=a.createGain();
       o.type=v.typ;o.frequency.value=v.f;g.gain.value=v.g;
@@ -2441,93 +2419,80 @@ document.getElementById('leadform').addEventListener('submit',e=>{
       return o;
     });
 
-    // vzduch v místnosti
-    const vz=a.createBufferSource();vz.buffer=sumBuf(a,2.5,'rovny');vz.loop=true;
+    const vz=a.createBufferSource();vz.buffer=sumBuf(a,3,'rovny');vz.loop=true;
     const vzF=a.createBiquadFilter(),vzG=a.createGain();
-    vzF.type='bandpass';vzF.frequency.value=1250;vzF.Q.value=0.6;
-    vzG.gain.value=0.12;
+    vzF.type='lowpass';vzF.frequency.value=700;vzF.Q.value=0.5;
+    vzG.gain.value=0.07;
     vz.connect(vzF);vzF.connect(vzG);vzG.connect(filtr);vz.start(t);
 
-    // dvě pomalá kolísání: hlasitost a barva
     const lfoA=a.createOscillator(),lfoAG=a.createGain();
-    lfoA.type='sine';lfoA.frequency.value=0.23;lfoAG.gain.value=0.013;
+    lfoA.type='sine';lfoA.frequency.value=0.16;lfoAG.gain.value=0.008;
     lfoA.connect(lfoAG);lfoAG.connect(humG.gain);lfoA.start(t);
-    const lfoF=a.createOscillator(),lfoFG=a.createGain();
-    lfoF.type='sine';lfoF.frequency.value=3.7;lfoFG.gain.value=110;
-    lfoF.connect(lfoFG);lfoFG.connect(filtr.frequency);lfoF.start(t);
 
-    hum={slozky,vz,lfoA,lfoF,filtr};
+    hum={slozky,vz,lfoA,filtr};
 
     // projekce občas ztratí signál — zvuk a obraz škubnou zároveň
     const fig=box.querySelector('.holo-fig');
     const vypadek=()=>{
       if(!hum)return;
-      const n=ac.currentTime,delka=0.05+Math.random()*0.07;
+      const n=ac.currentTime,delka=0.04+Math.random()*0.05;
       try{
         humG.gain.cancelScheduledValues(n);
         humG.gain.setValueAtTime(humG.gain.value,n);
-        humG.gain.exponentialRampToValueAtTime(0.006,n+0.012);
-        humG.gain.exponentialRampToValueAtTime(0.055,n+delka+0.1);
+        humG.gain.exponentialRampToValueAtTime(0.005,n+0.015);
+        humG.gain.exponentialRampToValueAtTime(0.034,n+delka+0.22);
       }catch(e){}
       if(fig){fig.classList.add('vypadek');setTimeout(()=>fig.classList.remove('vypadek'),delka*1000)}
-      vypadky=setTimeout(vypadek,2600+Math.random()*5200);
+      vypadky=setTimeout(vypadek,4200+Math.random()*6000);
     };
-    vypadky=setTimeout(vypadek,3200+Math.random()*3000);
+    vypadky=setTimeout(vypadek,4000+Math.random()*4000);
   }
   function humVyp(){
     clearTimeout(vypadky);vypadky=null;
     if(!hum)return;
-    const a=ac,konec=a?a.currentTime+0.4:0,h=hum;hum=null;
+    const a=ac,konec=a?a.currentTime+0.5:0,h=hum;hum=null;
     try{
       humG.gain.cancelScheduledValues(a.currentTime);
       humG.gain.setValueAtTime(humG.gain.value,a.currentTime);
       humG.gain.exponentialRampToValueAtTime(0.0001,konec);
-      h.filtr.frequency.exponentialRampToValueAtTime(180,konec);
+      h.filtr.frequency.exponentialRampToValueAtTime(140,konec);
     }catch(e){}
     setTimeout(()=>{
       h.slozky.forEach(o=>{try{o.stop()}catch(e){}});
-      [h.vz,h.lfoA,h.lfoF].forEach(o=>{try{o.stop()}catch(e){}});
-    },460);
+      [h.vz,h.lfoA].forEach(o=>{try{o&&o.stop()}catch(e){}});
+    },560);
   }
 
-  /* vypnutí — signál spadne, projekce sklapne, relé cvakne */
+  /* vypnutí — vzduch vydechne a spodek doklesne */
   function zvukVyp(){
     const a=ctx();if(!a||ticho)return;
     const t=a.currentTime;
 
-    const pad=a.createOscillator(),padF=a.createBiquadFilter(),padG=a.createGain();
-    pad.type='sawtooth';
-    pad.frequency.setValueAtTime(720,t);pad.frequency.exponentialRampToValueAtTime(64,t+0.34);
-    padF.type='lowpass';padF.Q.value=6;
-    padF.frequency.setValueAtTime(4200,t);padF.frequency.exponentialRampToValueAtTime(140,t+0.36);
-    padG.gain.setValueAtTime(0.15,t);padG.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
-    pad.connect(padF);padF.connect(padG);ven(a,padG,0.7,0.4);pad.start(t);pad.stop(t+0.45);
+    const vz=a.createBufferSource();vz.buffer=sumBuf(a,0.5,'dozniva');
+    const vzF=a.createBiquadFilter(),vzG=a.createGain();
+    vzF.type='lowpass';vzF.Q.value=0.7;
+    vzF.frequency.setValueAtTime(2600,t);vzF.frequency.exponentialRampToValueAtTime(200,t+0.45);
+    vzG.gain.setValueAtTime(0.2,t);vzG.gain.exponentialRampToValueAtTime(0.0001,t+0.5);
+    vz.connect(vzF);vzF.connect(vzG);ven(a,vzG,0.5,0.5);vz.start(t);
 
-    const psik=a.createBufferSource();psik.buffer=sumBuf(a,0.2,'dozniva');
-    const psF=a.createBiquadFilter(),psG=a.createGain();
-    psF.type='highpass';psF.frequency.setValueAtTime(900,t);
-    psF.frequency.exponentialRampToValueAtTime(5200,t+0.2);
-    psG.gain.setValueAtTime(0.16,t);psG.gain.exponentialRampToValueAtTime(0.001,t+0.22);
-    psik.connect(psF);psF.connect(psG);ven(a,psG,0.5,0.45);psik.start(t);
-
-    const rel=a.createBufferSource();rel.buffer=sumBuf(a,0.04,'dozniva');
-    const relF=a.createBiquadFilter(),relG=a.createGain();
-    relF.type='highpass';relF.frequency.value=2200;
-    relG.gain.setValueAtTime(0.34,t+0.36);relG.gain.exponentialRampToValueAtTime(0.001,t+0.4);
-    rel.connect(relF);relF.connect(relG);ven(a,relG,0.8,0.2);rel.start(t+0.36);
+    const sub=a.createOscillator(),subG=a.createGain();
+    sub.type='sine';
+    sub.frequency.setValueAtTime(72,t);sub.frequency.exponentialRampToValueAtTime(30,t+0.4);
+    subG.gain.setValueAtTime(0.22,t);subG.gain.exponentialRampToValueAtTime(0.0001,t+0.46);
+    sub.connect(subG);ven(a,subG,0.5,0.15);sub.start(t);sub.stop(t+0.5);
   }
 
-  /* tichý cvak při změně repliky */
+  /* změna repliky — sotva znatelné ťuknutí */
   function zvukReplika(){
     const a=ctx();if(!a||ticho)return;
     const t=a.currentTime;
     const o=a.createOscillator(),g=a.createGain();
-    o.type='triangle';
-    o.frequency.setValueAtTime(1900,t);o.frequency.exponentialRampToValueAtTime(1150,t+0.07);
+    o.type='sine';
+    o.frequency.setValueAtTime(1046.5,t);o.frequency.exponentialRampToValueAtTime(784,t+0.09);
     g.gain.setValueAtTime(0.0001,t);
-    g.gain.exponentialRampToValueAtTime(0.035,t+0.008);
-    g.gain.exponentialRampToValueAtTime(0.0001,t+0.09);
-    o.connect(g);ven(a,g,0.5,0.5);o.start(t);o.stop(t+0.12);
+    g.gain.exponentialRampToValueAtTime(0.016,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.26);
+    o.connect(g);ven(a,g,0.4,0.65);o.start(t);o.stop(t+0.3);
   }
 
   /* ---- repliky ---- */
