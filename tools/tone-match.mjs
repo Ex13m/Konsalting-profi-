@@ -7,9 +7,14 @@
  * jednolitých plochách vznikají barevné závoje.
  *
  * Spuštění:  node tools/tone-match.mjs
- * Vyžaduje:  playwright s prohlížečem (dekódování webp a zápis zpět)
+ * Vyžaduje:  PLAYWRIGHT_DIR=<cesta k node_modules> (dekódování webp a zápis zpět)
  */
-import {chromium} from 'playwright';
+// playwright se do package.json nedává — Netlify by ho tahal při každém buildu.
+// Cestu k lokálně nainstalovanému balíku předej přes PLAYWRIGHT_DIR.
+const pw = await import(
+  process.env.PLAYWRIGHT_DIR ? `${process.env.PLAYWRIGHT_DIR}/playwright/index.js` : 'playwright'
+);
+const chromium = pw.chromium ?? pw.default.chromium;
 import fs from 'fs';
 const DIR='/home/user/konsalting-profi-/assets';
 const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium'});
