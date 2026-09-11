@@ -2136,22 +2136,31 @@ function marquee(track,html,pxPerSec,stackUnder){
     if(box)box.style.display=on?'':'none';
     if(note)note.style.display=on?'':'none';
   }
-  let live=null;
+  let live=null,nactenoPro=null,nacita=false;
   function render(){
     toggle(!!(live&&live.length));
     if(!live||!live.length)return;
     data=live;paint();
   }
-  toggle(false);RER(render);
+  toggle(false);
+  /* Po přepnutí jazyka si řekneme o kanál v novém jazyce — Evropská
+     komise ho v několika jazycích vydává rovnou. */
+  RER(()=>{render();if(nactenoPro!==lang())load()});
   addEventListener('resize',()=>{clearTimeout(window.__wireT);window.__wireT=setTimeout(render,250)},{passive:true});
 
   async function load(){
+    const l=lang();
+    if(nacita||nactenoPro===l)return;      /* ať se na startu neptáme dvakrát */
+    nacita=true;
     try{
-      const r=await fetch('/api/news',{headers:{'Accept':'application/json'}});
-      if(!r.ok)throw 0;
+      const r=await fetch('/api/news?lang='+encodeURIComponent(l),{headers:{'Accept':'application/json'}});
+      if(!r.ok)throw new Error('HTTP '+r.status);
       const j=await r.json();
-      if(Array.isArray(j.items)&&j.items.length){live=j.items.slice(0,12);render()}
-    }catch(e){ /* zůstávají termíny z kalendáře */ }
+      nactenoPro=l;
+      live=Array.isArray(j.items)?j.items.slice(0,12):[];
+      render();
+    }catch(e){ /* bez kanálu pás prostě nebude */ }
+    finally{ nacita=false }
   }
   load();
   setInterval(load,15*60*1000);

@@ -7,14 +7,32 @@
  * do pěti jazyků a jednu větu „o čem to je“ pro podnikatele.
  * Bez klíče web ukáže originální české titulky.
  */
-const SOURCES = [
+import { createHash } from "node:crypto";
+
+/* České zdroje. Jedou vždy — jsou to ty, které se účetnictví týkají
+   nejvíc, a jinde než česky nevycházejí. */
+const CS_SOURCES = [
   { tag: "ČNB", source: "Česká národní banka", url: "https://www.cnb.cz/cs/cnb-news/rss/" },
-  { tag: "EU", source: "Evropská komise", url: "https://ec.europa.eu/commission/presscorner/api/rss?language=cs&pagesize=10" },
   { tag: "Daně", source: "Finanční správa", url: "https://www.financnisprava.cz/rss/cs/tiskove-zpravy.xml" },
   { tag: "ČR", source: "Ministerstvo financí", url: "https://www.mfcr.cz/cs/rss/tiskove-zpravy" },
 ];
 
-import { createHash } from "node:crypto";
+/* Evropská komise vydává tentýž kanál ve více jazycích. Kde její jazyk
+   existuje, bereme ho rovnou — přeložený titulek nemusíme vyrábět.
+   Pro ruštinu a ukrajinštinu kanál není, posíláme anglický. */
+const EU_RSS = (l) =>
+  `https://ec.europa.eu/commission/presscorner/api/rss?language=${l}&pagesize=10`;
+const EU_LANG = { cs: "cs", en: "en", de: "de", pl: "pl", ru: "en", uk: "en" };
+const CNB_EN = { tag: "ČNB", source: "Czech National Bank", url: "https://www.cnb.cz/en/cnb-news/rss/" };
+
+function sourcesFor(lang) {
+  const l = EU_LANG[lang] ? lang : "cs";
+  const eu = { tag: "EU", source: l === "cs" ? "Evropská komise" : "European Commission",
+               url: EU_RSS(EU_LANG[l]) };
+  /* U cizích jazyků přidáme i anglickou ČNB — aspoň část pásu je pak
+     v jazyce návštěvníka i bez překladače. */
+  return l === "cs" ? [...CS_SOURCES, eu] : [CNB_EN, eu, ...CS_SOURCES];
+}
 
 const LANGS = ["cs", "en", "ru", "uk", "de", "pl"];
 const TAGS = {
@@ -26,7 +44,7 @@ const TAGS = {
 
 const TTL = 20 * 60 * 1000;      // titulky obnovujeme po 20 minutách;
                                  // překlady drží zásoba, takže to nic nestojí
-let cache = { at: 0, items: [] };
+const cache = new Map();      /* jazyk -> { at, items } */
 
 const strip = (s) =>
   s
@@ -58,7 +76,7 @@ function parse(xml, meta) {
 }
 
 async function fetchOne(meta) {
-  const ctl = AbortSignal.timeout ? AbortSignal.timeout(6000) : undefined;
+  const ctl = AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined;
   const r = await fetch(meta.url, {
     signal: ctl,
     headers: { "User-Agent": "KonsaltingProfi-web/1.0 (+https://konsalting.cz)" },
@@ -181,29 +199,50 @@ async function enrich(items) {
   return items.map(({ _done, ...x }) => x);
 }
 
-export default async () => {
-  if (Date.now() - cache.at < TTL && cache.items.length) {
-    return Response.json({ items: cache.items, cached: true });
+export default async (req) => {
+  const url = new URL(req.url);
+  const lang = ["cs", "en", "ru", "uk", "de", "pl"].includes(url.searchParams.get("lang"))
+    ? url.searchParams.get("lang") : "cs";
+  const debug = url.searchParams.get("debug") === "1";
+
+  const hit = cache.get(lang);
+  if (hit && Date.now() - hit.at < TTL && hit.items.length) {
+    return Response.json({ items: hit.items, lang, cached: true });
   }
 
-  const settled = await Promise.allSettled(SOURCES.map(fetchOne));
+  const srcs = sourcesFor(lang);
+  const settled = await Promise.allSettled(srcs.map(fetchOne));
+
+  /* Kdo odpověděl a kdo ne — ať se na to dá kouknout zvenčí a nehádalo
+     se, proč je pás prázdný. */
+  const stav = settled.map((r, i) => ({
+    zdroj: srcs[i].source,
+    url: srcs[i].url,
+    ok: r.status === "fulfilled",
+    pocet: r.status === "fulfilled" ? r.value.length : 0,
+    chyba: r.status === "rejected" ? String(r.reason).slice(0, 160) : null,
+  }));
+
   let items = settled
-    .filter((s) => s.status === "fulfilled")
-    .flatMap((s) => s.value)
+    .filter((r) => r.status === "fulfilled")
+    .flatMap((r) => r.value)
     .sort((a, b) => b.date - a.date)
     .slice(0, 10)
     .map((x) => ({ ...x, tag: TAGS[x.tag] || { cs: x.tag } }));
 
   if (items.length) {
     items = await enrich(items);
-    cache = { at: Date.now(), items };
+    cache.set(lang, { at: Date.now(), items });
   }
 
-  return new Response(JSON.stringify({ items: items.length ? items : cache.items }), {
+  const telo = { items: items.length ? items : (hit ? hit.items : []), lang };
+  if (debug || !telo.items.length) telo.zdroje = stav;
+
+  return new Response(JSON.stringify(telo), {
     status: 200,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "public, max-age=600",
+      "Cache-Control": "public, max-age=300",
     },
   });
 };
