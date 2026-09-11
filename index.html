@@ -491,6 +491,10 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .dock .btn{padding:12px 20px;font-size:14px;flex:none}
 .dock .x{background:none;border:0;color:var(--on-dark-mute);cursor:pointer;font-size:20px;line-height:1;padding:6px;flex:none}
 @media(max-width:700px){.dock .txt em{display:none}.dock .wrap{gap:10px}}
+/* v úzké liště se text lámal po slabikách — na telefonu tam nemá co dělat,
+   smysl nesou tlačítka */
+.dock .txt{overflow-wrap:normal;hyphens:none}
+@media(max-width:620px){.dock .txt{display:none}.dock .wrap{justify-content:center;gap:12px}}
 
 
 /* --- body důvěry: tiché signály, ne slogany --- */
@@ -699,6 +703,12 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 @keyframes pulse{70%{box-shadow:0 0 0 16px rgba(192,143,78,0)}100%{box-shadow:0 0 0 0 rgba(192,143,78,0)}}
 @media(max-width:700px){.assist-fab{right:14px;bottom:78px;padding:6px 16px 6px 6px;font-size:13px}
   .assist-fab .orb{width:36px;height:36px}.assist-fab .pulse{width:36px;height:36px;left:6px;top:6px}}
+/* na telefonu široké tlačítko přejíždělo přes nadpisy — zůstane jen kolečko */
+@media(max-width:620px){
+  .assist-fab{padding:6px;border-radius:50%}
+  .assist-fab span:not(.orb):not(.pulse){
+    position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+    clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}}
 @media(prefers-reduced-motion:reduce){.assist-fab .pulse{animation:none}}
 
 .assist{position:fixed;right:22px;bottom:22px;z-index:67;width:min(410px,calc(100vw - 28px));height:min(620px,calc(100dvh - 40px));
@@ -764,6 +774,17 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 /* ---- holografická projekce ----------------------------------------
    Klára nestojí v rámečku, ale přímo na stránce: pozadí snímku je
    vyříznuté do alfy, světlo vychází z tlačítka pod ní. */
+/* spodní lišta zabere dolní okraj — plovoucí tlačítka jí uhnou */
+body.dock-on .assist-fab{bottom:calc(22px + var(--dockh,96px))}
+body.dock-on .holo-fab{bottom:calc(88px + var(--dockh,96px))}
+body.dock-on .holo-mute{bottom:calc(97px + var(--dockh,96px))}
+body.dock-on .holo{bottom:calc(92px + var(--dockh,96px))}
+@media(max-width:700px){
+  body.dock-on .assist-fab{bottom:calc(78px + var(--dockh,96px))}
+  body.dock-on .holo-fab{bottom:calc(136px + var(--dockh,96px))}
+  body.dock-on .holo-mute{bottom:calc(145px + var(--dockh,96px))}
+  body.dock-on .holo{bottom:calc(196px + var(--dockh,96px))}}
+
 .holo-fab{position:fixed;right:22px;bottom:88px;z-index:67;width:52px;height:52px;border-radius:50%;
   border:1px solid rgba(192,143,78,.5);background:linear-gradient(180deg,#1B2C58,#0C1730);
   display:grid;place-items:center;cursor:pointer;padding:0;
@@ -867,6 +888,14 @@ body.classic #adv article,body.classic .faq details,body.classic .step-media{
 body.classic .pillars div:hover,body.classic .opt:hover,body.classic #adv article:hover{
   border-color:rgba(14,165,249,.5);box-shadow:0 12px 28px -18px rgba(14,42,107,.45)}
 /* tlačítko: plná azurová, bílý text, kulaté */
+/* karty v modrém pruhu zbělely, text v nich musí zčernat */
+body.classic .on-dark .pillars div,body.classic .on-dark .opt,body.classic #adv article,
+body.classic .on-dark .cal .m,body.classic .on-dark .faq details{color:var(--ink)}
+body.classic .on-dark .pillars div p,body.classic .on-dark .opt p,body.classic #adv article p,
+body.classic .on-dark .pillars div .muted,body.classic #adv article .muted{color:var(--muted)}
+body.classic #adv article h3,body.classic .on-dark .pillars div h3,
+body.classic .on-dark .opt h3,body.classic .on-dark .opt b{color:var(--ink)}
+body.classic #adv article svg,body.classic .on-dark .pillars div svg{stroke:var(--brass)}
 body.classic .btn{border-radius:10px;font-weight:600;letter-spacing:0}
 body.classic .btn:not(.ghost){background:var(--brass);color:#fff;box-shadow:none}
 body.classic .btn:not(.ghost):hover{background:#0B93E0}
@@ -1935,9 +1964,12 @@ document.getElementById('bform').addEventListener('submit',e=>{
     const past=scrollY>innerHeight*.9;
     const atBook=(()=>{const b=document.getElementById('objednani');if(!b)return false;
       const r=b.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0})();
-    dock.classList.toggle('on',past&&!atBook);
+    const vidi=past&&!atBook;
+    dock.classList.toggle('on',vidi);
+    document.body.classList.toggle('dock-on',vidi);
+    if(vidi)document.body.style.setProperty('--dockh',dock.offsetHeight+'px');
   },{passive:true});
-  document.getElementById('dockx').onclick=()=>{dockClosed=true;dock.classList.remove('on');
+  document.getElementById('dockx').onclick=()=>{dockClosed=true;dock.classList.remove('on');document.body.classList.remove('dock-on');
     try{sessionStorage.setItem('kp-dock','0')}catch(e){}};
 
   const ex=document.getElementById('exit');
