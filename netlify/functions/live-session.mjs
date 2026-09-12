@@ -11,18 +11,24 @@
  *   LIVE_VOICE       volitelné, hlas modelu
  *   LIVE_BACKEND_MODEL volitelné, model pro delegované uvažování
  *
- * ⚠ NEOVĚŘENO PROTI DOKUMENTACI. Dokumentace gpt-live-1 nebyla z prostředí,
- * kde tenhle soubor vznikl, dostupná (síť ji blokuje). Tvar požadavku níže
- * odpovídá Realtime API; až bude dokumentace po ruce, opravuje se jen
- * konstanta SESSION_URL a funkce telo() — nic jiného.
+ * Ověřeno proti GA rozhraní Realtime API: efemérní klíč se vydává přes
+ * POST /v1/realtime/client_secrets, sesse má session.type a výstupní zvuk
+ * sedí pod session.audio.output. Hlavička OpenAI-Beta se neposílá.
+ *
+ * ⚠ Co zatím ověřené NENÍ: specifika gpt-live-1 — hodnota session.type
+ * a název pole pro delegovaný backend-model. Dokumentace GPT-Live nebyla
+ * z prostředí, kde tenhle soubor vznikl, dostupná (síť blokuje celý
+ * developers.openai.com). Mění se jedině funkce telo() níž.
  */
 
 const MODEL = process.env.LIVE_MODEL || "gpt-live-1";
 const VOICE = process.env.LIVE_VOICE || "cedar";
 const BACKEND = process.env.LIVE_BACKEND_MODEL || "";
 
-/* ── provider-specific: jediné dvě místa, která se mění podle dokumentace ── */
+/* GA rozhraní, potvrzeno dokumentací. */
 const SESSION_URL = "https://api.openai.com/v1/realtime/client_secrets";
+
+/* ── jediné místo, které se ještě může změnit podle GPT-Live ───────────── */
 
 const telo = (pokyny) => ({
   session: {
@@ -100,17 +106,36 @@ export default async (req) => {
   }
 
   let lang = "cs";
+  let uid = "";
   try {
     const body = await req.json();
     if (Object.prototype.hasOwnProperty.call(JAZYKY, body.lang)) lang = body.lang;
+    if (typeof body.uid === "string") uid = body.uid.slice(0, 200);
   } catch {
     /* prázdné tělo je v pořádku, jedeme česky */
+  }
+
+  /* Značku prohlížeče posíláme dál jen jako otisk. OpenAI díky ní umí
+     zakročit proti jednomu zneuživateli místo celého účtu; nic o člověku
+     v ní není a v původní podobě nikam neodchází. */
+  const hlavicky = {
+    Authorization: `Bearer ${klic}`,
+    "Content-Type": "application/json",
+  };
+  if (uid) {
+    try {
+      const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("kp:" + uid));
+      hlavicky["OpenAI-Safety-Identifier"] = [...new Uint8Array(b)]
+        .map((x) => x.toString(16).padStart(2, "0")).join("");
+    } catch {
+      /* bez otisku se hovor klidně navazuje dál */
+    }
   }
 
   try {
     const r = await fetch(SESSION_URL, {
       method: "POST",
-      headers: { Authorization: `Bearer ${klic}`, "Content-Type": "application/json" },
+      headers: hlavicky,
       body: JSON.stringify(telo(POKYNY(lang))),
     });
     const text = await r.text();

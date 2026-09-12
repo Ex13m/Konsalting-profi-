@@ -26,14 +26,29 @@ Tlačítko se řídí odpovědí `GET /api/live-session`. Dokud není klíč neb
 `LIVE_ENABLED=1`, web vypadá přesně jako dřív — nasazení je tedy bezpečné
 i před tím, než se klíč vloží.
 
-## Co ještě není ověřené
+## Co je ověřené a co ne
 
-Dokumentace `gpt-live-1` nebyla z prostředí, kde tohle vznikalo, dostupná
-(síť ji blokuje). Tvar požadavku odpovídá Realtime API a může se lišit.
+Podle dokumentace GA rozhraní Realtime API sedí:
+
+- efemérní klíč: `POST /v1/realtime/client_secrets`
+- sesse má `session.type`, výstupní zvuk je pod `session.audio.output`
+- WebRTC se navazuje přes `/v1/realtime/calls` (model se do URL nedává,
+  je zapečený v klíči)
+- hlavička `OpenAI-Beta` se u GA neposílá
+- otisk návštěvníka jde v hlavičce `OpenAI-Safety-Identifier`
+
+Neověřené zůstávají specifika GPT-Live — stránka
+`developers.openai.com/api/docs/guides/live` nebyla dostupná (síť blokuje
+celou doménu; nepomůže ani `.md` na konci adresy). Konkrétně:
+
+- jakou hodnotu má mít `session.type` pro gpt-live-1
+- jak se jmenuje pole pro delegovaný backend-model (teď `backend_model`)
+- název datového kanálu (teď `oai-events`)
+
 Mění se jen dvě místa, obě označená komentářem:
 
-- `live-session.mjs` — konstanta `SESSION_URL` a funkce `telo()`
-- `live-client.js` — objekt `KONFIG` (adresa spojení, název datového kanálu)
+- `live-session.mjs` — funkce `telo()`
+- `live-client.js` — objekt `KONFIG`
 
 Chyba od OpenAI se propisuje do odpovědi i do logu funkce celá, takže
 seřízení je jeden pohled do Netlify → Functions → live-session.

@@ -15,7 +15,10 @@
 
   const KONFIG = {
     SESSION: "/api/live-session",
-    RTC: "https://api.openai.com/v1/realtime",
+    /* GA rozhraní: WebRTC se navazuje přes /calls. Model se neposílá —
+       je už zapečený v efemérním klíči, který vydal server. */
+    RTC: "https://api.openai.com/v1/realtime/calls",
+    MODEL_V_URL: false,
     KANAL: "oai-events",
     ICE: [{ urls: "stun:stun.l.google.com:19302" }],
   };
@@ -24,6 +27,23 @@
   const DRZET = 420;    // ms, aby ukazatel „mluví“ neposkakoval mezi slovy
 
   let stav = null;
+
+  /* Náhodná značka prohlížeče. Není v ní nic o člověku — slouží jen k tomu,
+     aby OpenAI uměla zakročit proti jednomu zneuživateli, ne proti celému
+     účtu. Server ji ještě prožene hashem. */
+  function znacka() {
+    try {
+      let z = localStorage.getItem("kp-live-id");
+      if (!z) {
+        z = (crypto.randomUUID && crypto.randomUUID()) ||
+            String(Date.now()) + Math.random().toString(36).slice(2);
+        localStorage.setItem("kp-live-id", z);
+      }
+      return z;
+    } catch (e) {
+      return "";
+    }
+  }
 
   /* ---- měření hlasitosti ------------------------------------------- */
   function merak(ac, stream) {
@@ -54,7 +74,7 @@
       const r = await fetch(KONFIG.SESSION, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lang: lang || "cs" }),
+        body: JSON.stringify({ lang: lang || "cs", uid: znacka() }),
       });
       s = await r.json();
       if (!r.ok || !s.token) throw new Error(s.detail || s.error || "no token");
@@ -117,7 +137,8 @@
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      const r = await fetch(KONFIG.RTC + "?model=" + encodeURIComponent(s.model), {
+      const adresa = KONFIG.RTC + (KONFIG.MODEL_V_URL ? "?model=" + encodeURIComponent(s.model) : "");
+      const r = await fetch(adresa, {
         method: "POST",
         body: offer.sdp,
         headers: { Authorization: "Bearer " + s.token, "Content-Type": "application/sdp" },
