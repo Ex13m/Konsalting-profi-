@@ -1053,6 +1053,21 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
   .lang button{min-height:42px}}
 .due-item{padding-block:8px}
 
+/* Rozbalené mobilní menu leží na papíru, ale hlavička nad fotkou píše
+   světle — odkazy v něm mizely. V menu proto vždycky tmavý inkoust. */
+@media(max-width:1180px){
+  /* .hbar v selektoru není ozdoba: pravidlo pro odkazy v liště
+     (body.classic header:not(.solid) .hbar a:not(.btn)) je silnější
+     než totéž bez .hbar a přebilo by nás zpátky na světlou barvu */
+  body header .hbar nav.main a,
+  body header:not(.solid) .hbar nav.main a,
+  body header.solid .hbar nav.main a,
+  body.dark header .hbar nav.main a,
+  body.classic header:not(.solid) .hbar nav.main a,
+  body.classic header.solid .hbar nav.main a{color:var(--ink)}
+  body header .hbar nav.main a:hover{color:var(--brass)}
+  body.classic header .hbar nav.main a:hover{color:var(--brass-2)}
+}
 </style>
 </head>
 <body>
