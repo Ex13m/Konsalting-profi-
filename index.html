@@ -779,11 +779,13 @@ body.dock-on .assist-fab{bottom:calc(22px + var(--dockh,96px))}
 body.dock-on .holo-fab{bottom:calc(88px + var(--dockh,96px))}
 body.dock-on .holo-mute{bottom:calc(97px + var(--dockh,96px))}
 body.dock-on .holo{bottom:calc(92px + var(--dockh,96px))}
+body.dock-on .live-fab{bottom:calc(152px + var(--dockh,96px))}
 @media(max-width:700px){
   body.dock-on .assist-fab{bottom:calc(78px + var(--dockh,96px))}
   body.dock-on .holo-fab{bottom:calc(136px + var(--dockh,96px))}
   body.dock-on .holo-mute{bottom:calc(145px + var(--dockh,96px))}
-  body.dock-on .holo{bottom:calc(196px + var(--dockh,96px))}}
+  body.dock-on .holo{bottom:calc(196px + var(--dockh,96px))}
+  body.dock-on .live-fab{bottom:calc(190px + var(--dockh,96px))}}
 
 .holo-fab{position:fixed;right:22px;bottom:88px;z-index:67;width:52px;height:52px;border-radius:50%;
   border:1px solid rgba(192,143,78,.5);background:linear-gradient(180deg,#1B2C58,#0C1730);
@@ -794,6 +796,44 @@ body.dock-on .holo{bottom:calc(92px + var(--dockh,96px))}
 .holo-fab.on{border-color:rgba(224,177,115,.9);
   box-shadow:0 0 0 2px rgba(192,143,78,.2),0 0 34px 6px rgba(192,143,78,.42),0 10px 28px rgba(8,14,30,.4)}
 .holo-fab.on svg{stroke:#F0CB96}
+
+/* --- hlasový hovor (zkušební) --- */
+.live-fab{position:fixed;right:22px;bottom:152px;z-index:67;width:52px;height:52px;border-radius:50%;
+  border:1px solid rgba(192,143,78,.5);background:linear-gradient(180deg,#1B2C58,#0C1730);
+  display:grid;place-items:center;cursor:pointer;padding:0;
+  box-shadow:0 8px 22px rgba(8,14,30,.38);transition:transform .25s,box-shadow .25s,border-color .25s}
+.live-fab[hidden]{display:none}
+.live-fab svg{width:22px;height:22px;fill:none;stroke:#C08F4E;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.live-fab:hover{transform:translateY(-3px)}
+.live-fab.on{border-color:#5FBF7F;box-shadow:0 0 0 2px rgba(95,191,127,.22),0 10px 28px rgba(8,14,30,.4)}
+.live-fab.on svg{stroke:#8FD9A6}
+
+.hovor{position:fixed;right:22px;bottom:22px;z-index:68;width:min(340px,calc(100vw - 28px));
+  background:var(--paper-2);border:1px solid var(--line);border-radius:6px;
+  box-shadow:0 40px 90px -40px rgba(9,17,38,.7);overflow:hidden;
+  opacity:0;transform:translateY(14px) scale(.98);pointer-events:none;
+  transition:opacity .28s cubic-bezier(.2,.8,.3,1),transform .28s cubic-bezier(.2,.8,.3,1)}
+.hovor.on{opacity:1;transform:none;pointer-events:auto}
+@media(max-width:700px){.hovor{right:8px;left:8px;bottom:8px;width:auto}}
+.live-head{background:var(--navy);color:var(--on-dark);padding:14px 16px;display:flex;align-items:center;gap:12px}
+.live-orb{width:38px;height:38px;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 34% 30%,#3E5EA8,#0C1730);border:1px solid var(--line-dark);
+  transform:scale(1);transition:transform .09s linear;
+  box-shadow:0 0 0 0 rgba(192,143,78,.5)}
+.live-kdo{min-width:0}
+.live-kdo b{display:block;font-family:"Source Serif 4",serif;font-weight:600;font-size:16px}
+.live-kdo em{font-style:normal;font-size:12.5px;color:var(--on-dark-mute);display:block}
+.live-cas{margin-left:auto;font-size:13px;color:var(--on-dark-mute);font-variant-numeric:tabular-nums}
+.live-vlny{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:34px;
+  padding:12px 16px 0;background:var(--paper)}
+.live-vlny i{width:4px;height:4px;border-radius:2px;background:var(--brass);opacity:.45;
+  transform-origin:bottom;transform:scaleY(1);transition:transform .07s linear}
+.live-pozn{font-size:11.5px;line-height:1.45;color:var(--muted);padding:10px 16px 0;background:var(--paper);margin:0}
+.live-akce{display:flex;gap:8px;padding:12px 16px 14px;background:var(--paper)}
+.live-akce .btn{flex:1 1 auto;padding:11px 12px;font-size:13px;justify-content:center}
+.live-akce .btn[disabled]{opacity:.45;cursor:default;pointer-events:none}
+.live-akce .btn.live-konec{background:#9B3535;color:#fff;border-color:#9B3535;box-shadow:none}
+.live-akce .btn.live-konec:hover{background:#822C2C}
 
 /* scéna je průhledná — žádné pozadí, žádný rám */
 .holo-dim{position:fixed;inset:0;z-index:64;opacity:0;pointer-events:none;
@@ -925,6 +965,8 @@ body.classic .holo-fig video{filter:url(#klaraLuma) brightness(.92) contrast(1.1
 @media(max-width:700px){
   /* asistentka je široká přes půl obrazovky — projektor patří nad ni, ne vedle */
   .holo-fab{right:14px;bottom:136px;width:46px;height:46px}
+  .live-fab{right:14px;bottom:190px;width:46px;height:46px}
+  .live-fab svg{width:20px;height:20px}
   .holo-mute{right:70px;bottom:145px}
   /* nad tlačítkem u kraje se postava nevejde, na úzké obrazovce stojí na střed */
   .holo{left:0;right:0;bottom:196px;width:100%;height:300px}
@@ -1580,6 +1622,31 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
 </button>
 <button class="holo-mute" id="holomute" aria-label="Ztlumit zvuk">&#9724;</button>
 
+<!-- hlasový hovor: zatím bez avatara, jen hlas -->
+<button class="live-fab" id="livebtn" hidden aria-label="Mluvit s Klárou" aria-pressed="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="9" y="3" width="6" height="11" rx="3"/>
+    <path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>
+  </svg>
+</button>
+
+<div class="hovor" id="live" role="dialog" aria-label="Hlasový hovor s Klárou" aria-hidden="true">
+  <div class="live-head">
+    <span class="live-orb" id="liveorb" aria-hidden="true"></span>
+    <div class="live-kdo">
+      <b>Klára</b>
+      <em class="dyn" id="livestate" aria-live="polite"></em>
+    </div>
+    <span class="live-cas num" id="livecas">0:00</span>
+  </div>
+  <div class="live-vlny" id="livevlny" aria-hidden="true"></div>
+  <p class="live-pozn dyn" id="livepozn"></p>
+  <div class="live-akce">
+    <button class="btn ghost dyn" id="livemic" type="button">Ztlumit mikrofon</button>
+    <button class="btn live-konec dyn" id="livekonec" type="button">Zavěsit</button>
+  </div>
+</div>
+
 <svg class="holo-def" aria-hidden="true" focusable="false" width="0" height="0">
   <filter id="klaraLuma" color-interpolation-filters="sRGB">
     <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  .299 .587 .114 0 0"/>
@@ -1671,6 +1738,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
 </div>
 
 <script src="assets/i18n-data.js?v=3"></script>
+<script src="assets/live-client.js?v=1"></script>
 <script>
 /* Serverová funkce asistentky. Když není nasazená (chybí klíč k API),
    asistentka automaticky spadne zpět na vestavěné odpovědi. */
@@ -2826,6 +2894,108 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
     if(zapnuto&&cap.querySelector('span')&&!mluvi){zrus();povidej(0);smycka=setTimeout(prehraj,PAUZA)}
   });
+})();
+
+
+/* ---- hlasový hovor s Klárou ---------------------------------------
+   Zkušební provoz: jen hlas, žádný avatar. Tlačítko se ukáže teprve
+   když je funkce nasazená a v Netlify zapnutá LIVE_ENABLED=1. */
+(function(){
+  const btn=document.getElementById('livebtn'),box=document.getElementById('live'),
+        radek=document.getElementById('livestate'),cas=document.getElementById('livecas'),
+        pozn=document.getElementById('livepozn'),vlny=document.getElementById('livevlny'),
+        orb=document.getElementById('liveorb'),
+        micBtn=document.getElementById('livemic'),konecBtn=document.getElementById('livekonec');
+  if(!btn||!box)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.RTCPeerConnection)return;
+
+  for(let i=0;i<5;i++)vlny.appendChild(document.createElement('i'));
+  const pruhy=[].slice.call(vlny.children);
+
+  const STAVY={
+    connecting:'Připojuji…',
+    listening:'Mluvte, poslouchám',
+    speaking:'Klára mluví',
+    muted:'Mikrofon je ztlumený',
+    ended:'Hovor skončil.'
+  };
+  const CHYBY={
+    mic:'Bez přístupu k mikrofonu hovor nezačne. Povolte mikrofon v nastavení prohlížeče.',
+    session:'Hovor se nepodařilo navázat. Zkuste to prosím znovu, nebo nám zavolejte na +420 773 966 787.',
+    spojeni:'Spojení se přerušilo. Zkuste to prosím znovu, nebo nám zavolejte na +420 773 966 787.'
+  };
+  const POZNAMKA='Hovor je zatím zkušební a trvá nejvýš osm minut. Klára odpovídá orientačně; konkrétní daňové posouzení vždy potvrdí účetní.';
+
+  let bezi=false,ticho=false,klicStav='connecting',klicPozn=POZNAMKA;
+
+  const vypis=()=>{
+    radek.textContent=T(STAVY[klicStav]||STAVY.connecting);
+    pozn.textContent=T(klicPozn);
+    micBtn.textContent=T(ticho?'Zapnout mikrofon':'Ztlumit mikrofon');
+    konecBtn.textContent=T(bezi?'Zavěsit':'Zavřít');
+    micBtn.disabled=!bezi;
+    btn.setAttribute('aria-label',T(bezi?'Ukončit hovor s Klárou':'Mluvit s Klárou'));
+  };
+  const nastav=(k,p)=>{klicStav=k;if(p!==undefined)klicPozn=p;vypis()};
+
+  function hodiny(s){
+    cas.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+  }
+  function ukazatele(u){
+    orb.style.transform='scale('+(1+Math.min(u.klara*3.4,.34))+')';
+    pruhy.forEach((b,i)=>{
+      const v=Math.min(u.mikrofon*(9-Math.abs(i-2)*1.6),1);
+      b.style.transform='scaleY('+(1+v*6)+')';
+    });
+  }
+  function klid(){
+    orb.style.transform='';
+    pruhy.forEach(b=>b.style.transform='');
+  }
+
+  const UD={
+    stav:k=>{if(bezi)nastav(k)},
+    cas:hodiny,
+    uroven:ukazatele,
+    varovani:()=>nastav(klicStav,'Zbývá poslední minuta hovoru. Chcete-li pokračovat, domluvíme schůzku nebo zavolejte na +420 773 966 787.'),
+    chyba:d=>{bezi=false;klid();btn.classList.remove('on');btn.setAttribute('aria-pressed','false');nastav('ended',CHYBY[d]||CHYBY.session)},
+    konec:()=>polozit(),
+    spojeno:()=>{}
+  };
+
+  function zvednout(){
+    if(bezi)return;
+    bezi=true;ticho=false;
+    const chat=document.getElementById('assist');
+    if(chat&&chat.classList.contains('on'))document.getElementById('assistx').click();
+    box.classList.add('on');box.setAttribute('aria-hidden','false');
+    btn.classList.add('on');btn.setAttribute('aria-pressed','true');
+    hodiny(0);nastav('connecting',POZNAMKA);
+    KPLive.start((window.KP&&KP.lang)||'cs',UD);
+  }
+  function polozit(){
+    if(bezi){KPLive.stop('user');bezi=false}
+    klid();
+    btn.classList.remove('on');btn.setAttribute('aria-pressed','false');
+    nastav('ended',POZNAMKA);
+    box.classList.remove('on');box.setAttribute('aria-hidden','true');
+  }
+  function zavrit(){
+    if(bezi)return polozit();
+    box.classList.remove('on');box.setAttribute('aria-hidden','true');
+  }
+
+  btn.onclick=()=>bezi?polozit():zvednout();
+  konecBtn.onclick=zavrit;
+  micBtn.onclick=()=>{if(!bezi)return;ticho=KPLive.ticho(!ticho);vypis()};
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('on'))zavrit()});
+  addEventListener('pagehide',()=>{if(bezi)KPLive.stop('leave')});
+
+  RER(vypis);
+  vypis();
+
+  /* tlačítko se objeví, jen když je hovor opravdu zapnutý */
+  if(window.KPLive&&KPLive.dostupne)KPLive.dostupne().then(ok=>{if(ok)btn.hidden=false});
 })();
 
 </script>
