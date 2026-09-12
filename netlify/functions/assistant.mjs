@@ -29,15 +29,43 @@ Pravidelné zákonné termíny, které kancelář klientům hlídá:
 - měsíc po termínu přiznání: přehledy OSVČ pro ČSSZ a zdravotní pojišťovnu
 
 Jak odpovídáš:
-- česky, věcně, vykáš, maximálně 4 věty
+- věcně, vykáš, maximálně 4 věty
 - konkrétní daňové posouzení nikdy nevydávej za závazné: u složitějších dotazů řekni, že to potvrdí účetní na konzultaci
 - nevymýšlej si ceny, reference ani čísla, která tu nejsou; cena se stanovuje po konzultaci podle objemu dokladů a počtu zaměstnanců
 - když se zákazník ptá na schůzku, cenu nebo převzetí agendy, nabídni nezávaznou konzultaci (45 minut) a vrať v odpovědi doporučení objednat se
 - termíny, které připadnou na víkend nebo svátek, se posouvají na nejbližší pracovní den`;
 
-const BOOKING_HINTS = ["objedn", "schůz", "rezerv", "konzultac", "termín schůzky", "cena", "kolik stoj", "převz", "přejít"];
+/* Stejné jako v prohlížeči — návštěvník píše v jazyce, který si zvolil. */
+const BOOKING_HINTS = [
+  "objedn", "schůz", "rezerv", "konzultac", "termín schůzky", "sejít", "domluvit", "cena", "kolik stoj", "převz", "přejít",
+  "book", "appointment", "meeting", "consultation", "price", "how much", "switch", "handover",
+  "запис", "встреч", "консультац", "цен", "стоит", "стоимост", "переход", "перейти",
+  "зустріч", "консультац", "вартіст", "коштує", "перехід",
+  "termin", "buchen", "beratung", "preis", "kostet", "wechsel", "übergang",
+  "umów", "spotkan", "konsultac", "koszt", "ile to", "przejści",
+];
 
-const LANG_NAMES = { cs: "čeština", en: "angličtina", ru: "ruština", uk: "ukrajinština", de: "němčina", pl: "polština" };
+/* Jazyk odpovědi. Pokyn je i v cílovém jazyce — na samotný český popis
+   model občas nedal a odpovídal dál česky, případně jazyky míchal. */
+const JAZYKY = {
+  cs: { nazev: "čeština",      pokyn: "Odpovídej výhradně česky." },
+  en: { nazev: "angličtina",   pokyn: "Reply in English only. Do not use Czech." },
+  ru: { nazev: "ruština",      pokyn: "Отвечай только по-русски. Не используй чешский." },
+  uk: { nazev: "ukrajinština", pokyn: "Відповідай лише українською. Чеську не використовуй." },
+  de: { nazev: "němčina",      pokyn: "Antworte ausschließlich auf Deutsch. Kein Tschechisch." },
+  pl: { nazev: "polština",     pokyn: "Odpowiadaj wyłącznie po polsku. Nie używaj czeskiego." },
+};
+
+const jazykovyBlok = (lang) => {
+  const j = JAZYKY[lang];
+  return [
+    "JAZYK ODPOVĚDI: " + j.nazev + ". " + j.pokyn,
+    "Celá odpověď musí být v tomto jazyce — včetně názvů měsíců, dnů a popisů termínů.",
+    "Nikdy nemíchej dva jazyky v jedné odpovědi.",
+    "Beze změny nech jen vlastní jména a adresu: Konsalting Profi, Rubeška 383/4, Praha 9 – Vysočany.",
+    "České zkratky (DPH, OSVČ, s.r.o., ČSSZ) uveď v původní podobě a krátce je vysvětli v jazyce odpovědi.",
+  ].join(" ");
+};
 
 export default async (req) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
@@ -59,9 +87,9 @@ export default async (req) => {
       max_tokens: 400,
       system: [
         { type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } },
-        { type: "text", text: "Odpověz v jazyce: " + LANG_NAMES[lang] + "." },
+        { type: "text", text: jazykovyBlok(lang) },
       ],
-      messages: [{ role: "user", content: question }],
+      messages: [{ role: "user", content: question + "\n\n[" + JAZYKY[lang].pokyn + "]" }],
     });
 
     const answer = message.content
