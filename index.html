@@ -2169,13 +2169,15 @@ document.getElementById('bform').addEventListener('submit',e=>{
         log=document.getElementById('alog'),chips=document.getElementById('achips'),
         form=document.getElementById('aform'),input=document.getElementById('ain');
   let opened=false;
+  /* dvakrát: hned a po přepočtu řádků, jinak dlouhá odpověď zůstane useknutá */
+  function nadno(){log.scrollTop=log.scrollHeight;requestAnimationFrame(()=>{log.scrollTop=log.scrollHeight})}
   function add(role,text){
     const d=document.createElement('div');d.className='msg '+role;d.textContent=text;
-    log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
+    log.appendChild(d);nadno();return d;
   }
   function typing(){
     const d=document.createElement('div');d.className='msg a typing';d.innerHTML='<i></i><i></i><i></i>';
-    log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
+    log.appendChild(d);nadno();return d;
   }
   const CHIPS=['Chci se objednat','Kolik to stojí?','Jak probíhá přechod?','Termíny pro DPH','Vedete i mzdy?'];
   function renderChips(){
@@ -2216,7 +2218,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
       const b=document.createElement('button');b.className='chip';b.textContent=T('Otevřít objednání →');
       b.style.margin='2px 0 0';b.onclick=()=>{close();document.querySelector(res.go).scrollIntoView({behavior:'smooth'})};
       const wrap=document.createElement('div');wrap.style.alignSelf='flex-start';wrap.appendChild(b);
-      log.appendChild(wrap);log.scrollTop=log.scrollHeight;
+      log.appendChild(wrap);nadno();
     }
   }
   form.addEventListener('submit',e=>{e.preventDefault();const v=input.value.trim();if(v)ask(v)});
