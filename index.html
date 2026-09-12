@@ -809,9 +809,17 @@ body.dark .holo-dim{background:radial-gradient(120% 90% at 78% 88%,rgba(4,8,20,.
 /* samotná projekce */
 .holo-fig{position:absolute;right:148px;bottom:0;width:264px;height:352px;opacity:0;
   will-change:transform,opacity}
-.holo-fig img{width:100%;height:100%;display:block;
+.holo-def{position:absolute;width:0;height:0;overflow:hidden}
+.holo-fig img,.holo-fig video{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover;
   filter:brightness(1.06) contrast(1.12) saturate(.8) drop-shadow(0 0 20px rgba(224,177,115,.4))}
-body.dark .holo-fig img{filter:brightness(1.1) contrast(1.1) saturate(.78) drop-shadow(0 0 20px rgba(224,177,115,.42))}
+body.dark .holo-fig img,body.dark .holo-fig video{filter:brightness(1.1) contrast(1.1) saturate(.78) drop-shadow(0 0 20px rgba(224,177,115,.42))}
+/* video má vlastní pozadí, tak se z jasu udělá průhlednost přes SVG filtr */
+.holo-fig video{opacity:0;transition:opacity .35s .45s ease;
+  filter:url(#klaraLuma) brightness(1.06) contrast(1.12) saturate(.8) drop-shadow(0 0 20px rgba(224,177,115,.4))}
+body.dark .holo-fig video{filter:url(#klaraLuma) brightness(1.1) contrast(1.1) saturate(.78) drop-shadow(0 0 20px rgba(224,177,115,.42))}
+.holo-fig.mluvi video{opacity:1}
+.holo-fig.mluvi img{opacity:0;transition:opacity .35s ease}
 /* řádkování jen přes postavu, ne přes obdélník */
 .holo-fig::after{content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 3px,rgba(4,8,20,.34) 3px 5px);
@@ -912,6 +920,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
 body.classic .trustline svg{stroke:var(--brass-2)}
 /* projekce se sem hodí — jen ať na bílém není přesvětlená */
 body.classic .holo-fig img{filter:brightness(.92) contrast(1.15) saturate(.85)}
+body.classic .holo-fig video{filter:url(#klaraLuma) brightness(.92) contrast(1.15) saturate(.85)}
 
 @media(max-width:700px){
   /* asistentka je široká přes půl obrazovky — projektor patří nad ni, ne vedle */
@@ -1571,10 +1580,21 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
 </button>
 <button class="holo-mute" id="holomute" aria-label="Ztlumit zvuk">&#9724;</button>
 
+<svg class="holo-def" aria-hidden="true" focusable="false" width="0" height="0">
+  <filter id="klaraLuma" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  .299 .587 .114 0 0"/>
+    <feComponentTransfer><feFuncA type="gamma" amplitude="1.6" exponent="0.8" offset="-0.2"/></feComponentTransfer>
+  </filter>
+</svg>
+
 <div class="holo-dim" id="holodim" aria-hidden="true"></div>
 <div class="holo" id="holo" aria-hidden="true">
   <p class="holo-cap dyn" id="holocap" aria-live="polite"></p>
-  <span class="holo-fig" aria-hidden="true"><img src="assets/klara.webp?v=2" alt=""></span>
+  <span class="holo-fig" aria-hidden="true">
+    <img src="assets/klara.webp?v=2" alt="" id="holostill">
+    <video id="holovid" src="assets/klara-uvitani.mp4?v=1" playsinline preload="none"
+           poster="assets/klara.webp?v=2" aria-hidden="true"></video>
+  </span>
 </div>
 
 <!-- ============ NABÍDKA PŘI ODCHODU ============ -->
@@ -2467,12 +2487,21 @@ document.getElementById('leadform').addEventListener('submit',e=>{
         cap=document.getElementById('holocap'),mute=document.getElementById('holomute');
   if(!btn||!box)return;
 
-  const REPLIKY=[
-    'Dobrý den, jsem Klára — holografická asistentka Konsalting Profi.',
-    'Hlídám termíny podání a stav vašich dokladů.',
-    'Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.',
-    'Účetní vás uvidí v kalendáři hned, jak se objednáte.'
+  const vid=document.getElementById('holovid'),
+        postava=box.querySelector('.holo-fig');
+
+  /* Co Klára opravdu říká ve videu — titulky jdou s tím, co je slyšet. */
+  const UVITANI=[
+    ['Dobrý den, jsem Klára, asistentka účetní kanceláře Konsalting Profi.',0.4],
+    ['Ráda vám pomůžu s termíny, službami i objednáním schůzky.',6.1]
   ];
+  /* Mezi přehráními stojí a čeká — tyhle věty se střídají potichu. */
+  const REPLIKY=[
+    'Hlídám termíny podání a stav vašich dokladů.',
+    'Účetní vás uvidí v kalendáři hned, jak se objednáte.',
+    'Objednat schůzku můžete kdykoli, i mimo pracovní dobu.'
+  ];
+  const PAUZA=10000;   // po dopovídání se uvítání pustí znovu za deset vteřin
   const t=s=>(window.KP&&KP.t)?KP.t(s):s;
 
   /* ---- zvuk ----------------------------------------------------------
@@ -2708,16 +2737,50 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   }
 
   /* ---- repliky ---- */
-  let casovace=[];
-  const zrus=()=>{casovace.forEach(clearTimeout);casovace=[]};
-  function rekni(i){
-    cap.innerHTML='<b>Klára</b><span>'+t(REPLIKY[i])+'</span>';
-    zvukReplika();
+  let casovace=[],smycka=null;
+  const zrus=()=>{casovace.forEach(clearTimeout);casovace=[];clearTimeout(smycka);smycka=null};
+  function rekni(text,tise){
+    cap.innerHTML='<b>Klára</b><span>'+t(text)+'</span>';
+    if(!tise)zvukReplika();
   }
-  function povidej(){
+  /* titulky k mluvenému uvítání */
+  function titulky(){
+    UVITANI.forEach(([text,cas])=>casovace.push(setTimeout(()=>rekni(text,true),cas*1000)));
+  }
+  /* tiché čekání mezi přehráními */
+  function povidej(od){
+    REPLIKY.forEach((text,i)=>casovace.push(setTimeout(()=>rekni(text),(od||0)+i*4200)));
+  }
+
+  /* ---- mluvící Klára ------------------------------------------------
+     Video je zatím jen nahrané uvítání, žádná AI. Pozadí se odstraňuje
+     až v prohlížeči přes SVG filtr, aby stála přímo na stránce. */
+  let mluvi=false;
+  function prehraj(){
+    if(!zapnuto)return;
     zrus();
-    REPLIKY.forEach((_,i)=>casovace.push(setTimeout(()=>rekni(i),900+i*4200)));
-    casovace.push(setTimeout(()=>{cap.innerHTML='<b>Klára</b><span>'+t(REPLIKY[0])+'</span>'},900+REPLIKY.length*4200));
+    if(!vid||!vid.play||vid.error){povidej(900);return}   // bez videa zůstanou jen titulky
+    vid.muted=ticho;vid.volume=0.92;
+    try{vid.currentTime=0}catch(e){}
+    const p=vid.play();
+    if(p&&p.catch)p.catch(()=>{ // prohlížeč přehrání odmítl — zůstane obraz a titulky
+      mluvi=false;postava.classList.remove('mluvi');povidej(900);
+    });
+    mluvi=true;postava.classList.add('mluvi');
+    titulky();
+  }
+  function dopovidal(){
+    mluvi=false;postava.classList.remove('mluvi');
+    if(!zapnuto)return;
+    povidej(600);
+    if(!vid||!vid.error)smycka=setTimeout(prehraj,PAUZA);
+  }
+  if(vid){
+    vid.addEventListener('ended',dopovidal);
+    vid.addEventListener('error',dopovidal);
+    /* stahovat až ve chvíli, kdy je vidět, že o projekci někdo stojí */
+    const nacti=()=>{if(vid.preload!=='auto'){vid.preload='auto';vid.load()}};
+    ['pointerenter','focus','touchstart'].forEach(u=>btn.addEventListener(u,nacti,{once:true,passive:true}));
   }
 
   /* ---- zapnutí a vypnutí ---- */
@@ -2730,10 +2793,12 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     btn.setAttribute('aria-label',t('Vypnout hologram'));
     zvukZap();
     setTimeout(humZap,300);
-    povidej();
+    prehraj();   // pustit hned, jinak prohlížeč zvuk bez gesta odmítne
   }
   function vyp(){
     zapnuto=false;zrus();
+    mluvi=false;postava.classList.remove('mluvi');
+    if(vid){try{vid.pause();vid.currentTime=0}catch(e){}}
     box.classList.remove('on');dim.classList.remove('on');box.setAttribute('aria-hidden','true');
     btn.classList.remove('on');mute.classList.remove('on');btn.setAttribute('aria-pressed','false');
     btn.setAttribute('aria-label',t('Zapnout hologram'));
@@ -2749,6 +2814,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     ticho=!ticho;mute.innerHTML=ticho?'&#9654;':'&#9724;';
     mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
     try{localStorage.setItem('kp-holo-ticho',ticho?'ano':'ne')}catch(e){}
+    if(vid)vid.muted=ticho;
     if(ticho)humVyp(); else if(zapnuto)humZap();
   };
 
@@ -2756,7 +2822,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   if(window.KP&&KP.rerender)KP.rerender.push(()=>{
     btn.setAttribute('aria-label',t(zapnuto?'Vypnout hologram':'Zapnout hologram'));
     mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
-    if(zapnuto&&cap.querySelector('span'))povidej();
+    if(zapnuto&&cap.querySelector('span')&&!mluvi){zrus();povidej(0);smycka=setTimeout(prehraj,PAUZA)}
   });
 })();
 
