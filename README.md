@@ -19,6 +19,15 @@ Jednostránková prezentace účetní kanceláře Konsalting Profi (Praha 9 – 
 - formulář pro zpětné zavolání (napojení na CRM se doplňuje v `leadform` handleru)
 - strukturovaná data schema.org `AccountingService`
 
+## Video v hlavičce (nepovinné)
+Položte do `assets/hero.mp4` krátkou smyčku (6–10 s, bez zvuku) a sama se
+objeví přes úvodní fotku. Když soubor chybí, nic se neděje a zůstane fotka.
+
+Video se nestahuje vůbec, pokud je návštěvník na telefonu, v úsporném
+režimu, na pomalé lince nebo si přeje méně pohybu — a načítá se až po
+vykreslení stránky, aby nebrzdilo první dojem. Rozumná velikost je do
+2 MB; fotka `hero.webp` slouží jako plakát a záloha.
+
 ## Vývoj
 Statický web bez build kroku. Stačí otevřít `index.html` nebo spustit libovolný statický server:
 
