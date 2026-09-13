@@ -56,6 +56,25 @@ seřízení je jeden pohled do Netlify → Functions → live-session.
 Ukazatel „kdo zrovna mluví“ na tvaru API nezávisí — počítá se z hlasitosti
 obou zvukových stop, takže funguje i při jiném pojmenování událostí.
 
+## Projekce při hovoru
+
+Když se hovor naváže, projekce se sama rozsvítí a přepne z nahraného
+uvítání na živé kreslení — `assets/klara-usta.js`. Hudba pod projekcí se
+na dobu hovoru ztiší, aby nepřekážela.
+
+Ústa se nenatáčela. Bere se hotová průhledná fotka `assets/klara.webp`
+a kreslí se na plátno ve třech vodorovných pruzích: nad nosem beze změny,
+obličej od nosu po bradu se podle hlasitosti protahuje dolů, krk a ramena
+se o stejnou míru stlačí, aby nevznikl šev. Mezi rty se do plátna měkce
+vyřízne díra — otevřená ústa jsou tak mezera v projekci, ne tmavá skvrna.
+
+Hlasitost přichází z `live-client.js`, který ji už měří kvůli ukazateli
+„kdo mluví“. Nic dalšího se nestahuje a nic dalšího se neplatí.
+
+Souřadnice obličeje jsou v `TVAR` v podílech obrázku, ne v pixelech —
+když se vymění fotka, dolaďuje se jen tenhle jeden objekt. Amplituda je
+schválně střídmá: při plném rozevření se obličej viditelně deformoval.
+
 ## Peníze a zneužití
 
 Hlasová vrstva stojí 0,05 USD za minutu, k tomu se připočítávají tokeny

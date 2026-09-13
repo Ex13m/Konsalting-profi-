@@ -414,6 +414,7 @@ window.KP_DICTS.pl={
 "Spojení se přerušilo. Zkuste to prosím znovu, nebo nám zavolejte na +420 773 966 787.":"Połączenie zostało przerwane. Spróbuj ponownie albo zadzwoń: +420 773 966 787.",
 "Hovor je zatím zkušební a trvá nejvýš osm minut. Klára odpovídá orientačně; konkrétní daňové posouzení vždy potvrdí účetní.":"Rozmowa jest na razie testowa i trwa najwyżej osiem minut. Klára odpowiada orientacyjnie; konkretną ocenę podatkową zawsze potwierdza księgowa.",
 "Zbývá poslední minuta hovoru. Chcete-li pokračovat, domluvíme schůzku nebo zavolejte na +420 773 966 787.":"Została ostatnia minuta rozmowy. Jeśli chcesz kontynuować, umówimy spotkanie albo zadzwoń: +420 773 966 787.",
+"Živý hovor":"Rozmowa na żywo",
 "Hlídám termíny podání a stav vašich dokladů.":"Pilnuję terminów złożenia i stanu Państwa dokumentów.",
 "Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.":"Na razie jestem tylko projekcją. Porozmawiać ze mną będzie można wkrótce.",
 "Účetní vás uvidí v kalendáři hned, jak se objednáte.":"Księgowa zobaczy Państwa w kalendarzu od razu po umówieniu.",

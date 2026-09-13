@@ -850,16 +850,21 @@ body.dark .holo-dim{background:radial-gradient(120% 90% at 78% 88%,rgba(4,8,20,.
 .holo-fig{position:absolute;right:148px;bottom:0;width:264px;height:352px;opacity:0;
   will-change:transform,opacity}
 .holo-def{position:absolute;width:0;height:0;overflow:hidden}
-.holo-fig img,.holo-fig video{position:absolute;inset:0;width:100%;height:100%;display:block;
+.holo-fig img,.holo-fig video,.holo-fig canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
   object-fit:cover;
   filter:brightness(1.06) contrast(1.12) saturate(.8) drop-shadow(0 0 20px rgba(224,177,115,.4))}
-body.dark .holo-fig img,body.dark .holo-fig video{filter:brightness(1.1) contrast(1.1) saturate(.78) drop-shadow(0 0 20px rgba(224,177,115,.42))}
+body.dark .holo-fig img,body.dark .holo-fig video,body.dark .holo-fig canvas{filter:brightness(1.1) contrast(1.1) saturate(.78) drop-shadow(0 0 20px rgba(224,177,115,.42))}
 /* video má vlastní pozadí, tak se z jasu udělá průhlednost přes SVG filtr */
 .holo-fig video{opacity:0;transition:opacity .35s .45s ease;
   filter:url(#klaraLuma) brightness(1.06) contrast(1.12) saturate(.8) drop-shadow(0 0 20px rgba(224,177,115,.4))}
 body.dark .holo-fig video{filter:url(#klaraLuma) brightness(1.1) contrast(1.1) saturate(.78) drop-shadow(0 0 20px rgba(224,177,115,.42))}
 .holo-fig.mluvi video{opacity:1}
 .holo-fig.mluvi img{opacity:0;transition:opacity .35s ease}
+/* při živém hovoru kreslíme postavu sami, aby se hýbala ústa */
+.holo-fig canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
+  opacity:0;transition:opacity .3s ease;pointer-events:none}
+.holo-fig.hovori canvas{opacity:1}
+.holo-fig.hovori img,.holo-fig.hovori video{opacity:0}
 /* řádkování jen přes postavu, ne přes obdélník */
 .holo-fig::after{content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 3px,rgba(4,8,20,.34) 3px 5px);
@@ -959,7 +964,7 @@ body.classic .on-dark,body.classic .contact,body.classic .strip{background:var(-
 body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){background:var(--brass)}
 body.classic .trustline svg{stroke:var(--brass-2)}
 /* projekce se sem hodí — jen ať na bílém není přesvětlená */
-body.classic .holo-fig img{filter:brightness(.92) contrast(1.15) saturate(.85)}
+body.classic .holo-fig img,body.classic .holo-fig canvas{filter:brightness(.92) contrast(1.15) saturate(.85)}
 body.classic .holo-fig video{filter:url(#klaraLuma) brightness(.92) contrast(1.15) saturate(.85)}
 
 @media(max-width:700px){
@@ -1674,6 +1679,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
   <p class="holo-cap dyn" id="holocap" aria-live="polite"></p>
   <span class="holo-fig" aria-hidden="true">
     <img src="assets/klara.webp?v=2" alt="" id="holostill">
+    <canvas id="holocanvas" aria-hidden="true"></canvas>
     <video id="holovid" src="assets/klara-uvitani.mp4?v=1" playsinline preload="none"
            poster="assets/klara.webp?v=2" aria-hidden="true"></video>
   </span>
@@ -1753,6 +1759,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
 </div>
 
 <script src="assets/i18n-data.js?v=3"></script>
+<script src="assets/klara-usta.js?v=1"></script>
 <script src="assets/live-client.js?v=1"></script>
 <script>
 /* Serverová funkce asistentky. Když není nasazená (chybí klíč k API),
@@ -2869,19 +2876,22 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   }
 
   /* ---- zapnutí a vypnutí ---- */
-  let zapnuto=false;
-  function zap(){
+  let zapnuto=false,vHovoru=false,byloZap=false;
+  function zap(tichy){
     zapnuto=true;
     box.classList.remove('on');void box.offsetWidth;   // restart animací
     box.classList.add('on');dim.classList.add('on');box.setAttribute('aria-hidden','false');
     btn.classList.add('on');mute.classList.add('on');btn.setAttribute('aria-pressed','true');
     btn.setAttribute('aria-label',t('Vypnout hologram'));
     zvukZap();
-    setTimeout(humZap,300);
-    prehraj();   // pustit hned, jinak prohlížeč zvuk bez gesta odmítne
+    if(!tichy){
+      setTimeout(humZap,300);
+      prehraj();   // pustit hned, jinak prohlížeč zvuk bez gesta odmítne
+    }
   }
   function vyp(){
     zapnuto=false;zrus();
+    if(vHovoru)hovorKonec();
     mluvi=false;postava.classList.remove('mluvi');
     if(vid){try{vid.pause();vid.currentTime=0}catch(e){}}
     box.classList.remove('on');dim.classList.remove('on');box.setAttribute('aria-hidden','true');
@@ -2890,6 +2900,35 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     zvukVyp();humVyp();
     setTimeout(()=>{if(!zapnuto)cap.innerHTML=''},320);
   }
+  /* ---- živý hovor -----------------------------------------------------
+     Když se Klára rozmluví doopravdy, projekce přestane přehrávat nahrané
+     uvítání a začne se kreslit na plátno — ústa jdou podle hlasitosti. */
+  function hovorStart(){
+    if(vHovoru)return;
+    vHovoru=true;byloZap=zapnuto;
+    zrus();
+    mluvi=false;postava.classList.remove('mluvi');
+    if(vid){try{vid.pause();vid.currentTime=0}catch(e){}}
+    humVyp();                       // hudba pod projekcí by překážela hovoru
+    if(!zapnuto)zap(true);
+    postava.classList.add('hovori');
+    cap.innerHTML='<b>Klára</b><span>'+t('Živý hovor')+'</span>';
+    if(window.KPUsta)KPUsta.start(document.getElementById('holocanvas'),'assets/klara.webp?v=2');
+  }
+  function hovorKonec(){
+    if(!vHovoru)return;
+    vHovoru=false;
+    postava.classList.remove('hovori');
+    if(window.KPUsta)KPUsta.stop();
+    if(!byloZap){if(zapnuto)vyp();return}
+    if(zapnuto){if(!ticho)humZap();prehraj()}
+  }
+  window.KPHolo={
+    hovor:z=>z?hovorStart():hovorKonec(),
+    uroven:v=>{if(vHovoru&&window.KPUsta)KPUsta.uroven(v)},
+    vHovoru:()=>vHovoru
+  };
+
   btn.onclick=()=>zapnuto?vyp():zap();
   dim.onclick=()=>{if(zapnuto)vyp()};
 
@@ -2971,11 +3010,12 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   const UD={
     stav:k=>{if(bezi)nastav(k)},
     cas:hodiny,
-    uroven:ukazatele,
+    uroven:u=>{ukazatele(u);if(window.KPHolo)KPHolo.uroven(u.klara)},
     varovani:()=>nastav(klicStav,'Zbývá poslední minuta hovoru. Chcete-li pokračovat, domluvíme schůzku nebo zavolejte na +420 773 966 787.'),
-    chyba:d=>{bezi=false;klid();btn.classList.remove('on');btn.setAttribute('aria-pressed','false');nastav('ended',CHYBY[d]||CHYBY.session)},
+    chyba:d=>{bezi=false;klid();if(window.KPHolo)KPHolo.hovor(false);
+      btn.classList.remove('on');btn.setAttribute('aria-pressed','false');nastav('ended',CHYBY[d]||CHYBY.session)},
     konec:()=>polozit(),
-    spojeno:()=>{}
+    spojeno:()=>{if(window.KPHolo)KPHolo.hovor(true)}
   };
 
   function zvednout(){
@@ -2990,6 +3030,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   }
   function polozit(){
     if(bezi){KPLive.stop('user');bezi=false}
+    if(window.KPHolo)KPHolo.hovor(false);
     klid();
     btn.classList.remove('on');btn.setAttribute('aria-pressed','false');
     nastav('ended',POZNAMKA);

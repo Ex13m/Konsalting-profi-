@@ -414,6 +414,7 @@ window.KP_DICTS.en={
 "Spojení se přerušilo. Zkuste to prosím znovu, nebo nám zavolejte na +420 773 966 787.":"The connection dropped. Please try again, or call us on +420 773 966 787.",
 "Hovor je zatím zkušební a trvá nejvýš osm minut. Klára odpovídá orientačně; konkrétní daňové posouzení vždy potvrdí účetní.":"The call is still experimental and lasts at most eight minutes. Klára answers approximately; a specific tax assessment is always confirmed by the accountant.",
 "Zbývá poslední minuta hovoru. Chcete-li pokračovat, domluvíme schůzku nebo zavolejte na +420 773 966 787.":"One minute of the call is left. To continue, we can arrange a meeting, or call us on +420 773 966 787.",
+"Živý hovor":"Live call",
 "Hlídám termíny podání a stav vašich dokladů.":"I keep an eye on filing deadlines and the state of your paperwork.",
 "Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.":"For now I am only a projection. You will be able to talk to me soon.",
 "Účetní vás uvidí v kalendáři hned, jak se objednáte.":"The accountant sees you in the calendar the moment you book.",
