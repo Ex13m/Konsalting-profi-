@@ -869,6 +869,14 @@ body.dark .holo-fig video{filter:url(#klaraLuma) brightness(1.1) contrast(1.1) s
   opacity:0;transition:opacity .3s ease;pointer-events:none}
 .holo-fig.hovori canvas{opacity:1}
 .holo-fig.hovori img,.holo-fig.hovori video{opacity:0}
+/* živý obraz od poskytovatele avatara — pozadí si odstraníme sami,
+   stejným filtrem jako u nahraného uvítání, takže projekce zůstane projekcí */
+.holo-fig #holostream{opacity:0;transition:opacity .45s ease;
+  filter:url(#klaraLuma) brightness(1.06) contrast(1.12) saturate(.8) drop-shadow(0 0 20px rgba(224,177,115,.4))}
+body.dark .holo-fig #holostream{filter:url(#klaraLuma) brightness(1.1) contrast(1.1) saturate(.78) drop-shadow(0 0 20px rgba(224,177,115,.42))}
+body.classic .holo-fig #holostream{filter:url(#klaraLuma) brightness(.92) contrast(1.15) saturate(.85)}
+.holo-fig.zivyobraz #holostream{opacity:1}
+.holo-fig.zivyobraz img,.holo-fig.zivyobraz canvas,.holo-fig.zivyobraz video:not(#holostream){opacity:0}
 /* řádkování jen přes postavu, ne přes obdélník */
 .holo-fig::after{content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 3px,rgba(4,8,20,.34) 3px 5px);
@@ -1684,6 +1692,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
   <span class="holo-fig" aria-hidden="true">
     <img src="assets/klara.webp?v=2" alt="" id="holostill">
     <canvas id="holocanvas" aria-hidden="true"></canvas>
+    <video id="holostream" playsinline aria-hidden="true"></video>
     <video id="holovid" src="assets/klara-uvitani.mp4?v=1" playsinline preload="none"
            poster="assets/klara.webp?v=2" aria-hidden="true"></video>
   </span>
@@ -2934,7 +2943,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   /* ---- živý hovor -----------------------------------------------------
      Když se Klára rozmluví doopravdy, projekce přestane přehrávat nahrané
      uvítání a začne se kreslit na plátno — ústa jdou podle hlasitosti. */
-  function hovorStart(){
+  function hovorStart(kresli){
     if(vHovoru)return;
     vHovoru=true;byloZap=zapnuto;
     zrus();
@@ -2944,19 +2953,46 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     if(!zapnuto)zap(true);
     postava.classList.add('hovori');
     cap.innerHTML='<b>Klára</b><span>'+t('Živý hovor')+'</span>';
-    if(window.KPZive)KPZive.start(document.getElementById('holocanvas'),'assets/klara.webp?v=2');
+    /* Když obraz podává někdo jiný, kreslit z fotky nemá smysl. */
+    if(kresli!==false&&window.KPZive)KPZive.start(document.getElementById('holocanvas'),'assets/klara.webp?v=2');
   }
   function hovorKonec(){
     if(!vHovoru)return;
     vHovoru=false;
+    obrazVyp();
     postava.classList.remove('hovori');
     if(window.KPZive)KPZive.stop();
     if(!byloZap){if(zapnuto)vyp();return}
     if(zapnuto){if(!ticho)humZap();prehraj()}
   }
+  /* Živý obraz zvenčí. Kdokoli, kdo umí podat MediaStream s Klárou —
+     Hedra, jiný poskytovatel avatara, cokoli — ho sem prostě předá.
+     Pozadí si odřízneme sami, takže projekce vypadá pořád stejně
+     a nic dalšího se kvůli výměně poskytovatele nepřepisuje. */
+  const proud=document.getElementById('holostream');
+  function obrazZap(ms,volby){
+    if(!proud||!ms)return false;
+    const v=volby||{};
+    hovorStart(false);                // rozsvítit projekci, ztlumit hudbu, nekreslit
+    if(window.KPZive)KPZive.stop();   // kdyby běželo od dřívějška
+    postava.classList.remove('hovori');
+    postava.classList.add('zivyobraz');
+    proud.muted=v.zvuk===false||ticho;
+    proud.srcObject=ms;
+    const p=proud.play();
+    if(p&&p.catch)p.catch(()=>{});
+    return true;
+  }
+  function obrazVyp(){
+    if(!proud)return;
+    postava.classList.remove('zivyobraz');
+    try{proud.pause();proud.srcObject=null}catch(e){}
+  }
+
   window.KPHolo={
     hovor:z=>z?hovorStart():hovorKonec(),
-    uroven:v=>{if(vHovoru&&window.KPZive)KPZive.uroven(v)},
+    uroven:v=>{if(vHovoru&&window.KPZive&&!postava.classList.contains('zivyobraz'))KPZive.uroven(v)},
+    obraz:(ms,volby)=>ms?obrazZap(ms,volby):obrazVyp(),
     vHovoru:()=>vHovoru
   };
 
@@ -2970,6 +3006,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
     try{localStorage.setItem('kp-holo-ticho',ticho?'ano':'ne')}catch(e){}
     if(vid)vid.muted=ticho;
+    if(proud)proud.muted=ticho;
     if(ticho)humVyp(); else if(zapnuto)humZap();
   };
 

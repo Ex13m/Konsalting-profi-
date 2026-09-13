@@ -89,6 +89,21 @@ Souřadnice obličeje jsou v `TVAR` v podílech obrázku, ne v pixelech —
 když se vymění fotka, dolaďuje se jen tenhle jeden objekt. Amplituda je
 schválně střídmá: při plném rozevření se obličej viditelně deformoval.
 
+## Živý obraz zvenčí
+
+Projekce umí místo kreslení z fotky ukázat hotový obraz od poskytovatele
+avatara. Stačí mu podat proud:
+
+    KPHolo.obraz(mediaStream)        // zapnout
+    KPHolo.obraz(null)               // zpátky na kreslenou
+
+Pozadí si odřízneme sami — stejným filtrem `#klaraLuma`, jakým se čistí
+nahrané uvítání. Projekce tak vypadá pořád stejně, ať obraz podává kdokoli,
+a výměna poskytovatele se nedotkne ničeho jiného.
+
+Když obraz podává někdo zvenčí, kreslení z fotky se vypne, aby zbytečně
+nejelo pod neviditelným plátnem.
+
 ## Peníze a zneužití
 
 Hlasová vrstva stojí 0,05 USD za minutu, k tomu se připočítávají tokeny
