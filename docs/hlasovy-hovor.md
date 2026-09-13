@@ -59,14 +59,28 @@ obou zvukových stop, takže funguje i při jiném pojmenování událostí.
 ## Projekce při hovoru
 
 Když se hovor naváže, projekce se sama rozsvítí a přepne z nahraného
-uvítání na živé kreslení — `assets/klara-usta.js`. Hudba pod projekcí se
+uvítání na živé kreslení — `assets/klara-zive.js`. Hudba pod projekcí se
 na dobu hovoru ztiší, aby nepřekážela.
 
-Ústa se nenatáčela. Bere se hotová průhledná fotka `assets/klara.webp`
+Nic se nenatáčelo. Bere se hotová průhledná fotka `assets/klara.webp`
 a kreslí se na plátno ve třech vodorovných pruzích: nad nosem beze změny,
 obličej od nosu po bradu se podle hlasitosti protahuje dolů, krk a ramena
 se o stejnou míru stlačí, aby nevznikl šev. Mezi rty se do plátna měkce
 vyřízne díra — otevřená ústa jsou tak mezera v projekci, ne tmavá skvrna.
+
+Kromě úst má projekce řeč těla:
+
+- **mihotnutí na slabice** — prudký nárůst hlasitosti ztlumí na okamžik
+  celý obraz a škubne s ním do strany, jako když projektor nestíhá
+- **přikývnutí na konci věty** — když Klára aspoň půl vteřiny mluvila
+  a pak na dvě desetiny ztichla, hlava se tlumeně skloní a vrátí;
+  `KPZive.prikyvni()` jde zavolat i zvenčí, až budou z modelu chodit
+  události, hodí se to na „rozumím“ ve chvíli, kdy poslouchá
+- **pohupování a dýchání** — pořád, při řeči s větší amplitudou
+- **obnovovací pruh** projíždí obrazem a při řeči zrychlí
+
+Ruce v záběru nejsou — fotka je po prsa, takže gesta rukama z ní udělat
+nejdou. Chtělo by to jiný snímek, kde jsou vidět.
 
 Hlasitost přichází z `live-client.js`, který ji už měří kvůli ukazateli
 „kdo mluví“. Nic dalšího se nestahuje a nic dalšího se neplatí.

@@ -1759,7 +1759,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
 </div>
 
 <script src="assets/i18n-data.js?v=3"></script>
-<script src="assets/klara-usta.js?v=1"></script>
+<script src="assets/klara-zive.js?v=1"></script>
 <script src="assets/live-client.js?v=1"></script>
 <script>
 /* Serverová funkce asistentky. Když není nasazená (chybí klíč k API),
@@ -2913,19 +2913,19 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     if(!zapnuto)zap(true);
     postava.classList.add('hovori');
     cap.innerHTML='<b>Klára</b><span>'+t('Živý hovor')+'</span>';
-    if(window.KPUsta)KPUsta.start(document.getElementById('holocanvas'),'assets/klara.webp?v=2');
+    if(window.KPZive)KPZive.start(document.getElementById('holocanvas'),'assets/klara.webp?v=2');
   }
   function hovorKonec(){
     if(!vHovoru)return;
     vHovoru=false;
     postava.classList.remove('hovori');
-    if(window.KPUsta)KPUsta.stop();
+    if(window.KPZive)KPZive.stop();
     if(!byloZap){if(zapnuto)vyp();return}
     if(zapnuto){if(!ticho)humZap();prehraj()}
   }
   window.KPHolo={
     hovor:z=>z?hovorStart():hovorKonec(),
-    uroven:v=>{if(vHovoru&&window.KPUsta)KPUsta.uroven(v)},
+    uroven:v=>{if(vHovoru&&window.KPZive)KPZive.uroven(v)},
     vHovoru:()=>vHovoru
   };
 
