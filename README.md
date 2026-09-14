@@ -17,9 +17,11 @@ Jednostránková prezentace účetní kanceláře Konsalting Profi (Praha 9 – 
 ## Funkce
 - živý odpočet do nejbližšího zákonného termínu
 - daňový kalendář na celý rok, generovaný v prohlížeči
-- objednání termínu: online jen pondělí a středa, hodinový blok 10–11
-  nebo 11–12 (`OPEN` v `index.html`); úterý a čtvrtek jsou běžný provoz
-  a domlouvají se telefonicky
+- objednání termínu: v kalendáři je celý pracovní týden. Pondělí a středa
+  jsou přijímací dny — ukáže se celý provozní den, ale volné jsou jen
+  bloky 10–11 a 11–12 (`VOLNE` v `index.html`), zbytek je obsazený.
+  Úterý a čtvrtek nabídnou tlačítko Zavolat, pátek hlásí, že se nepřijímá.
+  Obsazenost z externího kalendáře se dodá funkcí `window.KP_OBSAZENO`
 - interaktivní diagnostika (4 otázky) s předvyplněním formuláře
 - formulář pro zpětné zavolání (napojení na CRM se doplňuje v `leadform` handleru)
 - strukturovaná data schema.org `AccountingService`

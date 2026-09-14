@@ -32,7 +32,7 @@ a středa jsou vyhrazené objednaným klientům; pátek až neděle zavřeno.
 Objednání: schůzky s klienty jsou v pondělí a ve středu, hodinový blok
 10:00–11:00 nebo 11:00–12:00 — ten si člověk vybere přímo na webu. Úterý
 a čtvrtek jsou běžný provoz kanceláře; termín na tyto dny se domlouvá
-telefonicky na +420 773 966 787, na webu se nenabízí.
+telefonicky na +420 773 966 787, na webu se nenabízí. V pátek se nepřijímá vůbec.
 
 ZÁKONNÉ TERMÍNY, KTERÉ KANCELÁŘ KLIENTŮM HLÍDÁ
 - do 8. dne: záloha na zdravotní pojištění OSVČ za předchozí měsíc

@@ -673,7 +673,9 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .book-r{background:var(--navy-2)}
 .days{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-bottom:26px}
 .day{background:rgba(244,241,235,.06);border:1px solid var(--line-dark);color:var(--on-dark);font:inherit;
-  padding:12px 10px;border-radius:var(--r);cursor:pointer;text-align:center;transition:all .2s}
+  padding:12px 10px;border-radius:var(--r);cursor:pointer;text-align:center;transition:all .2s;
+  /* dny se štítkem mají dva řádky — pevná výška srovná i řádky mezi sebou */
+  min-height:78px;display:flex;flex-direction:column;justify-content:center;gap:3px}
 .day:hover:not(:disabled){border-color:var(--brass-2);transform:translateY(-2px)}
 .day.on{background:var(--brass);border-color:var(--brass);color:#fff}
 .day:disabled{opacity:.28;cursor:not-allowed}
@@ -686,6 +688,10 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
   padding:11px 8px;border-radius:var(--r);cursor:pointer;transition:all .2s;font-variant-numeric:tabular-nums}
 .slot:hover{border-color:var(--brass-2);background:rgba(192,143,78,.14)}
 .slot.on{background:var(--brass);border-color:var(--brass);color:#fff}
+.slot:disabled{opacity:.32;cursor:not-allowed;border-style:dashed;text-decoration:line-through;
+  text-decoration-thickness:1px;text-decoration-color:var(--brass-2)}
+.slot:disabled:hover{border-color:var(--line-dark);background:transparent}
+.slots .telbtn{grid-column:1/-1;justify-self:start;margin-top:4px}
 .booknote{font-size:13.5px;color:var(--on-dark-mute);margin-top:18px;line-height:1.5}
 .picked{border:1px solid var(--line-dark);border-radius:var(--r);padding:16px 18px;margin-bottom:20px;
   background:rgba(192,143,78,.1);font-size:15px}
@@ -1212,7 +1218,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
         <div class="days dyn" id="days"></div>
         <p class="eyebrow" style="color:var(--brass-2)">2 — Čas</p>
         <div class="slots dyn" id="slots"></div>
-        <p class="booknote" id="booknote">Objednané klienty přijímáme v pondělí a ve středu — vyberte si hodinu 10–11 nebo 11–12. V úterý a ve čtvrtek je kancelář otevřená v běžném režimu; termín na tyto dny domluvíme po telefonu na čísle +420 773 966 787.</p>
+        <p class="booknote" id="booknote">Objednané klienty přijímáme v pondělí a ve středu; přes web jsou otevřené dvě dopolední hodiny, 10–11 a 11–12. Úterý a čtvrtek jsou běžný provozní den — termín na ně domluvíme po telefonu na čísle +420 773 966 787. V pátek nepřijímáme.</p>
       </div>
       <div class="book-r">
         <svg class="seal" viewBox="0 0 132 132" aria-hidden="true">
@@ -2099,18 +2105,33 @@ function renderCal(){
 renderCal();RER(renderCal);
 
 /* ============================================================
-   OBJEDNÁNÍ TERMÍNU — příjem objednaných klientů
-   Po a St patří schůzkám: online se vybírá hodina 10–11 nebo 11–12.
-   V úterý a ve čtvrtek je kancelář otevřená v běžném režimu 10:00–18:00
-   (pauza 13:00–14:00) — termín na tyto dny se domlouvá telefonicky,
-   proto se v kalendáři vůbec nenabízejí.
+   OBJEDNÁNÍ TERMÍNU
+   V kalendáři je celý pracovní týden, ať je hned vidět, jak to chodí:
+   - pondělí a středa: příjem objednaných klientů. Den se ukáže celý,
+     ale volné jsou jen dvě dopolední hodiny — zbytek je obsazený.
+   - úterý a čtvrtek: běžný provoz kanceláře 10:00–18:00 (pauza 13:00–14:00),
+     termín se domlouvá telefonicky.
+   - pátek: nepřijímáme.
    ============================================================ */
-const OPEN={1:[[10,12]],3:[[10,12]]};   // pondělí, středa — dopolední bloky
+const HODINY=[[10,13],[14,18]];   // provozní den po hodinových blocích
+const DEN_SCHUZKY=[1,3];          // pondělí, středa
+const DEN_TELEFON=[2,4];          // úterý, čtvrtek
+const VOLNE=['10:00','11:00'];    // jediné bloky otevřené pro objednání přes web
+
+/* Obsazenost zatím nikdo nehlásí. Až se napojí kalendář, stačí dodat
+   window.KP_OBSAZENO(datum, zacatek) → true, když je blok zabraný;
+   zbytek stránky se nemění. */
+function jeVolno(den,zacatek){
+  if(!VOLNE.includes(zacatek))return false;
+  try{if(window.KP_OBSAZENO&&KP_OBSAZENO(den,zacatek))return false}catch(e){}
+  return true;
+}
 function nextDays(count){
   const out=[],d=new Date();d.setHours(0,0,0,0);
   for(let i=1;out.length<count&&i<40;i++){
     const x=new Date(d);x.setDate(d.getDate()+i);
-    if(OPEN[x.getDay()])out.push(x);
+    const w=x.getDay();
+    if(w>=1&&w<=5)out.push(x);
   }
   return out;
 }
@@ -2119,9 +2140,12 @@ const daysEl=document.getElementById('days'),slotsEl=document.getElementById('sl
 let pickDay=null,pickTime=null;
 function renderDays(){
   const list=nextDays(8);
-  daysEl.innerHTML=list.map((x,i)=>
-    '<button class="day" data-i="'+i+'"><b class="num">'+x.getDate()+'. '+(x.getMonth()+1)+'.</b>'+
-    '<i>'+DAYS()[x.getDay()]+'</i></button>').join('');
+  daysEl.innerHTML=list.map((x,i)=>{
+    const w=x.getDay();
+    const stitek=DEN_SCHUZKY.includes(w)?'':' · '+U(DEN_TELEFON.includes(w)?'byPhone':'closedDay');
+    return '<button class="day" data-i="'+i+'"><b class="num">'+x.getDate()+'. '+(x.getMonth()+1)+'.</b>'+
+      '<i>'+DAYS()[w]+stitek+'</i></button>';
+  }).join('');
   daysEl.querySelectorAll('.day').forEach(b=>b.onclick=()=>{
     daysEl.querySelectorAll('.day').forEach(o=>o.classList.remove('on'));
     b.classList.add('on');pickDay=list[+b.dataset.i];pickTime=null;renderSlots();updatePicked();
@@ -2129,12 +2153,22 @@ function renderDays(){
 }
 function renderSlots(){
   if(!pickDay){slotsEl.innerHTML='<p class="booknote" style="margin:0">'+U('pickDayFirst')+'</p>';return}
-  /* celé hodiny, ne půlhodiny — rezervuje se hodinový blok */
+  const w=pickDay.getDay();
+  if(!DEN_SCHUZKY.includes(w)){
+    /* běžný provozní den, nebo pátek — online se na něj neobjednává */
+    const telefon=DEN_TELEFON.includes(w);
+    slotsEl.innerHTML='<p class="booknote" style="margin:0">'+U(telefon?'dayPhone':'dayClosed')+'</p>'+
+      (telefon?'<a class="btn ghost telbtn" href="tel:+420773966787">'+T('Zavolat')+' +420 773 966 787</a>':'');
+    pickTime=null;updatePicked();return;
+  }
+  /* celé hodiny, ne půlhodiny — a celý den, ať je vidět, co je obsazené */
   let html='';
-  OPEN[pickDay.getDay()].forEach(([a,b])=>{for(let h=a;h<b;h++){
-    const blok=pad(h)+':00–'+pad(h+1)+':00';
-    html+='<button class="slot" data-t="'+blok+'">'+blok+'</button>';
+  HODINY.forEach(([a,b])=>{for(let h=a;h<b;h++){
+    const zac=pad(h)+':00',blok=zac+'–'+pad(h+1)+':00';
+    html+='<button class="slot" data-t="'+blok+'"'+
+      (jeVolno(pickDay,zac)?'':' disabled title="'+U('taken')+'"')+'>'+blok+'</button>';
   }});
+  html+='<p class="booknote" style="margin:0">'+U('freeOnly')+'</p>';
   slotsEl.innerHTML=html;
   slotsEl.querySelectorAll('.slot').forEach(b=>b.onclick=()=>{
     slotsEl.querySelectorAll('.slot').forEach(o=>o.classList.remove('on'));
@@ -2144,8 +2178,11 @@ function renderSlots(){
 function updatePicked(){
   if(!pickDay){pickedEl.innerHTML='<b>'+T('Zatím nevybráno')+'</b><em>'+T('Vyberte den a čas vlevo')+'</em>';return}
   const dstr=pickDay.toLocaleDateString(LOC(),{weekday:'long',day:'numeric',month:'long'});
-  pickedEl.innerHTML='<b>'+dstr+(pickTime?', '+pickTime:'')+'</b>'+
-    '<em>'+T(pickTime?'Nezávazné úvodní setkání':'Vyberte ještě hodinu')+'</em>';
+  const w=pickDay.getDay();
+  const em=DEN_TELEFON.includes(w)?'Termín na tento den domluvíme telefonicky'
+    :!DEN_SCHUZKY.includes(w)?'Pátek není přijímací den'
+    :pickTime?'Nezávazné úvodní setkání':'Vyberte ještě hodinu';
+  pickedEl.innerHTML='<b>'+dstr+(pickTime?', '+pickTime:'')+'</b><em>'+T(em)+'</em>';
 }
 function renderBooking(){renderDays();renderSlots();updatePicked()}
 renderBooking();RER(renderBooking);
@@ -2171,7 +2208,8 @@ document.getElementById('bform').addEventListener('submit',e=>{
         mail=document.getElementById('b-mail').value.trim(),
         msg=document.getElementById('b-msg').value.trim();
   if(!document.getElementById('b-gdpr').checked){alert(U('needConsent'));return}
-  if(!pickDay||!pickTime){alert(U('needDay'));return}
+  if(!pickDay){alert(U('needDay'));return}
+  if(!pickTime){alert(U('needTime'));return}
   if(name.length<2||tel.replace(/\D/g,'').length<9){alert(U('needContact'));return}
   const dstr=pickDay.toLocaleDateString(LOC(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('bookform').style.display='none';
@@ -2295,7 +2333,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     {k:['osvč','živnost','paušál','evidenc','sole trader','self-employ','ип','самозанят','фоп','підприєм','selbständ','gewerbe','samozatrudni','ryczałt'],a:'Pro OSVČ vedeme daňovou evidenci: peněžní deník, evidenci majetku, přiznání a přehledy pro ČSSZ a zdravotní pojišťovnu. Posoudíme také, jestli se vám vyplatí paušální daň a jak jste daleko od limitu pro povinnou registraci k DPH.'},
     {k:['založ','s.r.o','sro','nová firma','zakládám','set up','incorporat','открыт','регистрац','ооо','відкрит','реєстрац','тов','gründ','gmbh','założ','sp. z o'],a:'Poradíme s volbou právní formy, registrací u finančního úřadu i dalších institucí a nastavíme účetnictví od prvního dokladu. Řekneme také, jestli se registrovat k DPH hned, nebo počkat.'},
     {k:['adres','kde jste','kancelář','vysočan','address','office','where are','адрес','офис','офіс','адрес','büro','anschrift','biuro'],a:'Kancelář najdete na adrese Rubeška 383/4, 190 00 Praha 9 – Vysočany. Doklady ale většina klientů posílá elektronicky, takže osobní návštěva nutná není.'},
-    {k:['otevř','provozní','hodin','kdy máte','opening','office hours','часы','режим работ','когда работ','години','коли працю','öffnungs','sprechzeit','godzin','otwarte'],a:'Objednané klienty přijímáme v pondělí a ve středu, na hodinu 10–11 nebo 11–12 — ty si vyberete rovnou na webu. V úterý a ve čtvrtek je kancelář otevřená v běžném režimu od deseti do šesti s pauzou mezi jednou a druhou; termín na tyto dny domluvíme po telefonu. O víkendu máme zavřeno.'},
+    {k:['otevř','provozní','hodin','kdy máte','opening','office hours','часы','режим работ','когда работ','години','коли працю','öffnungs','sprechzeit','godzin','otwarte'],a:'Objednané klienty přijímáme v pondělí a ve středu, na hodinu 10–11 nebo 11–12 — ty si vyberete rovnou na webu. V úterý a ve čtvrtek je kancelář otevřená v běžném režimu od deseti do šesti s pauzou mezi jednou a druhou; termín na tyto dny domluvíme po telefonu. V pátek a o víkendu máme zavřeno.'},
     {k:['termín','lhůt','kalendář','kdy se podává','deadline','due date','срок','сроки','календар','термін','frist','termin','kalender','kalendarz'],a:'Pravidelné termíny: do 8. dne zálohy zdravotního pojištění OSVČ, do 20. dne odvody ze mezd a sociální pojištění, do 25. dne DPH a kontrolní hlášení. Roční přiznání do 1. dubna listinně a do 1. května elektronicky. Celý kalendář najdete na této stránce a dá se stáhnout do vašeho kalendáře.'},
     {k:['odpovědnost','pokut','chyb','ručí','liab','penalt','ответственн','штраф','ошибк','відповідальн','штраф','помилк','haftung','strafe','fehler','odpowiedzialn','kara','błęd'],a:'Za zpracování odpovídáme a jsme pojištěni. Odpovědnost vůči správci daně nese ze zákona podnikatel, proto vám podklady vždy dáváme ke kontrole před odesláním.'},
     {k:['doklad','předáv','faktur','scan','sken','invoice','receipt','документ','счет','счёт','накладн','документ','рахунок','beleg','rechnung','dokument','faktur'],a:'Doklady stačí posílat elektronicky — sken nebo fotka. Kdo chce, může je předat osobně v kanceláři na pravidelné schůzce.'}
