@@ -35,6 +35,29 @@ režimu, na pomalé lince nebo si přeje méně pohybu — a načítá se až po
 vykreslení stránky, aby nebrzdilo první dojem. Rozumná velikost je do
 2 MB; fotka `hero.webp` slouží jako plakát a záloha.
 
+## Objednání
+
+Formulář posílá rezervaci na `POST /api/objednat`
+(`netlify/functions/objednat.mjs`). Funkce ověří, že termín dává smysl,
+uloží ho do Netlify Blobs a pošle avízo kanceláři a potvrzení klientovi.
+
+| Proměnná | Povinná | Popis |
+|---|---|---|
+| `RESEND_API_KEY` | ne | bez ní se rezervace uloží, ale nic neodejde |
+| `RESEND_FROM` | ne | odesílatel, výchozí `onboarding@resend.dev` |
+| `OBJEDNANI_MAIL` | ne | kam chodí avíza, výchozí `konsaltingprofi@gmail.com` |
+
+`GET /api/objednat` vrací jen obsazené časy (`{"obsazeno":["2026-09-16T10:00"]}`),
+žádné osobní údaje. Web si podle nich zašedne bloky.
+
+Když endpoint neběží nebo selže, formulář nespadne: ukáže termín, nabídne
+pozvánku do kalendáře a odeslání e-mailem a řekne, že se to nepodařilo
+odeslat automaticky. Rezervaci je tedy pořád jak dokončit.
+
+Proti robotům stojí skryté pole ve formuláři a čas vyplnění pod tři
+vteřiny; navíc nejvýš tři rezervace z jedné adresy za den. Záznamy starší
+než rok funkce maže sama — odpovídá to lhůtě v zásadách zpracování.
+
 ## Ceník
 
 Ceny jsou jen v `cenik.html`; PDF je z něj vygenerované, ne psané zvlášť.

@@ -85,10 +85,12 @@ Hovor je omezený na osm minut. Až se bude blížit konec, řekni to a nabídni
 
 ---
 
-## 3. Nástroj `objednej_schuzku` (zatím nezapínat)
+## 3. Nástroj `objednej_schuzku`
 
-Webhook na náš endpoint. **Počká, až bude `/api/objednat` hotový** — dokud
-neexistuje, nechte nástroj vypnutý, jinak Klára slíbí termín a nic se nezapíše.
+Webhook na náš endpoint `/api/objednat`, který už běží — nástroj se dá
+zapnout. Endpoint sám hlídá, že termín dává smysl: bere jen pondělí
+a středu a jen časy `10:00` a `11:00`. Když pošle Klára něco jiného,
+vrátí se chyba a Klára to musí říct člověku, ne slíbit termín.
 
 | Pole | Hodnota |
 |---|---|
@@ -102,13 +104,15 @@ Parametry, všechny povinné kromě poznámky:
 | Parametr | Typ | Popis |
 |---|---|---|
 | `den` | string | Datum ve tvaru `2026-09-22` |
-| `cas` | string | Čas ve tvaru `15:00` |
+| `cas` | string | Začátek bloku, jen `10:00` nebo `11:00` |
 | `jmeno` | string | Jméno nebo název firmy |
 | `telefon` | string | Telefon |
 | `email` | string | E-mail |
 | `poznamka` | string | Co potřebuje řešit, volitelné |
 
-Odpověď vrátí potvrzení, které Klára přečte nahlas.
+Odpověď je `{"ok":true,"id":"…","mail":true}`, když se termín zapsal.
+Při `409` je blok mezitím obsazený — Klára nabídne jiný. Při `400` je
+v údajích chyba, text chyby přijde v poli `error`.
 
 ---
 
