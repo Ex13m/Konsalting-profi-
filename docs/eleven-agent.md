@@ -29,6 +29,9 @@ pro OSVČ, poradenství při zakládání společnosti. Specializací je rekonst
 zanedbaného účetnictví.
 Provozní doba: úterý a čtvrtek 10:00–18:00 s pauzou 13:00–14:00; pondělí
 a středa jsou vyhrazené objednaným klientům; pátek až neděle zavřeno.
+Objednání přes web: jen úterý a čtvrtek dopoledne, hodinový blok 10:00–11:00
+nebo 11:00–12:00. Kdo potřebuje jiný čas, domluví se telefonicky; pondělí
+a středa se zapisují na dotaz a čas potvrzuje kancelář.
 
 ZÁKONNÉ TERMÍNY, KTERÉ KANCELÁŘ KLIENTŮM HLÍDÁ
 - do 8. dne: záloha na zdravotní pojištění OSVČ za předchozí měsíc

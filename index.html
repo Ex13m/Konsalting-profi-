@@ -680,7 +680,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .day b{display:block;font-family:"Source Serif 4",serif;font-size:19px;font-weight:600;line-height:1.1}
 .day i{font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--on-dark-mute)}
 .day.on i{color:rgba(255,255,255,.8)}
-.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
 .slots .booknote{grid-column:1/-1}
 .slot{background:transparent;border:1px solid var(--line-dark);color:var(--on-dark);font:inherit;font-size:15px;
   padding:11px 8px;border-radius:var(--r);cursor:pointer;transition:all .2s;font-variant-numeric:tabular-nums}
@@ -1212,7 +1212,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
         <div class="days dyn" id="days"></div>
         <p class="eyebrow" style="color:var(--brass-2)">2 — Čas</p>
         <div class="slots dyn" id="slots"></div>
-        <p class="booknote" id="booknote">V úterý a ve čtvrtek si vybíráte čas sami. Pondělí a středa patří objednaným klientům — označte je a ozveme se s návrhem termínu.</p>
+        <p class="booknote" id="booknote">Online se objednáváte na úterý nebo čtvrtek dopoledne, na hodinu 10–11 nebo 11–12. Pondělí a středa patří objednaným klientům — označte je a ozveme se s návrhem termínu. Jiný čas rádi domluvíme telefonicky.</p>
       </div>
       <div class="book-r">
         <svg class="seal" viewBox="0 0 132 132" aria-hidden="true">
@@ -2101,9 +2101,13 @@ renderCal();RER(renderCal);
 /* ============================================================
    OBJEDNÁNÍ TERMÍNU — provozní doba kanceláře
    Út a Čt 10:00–13:00 a 14:00–18:00 · Po a St po domluvě
+
+   Online se ale nepouští celá otevírací doba: k rezervaci jsou jen dvě
+   dopolední hodiny, 10–11 a 11–12. Zbytek dne zůstává na běžnou agendu
+   a na klienty, kteří chodí s doklady — jiný čas se domluví telefonicky.
    ============================================================ */
-const OPEN={2:[[10,13],[14,18]],4:[[10,13],[14,18]]};   // úterý, čtvrtek
-const ONREQ=[1,3];                                       // pondělí, středa
+const OPEN={2:[[10,12]],4:[[10,12]]};   // úterý, čtvrtek — jen dopoledne
+const ONREQ=[1,3];                      // pondělí, středa — objednaní klienti
 function nextDays(count){
   const out=[],d=new Date();d.setHours(0,0,0,0);
   for(let i=1;out.length<count&&i<40;i++){
@@ -2135,9 +2139,12 @@ function renderSlots(){
     slotsEl.innerHTML='<p class="booknote" style="margin:0">'+U('dayOnRequest')+'</p>';
     pickTime='po domluvě';updatePicked();return;
   }
+  /* celé hodiny, ne půlhodiny — rezervuje se hodinový blok */
   let html='';
-  OPEN[w].forEach(([a,b])=>{for(let h=a;h<b;h++){html+='<button class="slot" data-t="'+pad(h)+':00">'+pad(h)+':00</button>';
-    html+='<button class="slot" data-t="'+pad(h)+':30">'+pad(h)+':30</button>';}});
+  OPEN[w].forEach(([a,b])=>{for(let h=a;h<b;h++){
+    const blok=pad(h)+':00–'+pad(h+1)+':00';
+    html+='<button class="slot" data-t="'+blok+'">'+blok+'</button>';
+  }});
   slotsEl.innerHTML=html;
   slotsEl.querySelectorAll('.slot').forEach(b=>b.onclick=()=>{
     slotsEl.querySelectorAll('.slot').forEach(o=>o.classList.remove('on'));
@@ -2153,7 +2160,8 @@ function updatePicked(){
 function renderBooking(){renderDays();renderSlots();updatePicked()}
 renderBooking();RER(renderBooking);
 function bookingIcs(){
-  const t=(pickTime&&pickTime!=='po domluvě')?pickTime:'10:00';
+  /* v data-t je celý blok „10:00–11:00"; schůzka začíná na jeho začátku */
+  const t=(pickTime&&pickTime!=='po domluvě')?pickTime.split('–')[0]:'10:00';
   const [hh,mm]=t.split(':').map(Number);
   const st=new Date(pickDay);st.setHours(hh,mm,0,0);
   const en=new Date(st.getTime()+45*60000);
@@ -2299,7 +2307,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     {k:['osvč','živnost','paušál','evidenc','sole trader','self-employ','ип','самозанят','фоп','підприєм','selbständ','gewerbe','samozatrudni','ryczałt'],a:'Pro OSVČ vedeme daňovou evidenci: peněžní deník, evidenci majetku, přiznání a přehledy pro ČSSZ a zdravotní pojišťovnu. Posoudíme také, jestli se vám vyplatí paušální daň a jak jste daleko od limitu pro povinnou registraci k DPH.'},
     {k:['založ','s.r.o','sro','nová firma','zakládám','set up','incorporat','открыт','регистрац','ооо','відкрит','реєстрац','тов','gründ','gmbh','założ','sp. z o'],a:'Poradíme s volbou právní formy, registrací u finančního úřadu i dalších institucí a nastavíme účetnictví od prvního dokladu. Řekneme také, jestli se registrovat k DPH hned, nebo počkat.'},
     {k:['adres','kde jste','kancelář','vysočan','address','office','where are','адрес','офис','офіс','адрес','büro','anschrift','biuro'],a:'Kancelář najdete na adrese Rubeška 383/4, 190 00 Praha 9 – Vysočany. Doklady ale většina klientů posílá elektronicky, takže osobní návštěva nutná není.'},
-    {k:['otevř','provozní','hodin','kdy máte','opening','office hours','часы','режим работ','когда работ','години','коли працю','öffnungs','sprechzeit','godzin','otwarte'],a:'V úterý a ve čtvrtek jsme tu celý den s polední pauzou, pondělí a středa patří objednaným klientům, o víkendu máme zavřeno. Termín vám můžu rovnou zarezervovat.'},
+    {k:['otevř','provozní','hodin','kdy máte','opening','office hours','часы','режим работ','когда работ','години','коли працю','öffnungs','sprechzeit','godzin','otwarte'],a:'V úterý a ve čtvrtek jsme tu celý den s polední pauzou, pondělí a středa patří objednaným klientům, o víkendu máme zavřeno. Online se dá rezervovat úterý nebo čtvrtek dopoledne, hodina 10–11 nebo 11–12; jiný čas domluvíme telefonicky.'},
     {k:['termín','lhůt','kalendář','kdy se podává','deadline','due date','срок','сроки','календар','термін','frist','termin','kalender','kalendarz'],a:'Pravidelné termíny: do 8. dne zálohy zdravotního pojištění OSVČ, do 20. dne odvody ze mezd a sociální pojištění, do 25. dne DPH a kontrolní hlášení. Roční přiznání do 1. dubna listinně a do 1. května elektronicky. Celý kalendář najdete na této stránce a dá se stáhnout do vašeho kalendáře.'},
     {k:['odpovědnost','pokut','chyb','ručí','liab','penalt','ответственн','штраф','ошибк','відповідальн','штраф','помилк','haftung','strafe','fehler','odpowiedzialn','kara','błęd'],a:'Za zpracování odpovídáme a jsme pojištěni. Odpovědnost vůči správci daně nese ze zákona podnikatel, proto vám podklady vždy dáváme ke kontrole před odesláním.'},
     {k:['doklad','předáv','faktur','scan','sken','invoice','receipt','документ','счет','счёт','накладн','документ','рахунок','beleg','rechnung','dokument','faktur'],a:'Doklady stačí posílat elektronicky — sken nebo fotka. Kdo chce, může je předat osobně v kanceláři na pravidelné schůzce.'}
@@ -2308,7 +2316,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     'book','appointment','meeting','запис','встреч','консультац','зустріч','termin','buchen','beratung','umów','spotkan'];
   function answer(q){
     const t=q.toLowerCase();
-    if(BOOK.some(k=>t.includes(k)))return{a:T('Ráda vám najdu termín. První setkání je nezávazné — vyberte si den a čas v sekci objednání, hned pod tímto oknem.'),go:'#objednani'};
+    if(BOOK.some(k=>t.includes(k)))return{a:T('Ráda vám najdu termín. První setkání je nezávazné a trvá 45 minut. Online se vybírá úterý nebo čtvrtek dopoledne, hodina 10–11 nebo 11–12 — v sekci objednání hned pod tímto oknem. Kdyby se vám hodilo jindy, domluvíme to telefonicky.'),go:'#objednani'};
     let best=null,score=0;
     KB.forEach(item=>{const sc=item.k.reduce((n,k)=>n+(t.includes(k)?1:0),0);if(sc>score){score=sc;best=item}});
     if(best)return{a:T(best.a),go:best.go};
