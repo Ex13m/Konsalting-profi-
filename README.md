@@ -103,12 +103,15 @@ takže se dá z otevřeného webu poznat, jestli dojel deploy.
     node tools/verze.mjs           co je nastavené teď
     node tools/verze.mjs 1.1.0     přepíše verzi všude a založí sekci v CHANGELOGu
 
-Co se ve které verzi změnilo, je v `CHANGELOG.md`. Každá verze má git-tag,
-takže se dají porovnávat:
+Co se ve které verzi změnilo, je v `CHANGELOG.md`; je tam i tabulka
+verze → commit, takže se dají porovnávat:
 
-    git log --oneline v0.7.0..v1.0.0
-    git diff v0.7.0..v1.0.0 -- index.html
-    git tag -l -n1
+    git log --oneline d86e0c2..8609e79
+    git diff d86e0c2..8609e79 -- index.html
+
+Stejné body nesou i tagy `v0.1.0`…`v1.0.0`. Ty zatím žijí jen lokálně —
+proxy tohohle prostředí push tagů nepouští (HTTP 403); z vlastního
+počítače odejdou běžným `git push --tags`.
 
 Číslujeme podle semver: **major** — přestavba, po které se web prochází
 celý; **minor** — nová sekce nebo funkce; **patch** — texty, sazba, překlady.
