@@ -1,5 +1,7 @@
 # Konsalting Profi
 
+`verze 1.0.0 · 14. 9. 2026`
+
 Jednostránková prezentace účetní kanceláře Konsalting Profi (Praha 9 – Vysočany).
 
 ## Obsah
@@ -91,6 +93,28 @@ rolování. Kdo přijde odjinud nebo rovnou z adresního řádku, jde na úvod.
 Na webu vede k ceníku odkaz v patičce, v odpovědi na otázku po ceně
 v sekci Otázky a tlačítko pod Klárou. Záměrně nikde nekřičí: konkrétní
 částka se stejně skládá až po schůzce, ceník je orientační.
+
+## Verze
+
+Číslo verze je v `package.json` a odtud se razítkuje do stránek. Na webu je
+vidět v patičce (`v1.0.0`) a v hlavičce zdroje (`<meta name="kp-verze">`),
+takže se dá z otevřeného webu poznat, jestli dojel deploy.
+
+    node tools/verze.mjs           co je nastavené teď
+    node tools/verze.mjs 1.1.0     přepíše verzi všude a založí sekci v CHANGELOGu
+
+Co se ve které verzi změnilo, je v `CHANGELOG.md`. Každá verze má git-tag,
+takže se dají porovnávat:
+
+    git log --oneline v0.7.0..v1.0.0
+    git diff v0.7.0..v1.0.0 -- index.html
+    git tag -l -n1
+
+Číslujeme podle semver: **major** — přestavba, po které se web prochází
+celý; **minor** — nová sekce nebo funkce; **patch** — texty, sazba, překlady.
+
+Dokumenty v `docs/` i tenhle soubor nesou pod nadpisem razítko verze,
+ke které platí. Když se dokument mění, razítko se mění s ním.
 
 ## Vývoj
 Statický web bez build kroku. Stačí otevřít `index.html` nebo spustit libovolný statický server:

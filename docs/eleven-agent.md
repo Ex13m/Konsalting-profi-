@@ -1,5 +1,7 @@
 # Nastavení hlasové Kláry v ElevenLabs
 
+`verze 1.0.0 · 14. 9. 2026`
+
 Hotové texty k vložení do kabinetu ElevenLabs (Agents → agent → Configuration).
 Držte je shodné s `netlify/functions/assistant.mjs`, ať Klára v chatu a Klára
 po telefonu neříkají každá něco jiného.

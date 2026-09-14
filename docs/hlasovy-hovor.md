@@ -1,5 +1,7 @@
 # Hlasový hovor s Klárou (zkušební)
 
+`verze 1.0.0 · 14. 9. 2026`
+
 Třetí plovoucí tlačítko na webu — mikrofon nad projektorem a asistentkou.
 Zatím **jen hlas, žádný avatar**: ověřuje se, jak model zvládá češtinu.
 To je etap Ф0 ze zadání, jen ne na skryté stránce `/lab`, ale rovnou na webu.

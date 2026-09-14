@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Konsalting Profi — účetnictví, mzdy a daně pro firmy v Praze</title>
 <meta name="description" content="Účetní kancelář Praha 9 – Vysočany. Vedení účetnictví, mzdová agenda, daňová evidence a poradenství při zakládání společnosti. Termíny hlídáme za vás.">
+<meta name="kp-verze" content="1.0.0 · 2026-09-14">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="mask-icon" href="assets/favicon.svg" color="#A9743C">
 <meta name="theme-color" content="#16264F">
@@ -396,6 +397,7 @@ footer a{text-decoration:none;color:var(--on-dark-mute);transition:color .2s}
 footer a:hover{color:var(--on-dark)}
 .fbot{margin-top:48px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:13px;color:var(--on-dark-mute);
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.fbot .verze{opacity:.45;font-size:11px;letter-spacing:.04em}
 .fbot .by{flex-basis:100%;display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.02em;
   opacity:.55;padding-top:12px;margin-top:2px;border-top:1px solid var(--line-dark);
   width:100%;transition:opacity .25s}
@@ -1653,6 +1655,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
     </div>
     <div class="fbot">
       <span>© <span id="yr"></span> Konsalting Profi</span>
+      <span class="verze num" title="Verze webu">v1.0.0</span>
       <button type="button" class="legal-open" data-doc="gdpr">Ochrana osobních údajů</button>
       <button type="button" class="legal-open" data-doc="cookies">Cookies</button>
       <button type="button" class="legal-open" data-doc="terms">Podmínky použití</button>
@@ -2321,12 +2324,15 @@ bform.addEventListener('submit',async e=>{
   const dock=document.getElementById('dock');
   let dockClosed=false;
   try{dockClosed=sessionStorage.getItem('kp-dock')==='0'}catch(e){}
+  const videt=el=>{if(!el)return false;
+    const r=el.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0};
   addEventListener('scroll',()=>{
     if(dockClosed)return;
     const past=scrollY>innerHeight*.9;
-    const atBook=(()=>{const b=document.getElementById('objednani');if(!b)return false;
-      const r=b.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0})();
-    const vidi=past&&!atBook;
+    /* U objednání lišta jen opakuje, co je vedle; v patičce navíc zakrývá
+       podpis a kontakty. Na obou místech zmizí. */
+    const prekazi=videt(document.getElementById('objednani'))||videt(document.querySelector('footer'));
+    const vidi=past&&!prekazi;
     dock.classList.toggle('on',vidi);
     document.body.classList.toggle('dock-on',vidi);
     if(vidi)document.body.style.setProperty('--dockh',dock.offsetHeight+'px');
