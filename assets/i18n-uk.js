@@ -415,6 +415,7 @@ window.KP_DICTS.uk={
 "Hovor je zatím zkušební a trvá nejvýš osm minut. Klára odpovídá orientačně; konkrétní daňové posouzení vždy potvrdí účetní.":"Розмова поки тестова і триває щонайбільше вісім хвилин. Клара відповідає орієнтовно; конкретну податкову оцінку завжди підтверджує бухгалтер.",
 "Zbývá poslední minuta hovoru. Chcete-li pokračovat, domluvíme schůzku nebo zavolejte na +420 773 966 787.":"Залишається остання хвилина розмови. Хочете продовжити — домовимося про зустріч або зателефонуйте: +420 773 966 787.",
 "Živý hovor":"Жива розмова",
+"Daňový kalendář":"Податковий календар",
 "Hlídám termíny podání a stav vašich dokladů.":"Стежу за термінами подання та станом ваших документів.",
 "Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.":"Поки що я лише проєкція. Говорити зі мною можна буде незабаром.",
 "Účetní vás uvidí v kalendáři hned, jak se objednáte.":"Бухгалтер побачить вас у календарі одразу, щойно запишетеся.",

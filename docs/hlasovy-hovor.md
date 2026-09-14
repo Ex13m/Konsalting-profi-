@@ -104,6 +104,19 @@ a výměna poskytovatele se nedotkne ničeho jiného.
 Když obraz podává někdo zvenčí, kreslení z fotky se vypne, aby zbytečně
 nejelo pod neviditelným plátnem.
 
+## Uvítání samo od sebe
+
+Klára se ukáže sama, 2,6 vteřiny po vykreslení stránky, jednou za návštěvu
+(`sessionStorage`). Pod ní jsou tři tlačítka: objednání, daňový kalendář
+a zpětné zavolání — každé projekci zhasne a odscrolluje na svou sekci.
+
+Bez zvuku. Prohlížeč by ho bez gesta stejně odmítl, takže video běží potichu
+a mluví titulky; tlačítko zvuku svítí jako „pustit“ a prvním dotekem zvuk
+odemkne — teprve pak naskočí i hudba pod projekcí.
+
+Vynechá se při `prefers-reduced-motion` a když je karta na pozadí. Zavřít jde
+kliknutím mimo, Escapem nebo tlačítkem projektoru.
+
 ## Peníze a zneužití
 
 Hlasová vrstva stojí 0,05 USD za minutu, k tomu se připočítávají tokeny

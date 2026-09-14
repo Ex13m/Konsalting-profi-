@@ -415,6 +415,7 @@ window.KP_DICTS.de={
 "Hovor je zatím zkušební a trvá nejvýš osm minut. Klára odpovídá orientačně; konkrétní daňové posouzení vždy potvrdí účetní.":"Das Gespräch ist noch ein Test und dauert höchstens acht Minuten. Klára antwortet orientierend; eine konkrete steuerliche Beurteilung bestätigt immer die Buchhalterin.",
 "Zbývá poslední minuta hovoru. Chcete-li pokračovat, domluvíme schůzku nebo zavolejte na +420 773 966 787.":"Es bleibt die letzte Gesprächsminute. Wenn Sie fortfahren möchten, vereinbaren wir einen Termin, oder rufen Sie an: +420 773 966 787.",
 "Živý hovor":"Gespräch live",
+"Daňový kalendář":"Steuerkalender",
 "Hlídám termíny podání a stav vašich dokladů.":"Ich behalte Abgabefristen und den Stand Ihrer Belege im Blick.",
 "Zatím jsem jen projekce. Mluvit se mnou budete moct brzy.":"Noch bin ich nur eine Projektion. Sprechen können Sie mit mir bald.",
 "Účetní vás uvidí v kalendáři hned, jak se objednáte.":"Die Buchhalterin sieht Sie im Kalender, sobald Sie einen Termin buchen.",
