@@ -1527,6 +1527,9 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
       <p>Odpovídáme na to, co obvykle rozhoduje, když firma zvažuje změnu účetní.</p>
     </div>
     <div class="ledger faq" id="faqbox">
+      <div class="row" aria-expanded="false"><button><h3>Kolik to u vás stojí?</h3><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel"><div class="panel-in"><p>Ceny držíme na úrovni trhu — ne nejlevnější, ale ani nafouknuté. Účtujeme odvedenou práci, ne paušál, do kterého se schová i měsíc, kdy se skoro nic nedělo: platíte za skutečné úkony, ne za vzduch. Konečné číslo řekneme až po schůzce, kdy vidíme celý objem agendy.</p><p><a href="cenik.html">Orientační ceník standardních služeb</a></p></div></div>
+      </div>
       <div class="row" aria-expanded="false"><button><h3>Jak proběhne přechod od současné účetní?</h3><span class="plus" aria-hidden="true"></span></button>
         <div class="panel"><div class="panel-in"><p>Domluvíme datum, převezmeme data, odsouhlasíme zůstatky a navážeme. Nejjednodušší je začátek účetního období, ale zvládneme to i uprostřed roku — jen si nejdřív potvrdíme stav účtů, aby se nic neztratilo.</p></div></div>
       </div>
@@ -1601,6 +1604,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
         <li><a href="#o-nas">O kanceláři</a></li>
         <li><a href="#postup">Jak to chodí</a></li>
         <li><a href="#kalendar">Účetní kalendář</a></li>
+        <li><a href="cenik.html">Ceník</a></li>
         <li><a href="#faq">Otázky</a></li>
       </ul></div>
       <div><h5>Kontakt</h5><ul>
@@ -2289,7 +2293,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
   const KB=[
     {k:['dph','vat','ндс','пдв','umsatzsteuer','mehrwertsteuer','kontroln','контрольн'],a:'Přiznání k DPH i kontrolní hlášení se podávají do 25. dne po skončení zdaňovacího období — u měsíčních plátců za předchozí měsíc, u čtvrtletních za čtvrtletí. Ke stejnému dni je splatná i daň. U klientů termín hlídáme a podklady si vyžádáme s předstihem.'},
     {k:['mzd','zaměstnan','výplat','čssz','payroll','wage','salar','зарплат','зарплн','сотрудник','працівник','lohn','gehalt','płac','pracownik'],a:'Mzdy zpracováváme kompletně: výpočet a výplatní pásky, přihlášky a odhlášky na ČSSZ a zdravotní pojišťovny, srážkovou i zálohovou daň, exekuční srážky a roční zúčtování. Odvody za předchozí měsíc jsou splatné do 20. dne.'},
-    {k:['cena','cenik','kolik stoj','nabídk','price','cost','how much','цен','стоит','стоимост','вартіст','коштує','preis','kostet','koszt','ile to'],a:'Cenu skládáme podle objemu dokladů, počtu zaměstnanců a rozsahu agendy — proto ji řekneme až po krátkém setkání, kdy víme, co přesně přebíráme. Setkání je nezávazné; můžu vám rovnou najít termín.'},
+    {k:['cena','cenik','ceník','kolik stoj','kolik to stoj','ile to kosztuje','nabídk','price','cost','how much','цен','стоит','стоимост','вартіст','коштує','preis','kostet','koszt','ile to'],a:'Ceny držíme na úrovni trhu a účtujeme odvedenou práci — neplatíte za vzduch, ale za skutečné úkony. Konečnou částku skládáme podle objemu dokladů, počtu zaměstnanců a rozsahu agendy, proto ji řekneme až po krátkém nezávazném setkání. Orientační ceny standardních úkonů máme sepsané v ceníku.',go:'cenik.html'},
     {k:['přechod','převz','změnit účetní','přejít','handover','switch','переход','перейти','сменить','перехід','змінити','wechsel','übergang','przejści','zmienić'],a:'Převzetí zvládneme kdykoli během roku, nejsnazší je k prvnímu dni měsíce. Vyžádáme si data od stávající účetní, odsouhlasíme zůstatky a navážeme — vy nemusíte nic řešit s předchozím dodavatelem.'},
     {k:['rekonstru','nepořádek','zanedb','dohled','mess','restore','восстанов','беспорядок','запущен','відновл','безлад','rekonstruktion','unordnung','odtworz','bałagan'],a:'Rekonstrukce zanedbaného účetnictví je jedna z našich specializací. Nejprve zmapujeme, co chybí, navrhneme postup a odhad rozsahu, teprve pak dohledáváme doklady a opravujeme.'},
     {k:['osvč','živnost','paušál','evidenc','sole trader','self-employ','ип','самозанят','фоп','підприєм','selbständ','gewerbe','samozatrudni','ryczałt'],a:'Pro OSVČ vedeme daňovou evidenci: peněžní deník, evidenci majetku, přiznání a přehledy pro ČSSZ a zdravotní pojišťovnu. Posoudíme také, jestli se vám vyplatí paušální daň a jak jste daleko od limitu pro povinnou registraci k DPH.'},
@@ -2307,7 +2311,7 @@ document.getElementById('bform').addEventListener('submit',e=>{
     if(BOOK.some(k=>t.includes(k)))return{a:T('Ráda vám najdu termín. První setkání je nezávazné — vyberte si den a čas v sekci objednání, hned pod tímto oknem.'),go:'#objednani'};
     let best=null,score=0;
     KB.forEach(item=>{const sc=item.k.reduce((n,k)=>n+(t.includes(k)?1:0),0);if(sc>score){score=sc;best=item}});
-    if(best)return{a:T(best.a)};
+    if(best)return{a:T(best.a),go:best.go};
     return{a:T('Na tohle vám radši odpoví účetní napřímo — daňové posouzení se odvíjí od konkrétní situace vaší firmy. Můžu vám najít termín konzultace, nebo zavolejte na +420 773 966 787.'),go:'#objednani'};
   }
 
@@ -2361,8 +2365,14 @@ document.getElementById('bform').addEventListener('submit',e=>{
     t.remove();big.speak();mini.speak();
     add('a',res.a);
     if(res.go){
-      const b=document.createElement('button');b.className='chip';b.textContent=T('Otevřít objednání →');
-      b.style.margin='2px 0 0';b.onclick=()=>{close();document.querySelector(res.go).scrollIntoView({behavior:'smooth'})};
+      const kotva=res.go.charAt(0)==='#';
+      const b=document.createElement('button');b.className='chip';
+      b.textContent=T(kotva?'Otevřít objednání →':'Otevřít ceník →');
+      b.style.margin='2px 0 0';
+      b.onclick=()=>{
+        if(!kotva){window.open(res.go,'_blank','noopener');return}
+        close();document.querySelector(res.go).scrollIntoView({behavior:'smooth'});
+      };
       const wrap=document.createElement('div');wrap.style.alignSelf='flex-start';wrap.appendChild(b);
       log.appendChild(wrap);nadno();
     }
@@ -3020,7 +3030,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
      Klárou se ukáže, co se dá dělat dál — ať nezůstane jen u pozdravu. */
   const AKCE=[
     ['Objednat se','#objednani'],
-    ['Daňový kalendář','#kalendar'],
+    ['Stáhnout ceník','cenik.html'],
     ['Zavolejte mi','#kontakt']
   ];
   const akce=document.getElementById('holoakce');
@@ -3032,8 +3042,11 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     akce.innerHTML=AKCE.map((a,i)=>'<button type="button" data-i="'+i+'">'+t(a[0])+'</button>').join('');
     akce.querySelectorAll('button').forEach(b=>b.onclick=e=>{
       e.stopPropagation();
-      const cil=document.querySelector(AKCE[+b.dataset.i][1]);
+      const kam=AKCE[+b.dataset.i][1];
       vyp();
+      /* odkaz mimo stránku se otevře vedle, kotva jen odscrolluje */
+      if(kam.charAt(0)!=='#'){window.open(kam,'_blank','noopener');return}
+      const cil=document.querySelector(kam);
       if(cil)cil.scrollIntoView({behavior:'smooth'});
     });
   }

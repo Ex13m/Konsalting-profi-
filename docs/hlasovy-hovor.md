@@ -107,8 +107,9 @@ nejelo pod neviditelným plátnem.
 ## Nabídka pod Klárou
 
 Projekci pouští jedině člověk tlačítkem projektoru — sama od sebe nenaskočí.
-Jakmile se rozsvítí, pod Klárou se ukážou tři tlačítka: objednání, daňový
-kalendář a zpětné zavolání. Každé projekci zhasne a odscrolluje na svou sekci.
+Jakmile se rozsvítí, pod Klárou se ukážou tři tlačítka: objednání, ceník
+a zpětné zavolání. Projekce u každého zhasne; kotva odscrolluje na svou
+sekci, ceník se otevře vedle jako samostatná stránka.
 
 Protože projekci spouští gesto, zvuk hraje rovnou a není potřeba ho odemykat.
 

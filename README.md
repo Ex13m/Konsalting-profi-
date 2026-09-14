@@ -5,6 +5,8 @@ Jednostránková prezentace účetní kanceláře Konsalting Profi (Praha 9 – 
 ## Obsah
 - `index.html` — celý web v jednom souboru (styly i skripty inline)
 - `assets/` — fotografie použité v hero sekci, v profilu kanceláře a v postupu spolupráce
+- `cenik.html` — ceník standardních služeb, samostatná stránka ve stejném stylu
+- `assets/konsalting-profi-cenik.pdf` — týž ceník ke stažení
 - `netlify.toml`, `_headers` — konfigurace nasazení a cache
 
 ## Vizuální systém
@@ -27,6 +29,22 @@ Video se nestahuje vůbec, pokud je návštěvník na telefonu, v úsporném
 režimu, na pomalé lince nebo si přeje méně pohybu — a načítá se až po
 vykreslení stránky, aby nebrzdilo první dojem. Rozumná velikost je do
 2 MB; fotka `hero.webp` slouží jako plakát a záloha.
+
+## Ceník
+
+Ceny jsou jen v `cenik.html`; PDF je z něj vygenerované, ne psané zvlášť.
+Po každé změně částek je potřeba PDF přegenerovat, jinak se rozejde
+se stránkou:
+
+    python3 -m http.server 8899 &
+    PLAYWRIGHT_DIR=<cesta k node_modules> node tools/cenik-pdf.mjs
+
+Tiskový vzhled řídí blok `@media print` v `cenik.html` — hlavička, odkaz
+zpět a tlačítka se do PDF netisknou.
+
+Na webu vede k ceníku odkaz v patičce, v odpovědi na otázku po ceně
+v sekci Otázky a tlačítko pod Klárou. Záměrně nikde nekřičí: konkrétní
+částka se stejně skládá až po schůzce, ceník je orientační.
 
 ## Vývoj
 Statický web bez build kroku. Stačí otevřít `index.html` nebo spustit libovolný statický server:
