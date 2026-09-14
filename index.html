@@ -2908,7 +2908,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     if(!zapnuto)return;
     zrus();
     if(!vid||!vid.play||vid.error){povidej(900);return}   // bez videa zůstanou jen titulky
-    vid.muted=ticho||samo;vid.volume=0.92;
+    vid.muted=ticho;vid.volume=0.92;
     try{vid.currentTime=0}catch(e){}
     const p=vid.play();
     if(p&&p.catch)p.catch(()=>{ // prohlížeč přehrání odmítl — zůstane obraz a titulky
@@ -2932,7 +2932,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
   }
 
   /* ---- zapnutí a vypnutí ---- */
-  let zapnuto=false,vHovoru=false,byloZap=false,samo=false;
+  let zapnuto=false,vHovoru=false,byloZap=false;
   function zap(tichy){
     zapnuto=true;
     box.classList.remove('on');void box.offsetWidth;   // restart animací
@@ -2941,12 +2941,13 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     btn.setAttribute('aria-label',t('Vypnout hologram'));
     zvukZap();
     if(!tichy){
+      nabidka(true);              // pod Klárou rovnou nabídneme, co dál
       setTimeout(humZap,300);
       prehraj();   // pustit hned, jinak prohlížeč zvuk bez gesta odmítne
     }
   }
   function vyp(){
-    zapnuto=false;samo=false;zrus();
+    zapnuto=false;zrus();
     nabidka(false);
     if(vHovoru)hovorKonec();
     mluvi=false;postava.classList.remove('mluvi');
@@ -2967,6 +2968,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     mluvi=false;postava.classList.remove('mluvi');
     if(vid){try{vid.pause();vid.currentTime=0}catch(e){}}
     humVyp();                       // hudba pod projekcí by překážela hovoru
+    nabidka(false);
     if(!zapnuto)zap(true);
     postava.classList.add('hovori');
     cap.innerHTML='<b>Klára</b><span>'+t('Živý hovor')+'</span>';
@@ -3013,10 +3015,9 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     vHovoru:()=>vHovoru
   };
 
-  /* ---- uvítání samo od sebe -------------------------------------------
-     Klára se ukáže sama, jednou za návštěvu. Bez zvuku — prohlížeč ho bez
-     gesta stejně odmítne — zato s titulky a s nabídkou, co dál. Zvuk si
-     člověk pustí tlačítkem, pak teprve naskočí i hudba pod projekcí. */
+  /* ---- nabídka pod Klárou ---------------------------------------------
+     Projekci pouští jedině člověk tlačítkem. Jakmile se rozsvítí, pod
+     Klárou se ukáže, co se dá dělat dál — ať nezůstane jen u pozdravu. */
   const AKCE=[
     ['Objednat se','#objednani'],
     ['Daňový kalendář','#kalendar'],
@@ -3037,49 +3038,17 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     });
   }
 
-  function zapSamo(){
-    if(zapnuto)return;
-    samo=true;
-    zapnuto=true;
-    box.classList.remove('on');void box.offsetWidth;
-    box.classList.add('on');dim.classList.add('on');box.setAttribute('aria-hidden','false');
-    btn.classList.add('on');mute.classList.add('on');btn.setAttribute('aria-pressed','true');
-    btn.setAttribute('aria-label',t('Vypnout hologram'));
-    nabidka(true);
-    vypisTlacitka();
-    prehraj();                      // video se pustí, jen bez zvuku
-  }
-
-  (function uvitani(){
-    if(!vid)return;
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-    let bylo=false;try{bylo=sessionStorage.getItem('kp-holo-uvitani')==='ano'}catch(e){}
-    if(bylo)return;
-    addEventListener('load',()=>setTimeout(()=>{
-      if(zapnuto||document.hidden)return;
-      try{sessionStorage.setItem('kp-holo-uvitani','ano')}catch(e){}
-      vid.preload='auto';vid.load();
-      zapSamo();
-    },2600));
-  })();
 
   btn.onclick=()=>zapnuto?vyp():zap();
   dim.onclick=()=>{if(zapnuto)vyp()};
 
   function vypisTlacitka(){
-    mute.innerHTML=(ticho||samo)?'&#9654;':'&#9724;';
-    mute.setAttribute('aria-label',t((ticho||samo)?'Zapnout zvuk':'Ztlumit zvuk'));
+    mute.innerHTML=ticho?'&#9654;':'&#9724;';
+    mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
   }
   vypisTlacitka();
   mute.onclick=e=>{
     e.stopPropagation();
-    if(samo){            // první dotek: jen odemknout zvuk, nic nepřepínat
-      samo=false;
-      if(vid)vid.muted=ticho;
-      if(!ticho)humZap();
-      vypisTlacitka();
-      return;
-    }
     ticho=!ticho;mute.innerHTML=ticho?'&#9654;':'&#9724;';
     mute.setAttribute('aria-label',t(ticho?'Zapnout zvuk':'Ztlumit zvuk'));
     try{localStorage.setItem('kp-holo-ticho',ticho?'ano':'ne')}catch(e){}

@@ -104,18 +104,16 @@ a výměna poskytovatele se nedotkne ničeho jiného.
 Když obraz podává někdo zvenčí, kreslení z fotky se vypne, aby zbytečně
 nejelo pod neviditelným plátnem.
 
-## Uvítání samo od sebe
+## Nabídka pod Klárou
 
-Klára se ukáže sama, 2,6 vteřiny po vykreslení stránky, jednou za návštěvu
-(`sessionStorage`). Pod ní jsou tři tlačítka: objednání, daňový kalendář
-a zpětné zavolání — každé projekci zhasne a odscrolluje na svou sekci.
+Projekci pouští jedině člověk tlačítkem projektoru — sama od sebe nenaskočí.
+Jakmile se rozsvítí, pod Klárou se ukážou tři tlačítka: objednání, daňový
+kalendář a zpětné zavolání. Každé projekci zhasne a odscrolluje na svou sekci.
 
-Bez zvuku. Prohlížeč by ho bez gesta stejně odmítl, takže video běží potichu
-a mluví titulky; tlačítko zvuku svítí jako „pustit“ a prvním dotekem zvuk
-odemkne — teprve pak naskočí i hudba pod projekcí.
+Protože projekci spouští gesto, zvuk hraje rovnou a není potřeba ho odemykat.
 
-Vynechá se při `prefers-reduced-motion` a když je karta na pozadí. Zavřít jde
-kliknutím mimo, Escapem nebo tlačítkem projektoru.
+Za živého hovoru se nabídka schová — tam se mluví, ne klikají odkazy.
+Zavřít jde kliknutím mimo, Escapem nebo tlačítkem projektoru.
 
 ## Peníze a zneužití
 
