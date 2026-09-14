@@ -396,9 +396,24 @@ footer a{text-decoration:none;color:var(--on-dark-mute);transition:color .2s}
 footer a:hover{color:var(--on-dark)}
 .fbot{margin-top:48px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:13px;color:var(--on-dark-mute);
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
-.fbot .by{flex-basis:100%;display:flex;align-items:baseline;gap:6px;font-size:12px;letter-spacing:.02em;
-  opacity:.6;padding-top:12px;margin-top:2px;border-top:1px solid var(--line-dark)}
-.fbot .by b{font-weight:500;color:var(--brass-2);letter-spacing:.05em}
+.fbot .by{flex-basis:100%;display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.02em;
+  opacity:.55;padding-top:12px;margin-top:2px;border-top:1px solid var(--line-dark);
+  width:100%;transition:opacity .25s}
+.fbot .by:hover,.fbot .by:focus-visible{opacity:1}
+/* jméno studia drží jeden řádek — na úzké obrazovce se radši zmenší, než zlomí */
+.fbot .by b{font-weight:500;color:var(--brass-2);letter-spacing:.05em;white-space:nowrap;
+  font-size:clamp(10.5px,2.6vw,12px)}
+/* značka: vnější kroužek se otáčí, monogram uvnitř stojí */
+.gh{width:30px;height:30px;flex:none;display:block;color:var(--brass-2)}
+.gh circle,.gh path{fill:none;stroke:currentColor}
+.gh .ven{transform-origin:22px 22px;animation:ghturn 26s linear infinite}
+.gh .ven circle{stroke-width:.9;stroke-dasharray:2 5.4;stroke-linecap:round}
+.gh .ven path{fill:currentColor;stroke:none}
+.gh .uvnitr circle{stroke-width:.8;opacity:.55}
+.gh text{fill:currentColor;stroke:none;font-family:"Cormorant Garamond",Georgia,serif;
+  font-weight:600;font-size:15px;letter-spacing:.06em}
+@keyframes ghturn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.gh .ven{animation:none}}
 
 /* ---------- odhalování ---------- */
 /* němčina umí slova, která rozstrčí i širokou kolonku — necháme je zlomit
@@ -1635,7 +1650,20 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
       <button type="button" class="legal-open" data-doc="cookies">Cookies</button>
       <button type="button" class="legal-open" data-doc="terms">Podmínky použití</button>
       <a href="ochrana-osobnich-udaju.html">Úplné znění GDPR</a>
-      <span class="by">© <span class="num" id="yr2"></span> <b>Gausse Holler Custom Lab</b></span>
+      <a class="by" href="https://www.facebook.com/GausseHoller/" target="_blank" rel="noopener"
+         aria-label="Gausse Holler Custom Lab na Facebooku">
+        <svg class="gh" viewBox="0 0 44 44" aria-hidden="true">
+          <g class="ven">
+            <circle cx="22" cy="22" r="20.4"/>
+            <path d="M22 .4l1.9 1.9L22 4.2l-1.9-1.9z"/>
+          </g>
+          <g class="uvnitr">
+            <circle cx="22" cy="22" r="14.2"/>
+            <text x="22" y="22" text-anchor="middle" dominant-baseline="central" translate="no">GH</text>
+          </g>
+        </svg>
+        <b translate="no">Gausse Holler Custom Lab</b>
+      </a>
     </div>
   </div>
 </footer>
@@ -1817,7 +1845,7 @@ const hdr=document.getElementById('hdr'),nav=document.getElementById('nav'),burg
 addEventListener('scroll',()=>hdr.classList.toggle('solid',scrollY>40),{passive:true});
 burger.onclick=()=>{const o=nav.classList.toggle('open');burger.setAttribute('aria-expanded',o)};
 nav.querySelectorAll('a').forEach(a=>a.onclick=()=>{nav.classList.remove('open');burger.setAttribute('aria-expanded','false')});
-document.getElementById('yr').textContent=document.getElementById('yr2').textContent=new Date().getFullYear();
+document.getElementById('yr').textContent=new Date().getFullYear();
 setTimeout(()=>document.body.classList.add('anim-done'),1400);
 
 /* vzhled: tlačítko přepíná dokola světlý -> tmavý -> retro */
