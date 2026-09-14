@@ -671,7 +671,7 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 @media(max-width:920px){.book{grid-template-columns:1fr}}
 .book-l,.book-r{background:var(--navy);padding:clamp(24px,3vw,40px)}
 .book-r{background:var(--navy-2)}
-.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-bottom:26px}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:8px;margin-bottom:26px}
 .day{background:rgba(244,241,235,.06);border:1px solid var(--line-dark);color:var(--on-dark);font:inherit;
   padding:12px 10px;border-radius:var(--r);cursor:pointer;text-align:center;transition:all .2s;
   /* dny se štítkem mají dva řádky — pevná výška srovná i řádky mezi sebou */
@@ -681,7 +681,11 @@ body.dark .grain{mix-blend-mode:screen;opacity:.22}
 .day:disabled{opacity:.28;cursor:not-allowed}
 .day b{display:block;font-family:"Source Serif 4",serif;font-size:19px;font-weight:600;line-height:1.1}
 .day i{font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--on-dark-mute)}
-.day.on i{color:rgba(255,255,255,.8)}
+/* režim dne na vlastní řádek — „telefonicky" se do jednoho řádku se zkratkou
+   dne nevejde a lámalo se to uprostřed slova */
+.day u{display:block;text-decoration:none;font-size:9.5px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--brass-2);white-space:nowrap}
+.day.on i,.day.on u{color:rgba(255,255,255,.8)}
 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
 .slots .booknote{grid-column:1/-1}
 .slot{background:transparent;border:1px solid var(--line-dark);color:var(--on-dark);font:inherit;font-size:15px;
@@ -2146,9 +2150,9 @@ function renderDays(){
   const list=nextDays(8);
   daysEl.innerHTML=list.map((x,i)=>{
     const w=x.getDay();
-    const stitek=DEN_SCHUZKY.includes(w)?'':' · '+U(DEN_TELEFON.includes(w)?'byPhone':'closedDay');
+    const stitek=DEN_SCHUZKY.includes(w)?'':U(DEN_TELEFON.includes(w)?'byPhone':'closedDay');
     return '<button class="day" data-i="'+i+'"><b class="num">'+x.getDate()+'. '+(x.getMonth()+1)+'.</b>'+
-      '<i>'+DAYS()[w]+stitek+'</i></button>';
+      '<i>'+DAYS()[w]+'</i>'+(stitek?'<u>'+stitek+'</u>':'')+'</button>';
   }).join('');
   daysEl.querySelectorAll('.day').forEach(b=>b.onclick=()=>{
     daysEl.querySelectorAll('.day').forEach(o=>o.classList.remove('on'));
@@ -2454,7 +2458,7 @@ bform.addEventListener('submit',async e=>{
       b.textContent=T(kotva?'Otevřít objednání →':'Otevřít ceník →');
       b.style.margin='2px 0 0';
       b.onclick=()=>{
-        if(!kotva){window.open(res.go,'_blank','noopener');return}
+        if(!kotva){location.href=res.go;return}
         close();document.querySelector(res.go).scrollIntoView({behavior:'smooth'});
       };
       const wrap=document.createElement('div');wrap.style.alignSelf='flex-start';wrap.appendChild(b);
@@ -3128,8 +3132,9 @@ document.getElementById('leadform').addEventListener('submit',e=>{
       e.stopPropagation();
       const kam=AKCE[+b.dataset.i][1];
       vyp();
-      /* odkaz mimo stránku se otevře vedle, kotva jen odscrolluje */
-      if(kam.charAt(0)!=='#'){window.open(kam,'_blank','noopener');return}
+      /* na ceník jdeme v téže záložce — odtamtud vede odkaz zpátky sem
+         a člověk se vrátí přesně tam, kde skončil. Kotva jen odscrolluje. */
+      if(kam.charAt(0)!=='#'){location.href=kam;return}
       const cil=document.querySelector(kam);
       if(cil)cil.scrollIntoView({behavior:'smooth'});
     });

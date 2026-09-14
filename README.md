@@ -61,14 +61,32 @@ než rok funkce maže sama — odpovídá to lhůtě v zásadách zpracování.
 ## Ceník
 
 Ceny jsou jen v `cenik.html`; PDF je z něj vygenerované, ne psané zvlášť.
-Po každé změně částek je potřeba PDF přegenerovat, jinak se rozejde
-se stránkou:
+Po každé změně částek **i překladů** je potřeba PDF přegenerovat, jinak
+se rozejde se stránkou:
 
     python3 -m http.server 8899 &
     PLAYWRIGHT_DIR=<cesta k node_modules> node tools/cenik-pdf.mjs
 
+Vznikne šest souborů — `konsalting-profi-cenik.pdf` (česky) a `-en`,
+`-ru`, `-uk`, `-de`, `-pl`. Tlačítko na stránce nabízí ten, který
+odpovídá zvolenému jazyku.
+
 Tiskový vzhled řídí blok `@media print` v `cenik.html` — hlavička, odkaz
 zpět a tlačítka se do PDF netisknou.
+
+### Jazyk a návrat
+
+Stránka je ve stejných šesti jazycích jako web a bere si jazyk z téhož
+místa: `?lang=` v adrese (tak se generuje PDF), jinak `localStorage`,
+kam ho ukládá hlavní stránka. Slovník je společný — klíčem je původní
+český text, takže se překlad doplňuje do `assets/i18n-*.js` jako všude
+jinde. Čísla, adresa a název kanceláře jsou označené třídou `num`
+a nepřekládají se. Než slovník dorazí, je stránka schovaná, aby neblikla
+česky; pojistka ji odkryje po 1,5 s i kdyby slovník nedojel.
+
+Odkazy na ceník vedou v téže záložce. Odkaz „zpět na web" se proto vrací
+do historie a člověk se ocitne přesně tam, kde skončil — i s pozicí
+rolování. Kdo přijde odjinud nebo rovnou z adresního řádku, jde na úvod.
 
 Na webu vede k ceníku odkaz v patičce, v odpovědi na otázku po ceně
 v sekci Otázky a tlačítko pod Klárou. Záměrně nikde nekřičí: konkrétní

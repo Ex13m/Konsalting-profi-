@@ -7,6 +7,24 @@
 <meta name="description" content="Ceník standardních služeb účetní kanceláře Konsalting Profi, Praha 9 – Vysočany. Orientační ceny bez DPH: účetní položka, daňová přiznání, registrace, mzdy, konzultace.">
 <meta name="robots" content="index,follow">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+/* Jazyk držíme společný s webem: bere se z ?lang= (tak se generuje PDF)
+   nebo z localStorage, kam ho ukládá hlavní stránka. Dokud slovník
+   nedorazí, stránku schováme — jinak blikne česky a přepíše se. */
+(function(){
+  var L=['cs','en','ru','uk','de','pl'],c='cs';
+  try{
+    var q=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];
+    var s=q||localStorage.getItem('kp-lang');
+    if(s&&L.indexOf(s)>-1)c=s;
+  }catch(e){}
+  document.documentElement.lang=window.KP_LANG=c;
+  if(c!=='cs'){
+    document.documentElement.className='preklad';
+    setTimeout(function(){document.documentElement.classList.remove('preklad')},1500);
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -19,6 +37,7 @@
   --pad:clamp(20px,5vw,60px);
 }
 *{box-sizing:border-box}
+html.preklad body{visibility:hidden}
 body{margin:0;background:var(--paper);color:var(--ink);
   font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.65;
   -webkit-font-smoothing:antialiased}
@@ -134,10 +153,10 @@ footer a{color:var(--brass-2)}
 <header>
   <div class="wrap hbar">
     <a class="logo" href="index.html">
-      <span class="mark" aria-hidden="true">KP</span>
-      <span class="logo-w" translate="no"><b>Konsalting</b><i>PROFI</i></span>
+      <span class="mark num" aria-hidden="true">KP</span>
+      <span class="logo-w num" translate="no"><b>Konsalting</b><i>PROFI</i></span>
     </a>
-    <a class="back" href="index.html">← Zpět na web</a>
+    <a class="back zpet" href="index.html">← Zpět na web</a>
   </div>
 </header>
 
@@ -165,7 +184,7 @@ footer a{color:var(--brass-2)}
 <table>
   <thead><tr><th scope="col">Úkon</th><th scope="col">Cena</th></tr></thead>
   <tbody>
-    <tr><td>Účetní položka<span class="pozn">Jeden zaúčtovaný doklad</span></td><td>35 Kč</td></tr>
+    <tr><td>Účetní položka<span class="pozn">Jeden zaúčtovaný doklad</span></td><td><span class="num">35 Kč</span></td></tr>
   </tbody>
 </table>
 
@@ -173,15 +192,15 @@ footer a{color:var(--brass-2)}
 <table>
   <thead><tr><th scope="col">Úkon</th><th scope="col">Cena</th></tr></thead>
   <tbody>
-    <tr><td>Přiznání k dani z příjmů fyzických osob</td><td>1 000 Kč</td></tr>
-    <tr><td>Přiznání k dani z příjmů právnických osob<span class="pozn">Včetně rozvahy, výkazu zisku a ztráty a přílohy</span></td><td>3 000 Kč</td></tr>
-    <tr><td>Přiznání k dani z přidané hodnoty</td><td>1 000 Kč</td></tr>
-    <tr><td>Kontrolní hlášení</td><td>1 000 Kč</td></tr>
-    <tr><td>Souhrnné hlášení</td><td>500 Kč</td></tr>
-    <tr><td>Přiznání k dani z nemovitých věcí</td><td>1 000 Kč</td></tr>
-    <tr><td>Přehled na pojistné<span class="pozn">Zdravotní i sociální pojištění</span></td><td>500 Kč</td></tr>
-    <tr><td>Vyúčtování daně ze závislé činnosti</td><td>1 000 Kč</td></tr>
-    <tr><td>Vyúčtování daně vybírané srážkou</td><td>1 000 Kč</td></tr>
+    <tr><td>Přiznání k dani z příjmů fyzických osob</td><td><span class="num">1 000 Kč</span></td></tr>
+    <tr><td>Přiznání k dani z příjmů právnických osob<span class="pozn">Včetně rozvahy, výkazu zisku a ztráty a přílohy</span></td><td><span class="num">3 000 Kč</span></td></tr>
+    <tr><td>Přiznání k dani z přidané hodnoty</td><td><span class="num">1 000 Kč</span></td></tr>
+    <tr><td>Kontrolní hlášení</td><td><span class="num">1 000 Kč</span></td></tr>
+    <tr><td>Souhrnné hlášení</td><td><span class="num">500 Kč</span></td></tr>
+    <tr><td>Přiznání k dani z nemovitých věcí</td><td><span class="num">1 000 Kč</span></td></tr>
+    <tr><td>Přehled na pojistné<span class="pozn">Zdravotní i sociální pojištění</span></td><td><span class="num">500 Kč</span></td></tr>
+    <tr><td>Vyúčtování daně ze závislé činnosti</td><td><span class="num">1 000 Kč</span></td></tr>
+    <tr><td>Vyúčtování daně vybírané srážkou</td><td><span class="num">1 000 Kč</span></td></tr>
   </tbody>
 </table>
 
@@ -189,11 +208,11 @@ footer a{color:var(--brass-2)}
 <table>
   <thead><tr><th scope="col">Úkon</th><th scope="col">Cena</th></tr></thead>
   <tbody>
-    <tr><td>Registrace k daním nebo změna registračních údajů<span class="pozn">Daň z příjmů, závislá činnost, srážková daň</span></td><td>500 Kč</td></tr>
-    <tr><td>Registrace k DPH při překročení obratu</td><td><span class="od">od</span> 500 Kč</td></tr>
-    <tr><td>Dobrovolná registrace k DPH</td><td><span class="od">od</span> 1 000 Kč</td></tr>
-    <tr><td>Registrace na České správě sociálního zabezpečení</td><td>500 Kč</td></tr>
-    <tr><td>Registrace u zdravotní pojišťovny</td><td>500 Kč</td></tr>
+    <tr><td>Registrace k daním nebo změna registračních údajů<span class="pozn">Daň z příjmů, závislá činnost, srážková daň</span></td><td><span class="num">500 Kč</span></td></tr>
+    <tr><td>Registrace k DPH při překročení obratu</td><td><span class="od">od</span> <span class="num">500 Kč</span></td></tr>
+    <tr><td>Dobrovolná registrace k DPH</td><td><span class="od">od</span> <span class="num">1 000 Kč</span></td></tr>
+    <tr><td>Registrace na České správě sociálního zabezpečení</td><td><span class="num">500 Kč</span></td></tr>
+    <tr><td>Registrace u zdravotní pojišťovny</td><td><span class="num">500 Kč</span></td></tr>
   </tbody>
 </table>
 
@@ -201,10 +220,10 @@ footer a{color:var(--brass-2)}
 <table>
   <thead><tr><th scope="col">Úkon</th><th scope="col">Cena</th></tr></thead>
   <tbody>
-    <tr><td>Zpracování mezd<span class="pozn">Jeden zaměstnanec za jeden měsíc</span></td><td>350 Kč</td></tr>
-    <tr><td>Výkaz příjmů u dohody o provedení práce</td><td>100 Kč</td></tr>
-    <tr><td>Nástup nebo ukončení zaměstnance<span class="pozn">Přihláška i odhláška na ČSSZ a zdravotní pojišťovnu</span></td><td>250 Kč</td></tr>
-    <tr><td>Informační karta o nástupu nebo ukončení</td><td>190 Kč</td></tr>
+    <tr><td>Zpracování mezd<span class="pozn">Jeden zaměstnanec za jeden měsíc</span></td><td><span class="num">350 Kč</span></td></tr>
+    <tr><td>Výkaz příjmů u dohody o provedení práce</td><td><span class="num">100 Kč</span></td></tr>
+    <tr><td>Nástup nebo ukončení zaměstnance<span class="pozn">Přihláška i odhláška na ČSSZ a zdravotní pojišťovnu</span></td><td><span class="num">250 Kč</span></td></tr>
+    <tr><td>Informační karta o nástupu nebo ukončení</td><td><span class="num">190 Kč</span></td></tr>
   </tbody>
 </table>
 
@@ -212,7 +231,7 @@ footer a{color:var(--brass-2)}
 <table>
   <thead><tr><th scope="col">Úkon</th><th scope="col">Cena</th></tr></thead>
   <tbody>
-    <tr><td>Účetní poradenství<span class="pozn">Za započatou hodinu</span></td><td>1 000 Kč</td></tr>
+    <tr><td>Účetní poradenství<span class="pozn">Za započatou hodinu</span></td><td><span class="num">1 000 Kč</span></td></tr>
     <tr><td>Poradenství pro stávající klienty<span class="pozn">Neúčtujeme — je součástí spolupráce</span></td><td class="zdarma">Zdarma</td></tr>
     <tr><td>První nezávazná konzultace<span class="pozn">45 minut, ať se nakonec domluvíme, nebo ne</span></td><td class="zdarma">Zdarma</td></tr>
   </tbody>
@@ -223,7 +242,7 @@ footer a{color:var(--brass-2)}
   <p>Nejrychlejší odpověď je schůzka. Přineste, co máte — vzorek dokladů za měsíc stačí — a odejdete s konkrétní částkou a s tím, kdo co dělá.</p>
   <div class="akce">
     <a class="btn" href="index.html#objednani">Vybrat termín schůzky</a>
-    <a class="btn ghost" href="assets/konsalting-profi-cenik.pdf" download>Stáhnout jako PDF</a>
+    <a class="btn ghost" id="pdf" href="assets/konsalting-profi-cenik.pdf" download>Stáhnout jako PDF</a>
   </div>
 </div>
 
@@ -234,15 +253,63 @@ footer a{color:var(--brass-2)}
 
 <footer>
   <div class="wrap">
-    © <span id="yr"></span> Konsalting Profi · Rubeška 383/4, 190 00 Praha 9 – Vysočany · IČO 25720121 ·
-    <a href="tel:+420773966787">+420 773 966 787</a> ·
-    <a href="mailto:konsaltingprofi@gmail.com">konsaltingprofi@gmail.com</a> ·
-    <a href="index.html">zpět na web</a>
+    <span class="num" translate="no">© <span id="yr"></span> Konsalting Profi · Rubeška 383/4, 190 00 Praha 9 – Vysočany · IČO 25720121</span> ·
+    <a class="num" href="tel:+420773966787">+420 773 966 787</a> ·
+    <a class="num" href="mailto:konsaltingprofi@gmail.com">konsaltingprofi@gmail.com</a> ·
+    <a class="zpet" href="index.html">zpět na web</a>
   </div>
 </footer>
 
 <script>
 document.getElementById('yr').textContent=new Date().getFullYear();
+
+/* Zpět na web: když sem člověk přišel z naší stránky — typicky tlačítkem
+   pod Klárou nebo z odpovědi asistentky — vrátíme ho do historie. Ocitne
+   se přesně tam, kde byl, i s pozicí rolování. Kdo přišel odjinud nebo
+   rovnou z adresního řádku, jde na úvod. */
+(function(){
+  var zpatky=false;
+  try{
+    zpatky=history.length>1&&!!document.referrer&&
+      new URL(document.referrer).origin===location.origin;
+  }catch(e){}
+  if(!zpatky)return;
+  var n=document.querySelectorAll('.zpet'),i;
+  for(i=0;i<n.length;i++)n[i].addEventListener('click',function(e){e.preventDefault();history.back()});
+})();
+
+/* Překlad: stejný slovník i stejná pravidla jako na webu. Klíčem je
+   původní český text; čísla, adresa a název kanceláře (.num) zůstávají. */
+(function(){
+  var l=window.KP_LANG;
+  function odkryj(){document.documentElement.classList.remove('preklad')}
+  if(l==='cs')return;
+  document.getElementById('pdf').href='assets/konsalting-profi-cenik-'+l+'.pdf';
+  var e=document.createElement('script');
+  e.src='assets/i18n-'+l+'.js?v=3';
+  e.onerror=odkryj;
+  e.onload=function(){
+    var d=(window.KP_DICTS||{})[l];
+    if(!d)return odkryj();
+    var it=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{
+      acceptNode:function(n){
+        var p=n.parentElement;
+        if(!p||p.closest('script,style,code,.num'))return NodeFilter.FILTER_REJECT;
+        return n.nodeValue.trim().length>1?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+      }});
+    var uzly=[],n;
+    while((n=it.nextNode()))uzly.push(n);
+    uzly.forEach(function(x){
+      var t=d[x.nodeValue.trim()];
+      if(t)x.nodeValue=x.nodeValue.replace(x.nodeValue.trim(),t);
+    });
+    if(d[document.title])document.title=d[document.title];
+    var pop=document.querySelector('meta[name=description]');
+    if(pop&&d[pop.content])pop.content=d[pop.content];
+    odkryj();
+  };
+  document.head.appendChild(e);
+})();
 </script>
 </body>
 </html>
