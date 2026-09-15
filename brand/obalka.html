@@ -1,0 +1,101 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Obálka facebookové stránky, nahrává se 1640×856.
+     Facebook ji na počítači zobrazí 820×312 — udrží šířku a ukrojí
+     116 px nahoře i dole; na telefonu 640×360 — udrží výšku a ukrojí
+     zhruba 60 px po stranách. Bezpečné pole je tedy 1520×624 uprostřed.
+     Navíc přes levý dolní roh leží profilová fotka: přibližně 480 px
+     zleva a 260 px zdola musí zůstat prázdných. Proto celý obsah stojí
+     v horních dvou třetinách a dolní pás je vyloženě jen pozadí. */
+  :root{--navy:#0D1935;--navy-2:#16264F;--brass:#A9743C;--brass-2:#C08F4E;
+        --on-dark:#F4F1EB;--mute:rgba(244,241,235,.72)}
+  *{box-sizing:border-box}
+  body{margin:0;background:#222}
+  .o{width:1640px;height:856px;position:relative;overflow:hidden;background:var(--navy);
+     color:var(--on-dark);font-family:"IBM Plex Sans",system-ui,sans-serif}
+  .o::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse 66% 86% at 70% 34%,rgba(41,64,116,.6),transparent 62%)}
+  /* sotva znatelná mřížka jako na účetním papíru */
+  .o::after{content:"";position:absolute;inset:0;opacity:.05;
+    background:repeating-linear-gradient(0deg,transparent 0 47px,#F4F1EB 47px 48px),
+               repeating-linear-gradient(90deg,transparent 0 47px,#F4F1EB 47px 48px)}
+
+  .stred{position:absolute;left:50%;transform:translateX(-50%);
+         top:150px;width:1140px;z-index:2}
+
+  .znacka{display:flex;align-items:center;gap:18px;margin-bottom:30px}
+  .mark{width:56px;height:56px;flex:none;display:grid;place-items:center;
+    border:1px solid var(--brass);color:var(--brass-2)}
+  .mark span{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:25px;line-height:1}
+  .slovo{display:flex;flex-direction:column;line-height:1;gap:8px}
+  .slovo b{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:33px;
+    letter-spacing:.07em;text-transform:uppercase;line-height:.9}
+  .slovo i{font-style:normal;font-size:11.5px;letter-spacing:.44em;color:var(--brass-2);text-indent:.44em}
+
+  h1{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:66px;line-height:1.12;
+     letter-spacing:-.015em;margin:0 0 22px;max-width:18ch}
+  h1 em{font-style:italic;color:var(--brass-2)}
+  .pod{font-size:21px;line-height:1.5;color:var(--mute);max-width:56ch;margin:0 0 30px}
+
+  .radek{display:flex;align-items:center;gap:26px;padding-top:20px;font-size:16.5px;
+         color:var(--mute);border-top:1px solid rgba(244,241,235,.18);
+         font-variant-numeric:tabular-nums}
+  .radek b{color:var(--on-dark);font-weight:500}
+  .tecka{width:5px;height:5px;border-radius:50%;background:var(--brass);flex:none}
+
+  /* varianta 2 — místo věty čtyři služby */
+  #o2 .stred{top:168px}
+  #o2 h1{font-size:62px;margin-bottom:26px}
+  .sluzby{display:flex;margin-bottom:30px}
+  .sluzby div{padding-right:34px;margin-right:34px;border-right:1px solid rgba(244,241,235,.18)}
+  .sluzby div:last-child{border-right:0;margin-right:0;padding-right:0}
+  .sluzby b{display:block;font-family:"Source Serif 4",serif;font-weight:600;font-size:20px;
+    margin-bottom:5px}
+  .sluzby span{font-size:14px;color:var(--mute)}
+</style>
+
+<!-- 1 — slogan z webu -->
+<div class="o" id="o1">
+  <div class="stred">
+    <div class="znacka">
+      <span class="mark"><span>KP</span></span>
+      <span class="slovo"><b>Konsalting</b><i>Profi</i></span>
+    </div>
+    <h1>Účetnictví, které drží firmu <em>v pořádku.</em></h1>
+    <p class="pod">Přebíráme celou agendu — účetnictví, mzdy i jednání s úřady.
+      Vy se staráte o firmu, my o to, aby v jejích papírech nebylo co řešit.</p>
+    <div class="radek">
+      <span class="tecka"></span><b>Praha 9 – Vysočany</b>
+      <span>Rubeška 383/4</span>
+      <span class="tecka"></span><b>+420 773 966 787</b>
+      <span class="tecka"></span><span>konsalting.cz</span>
+    </div>
+  </div>
+</div>
+
+<!-- 2 — služby -->
+<div class="o" id="o2">
+  <div class="stred">
+    <div class="znacka">
+      <span class="mark"><span>KP</span></span>
+      <span class="slovo"><b>Konsalting</b><i>Profi</i></span>
+    </div>
+    <h1>Papíry firmy <em>v pořádku.</em></h1>
+    <div class="sluzby">
+      <div><b>Účetnictví</b><span>doklady, DPH, závěrka</span></div>
+      <div><b>Mzdy</b><span>výplaty, odvody, úřady</span></div>
+      <div><b>Daně</b><span>přiznání a poradenství</span></div>
+      <div><b>Rekonstrukce</b><span>srovnáme zanedbanou agendu</span></div>
+    </div>
+    <div class="radek">
+      <span class="tecka"></span><b>Praha 9 – Vysočany</b>
+      <span>Rubeška 383/4</span>
+      <span class="tecka"></span><b>+420 773 966 787</b>
+      <span class="tecka"></span><span>konsalting.cz</span>
+    </div>
+  </div>
+</div>

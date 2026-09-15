@@ -19,7 +19,11 @@ uvnitř bezpečné kružnice a rohy zůstávají prázdné.
 | `avatar-1-pecet.png` | varianta s podpisem „Účetní kancelář" |
 | `avatar-3-kruhovy-napis.png` | pečeť s názvem a adresou po obvodu |
 | `nahled.png` | všechny tři v kolečku na 260, 100, 56 a 32 px |
-| `avatar.html` | zdroj, ze kterého se obrázky kreslí |
+| `avatar.html` | zdroj, ze kterého se avatary kreslí |
+| `obalka-1-slogan.png` | obálka stránky se sloganem z webu, 1640×856 |
+| `obalka-2-sluzby.png` | obálka s výčtem služeb, 1640×856 |
+| `obalka-nahled.png` | jak obálky vypadají na počítači i na telefonu |
+| `obalka.html` | zdroj, ze kterého se obálky kreslí |
 
 Vybraná varianta je navíc v `assets/znacka-kp.png`, aby se dala použít
 i z webu — třeba jako veřejná adresa pro nahrání do sítí.
@@ -27,9 +31,23 @@ i z webu — třeba jako veřejná adresa pro nahrání do sítí.
 ## Přegenerování
 
     PLAYWRIGHT_DIR=<cesta k node_modules> node tools/avatar.mjs
+    PLAYWRIGHT_DIR=<cesta k node_modules> node tools/obalka.mjs
 
-Vznikne znovu všech pět obrázků i přehledový list. Barvy, velikosti
-a rozvržení se mění v `brand/avatar.html`, ne v obrázcích.
+Vzniknou znovu všechny obrázky i přehledové listy. Barvy, velikosti
+a rozvržení se mění v `brand/avatar.html` a `brand/obalka.html`,
+ne v obrázcích.
+
+## Rozměry obálky
+
+Nahrává se 1640×856. Facebook ji na počítači ukáže jako 820×312 —
+udrží šířku a ukrojí 116 px nahoře i dole; na telefonu 640×360 —
+udrží výšku a ukrojí zhruba 60 px po stranách. Bezpečné pole je tedy
+1520×624 uprostřed.
+
+Navíc přes levý dolní roh leží profilová fotka: kolečko 168 px, které
+středem sedí na dolní hraně. Proto musí zůstat prázdných přibližně
+390 px zleva a 290 px zdola. Obsah obálky tam nesahá — ověřeno měřením,
+ne odhadem.
 
 ## Proč zrovna monogram
 
