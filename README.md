@@ -10,6 +10,8 @@ Jednostránková prezentace účetní kanceláře Konsalting Profi (Praha 9 – 
 - `cenik.html` — ceník standardních služeb, samostatná stránka ve stejném stylu
 - `assets/konsalting-profi-cenik.pdf` — týž ceník ke stažení
 - `assets/znacka-kp.png` — znak kanceláře 1080×1080 pro profily na sítích
+- `brand/` — varianty znaku, velikosti a zdroj, ze kterého se kreslí
+  (`brand/README.md`)
 - `netlify.toml`, `_headers` — konfigurace nasazení a cache
 
 ## Vizuální systém

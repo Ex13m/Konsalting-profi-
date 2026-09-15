@@ -1,0 +1,69 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0D1935;--navy-2:#16264F;--brass:#A9743C;--brass-2:#C08F4E;--paper:#F4F1EB}
+  *{box-sizing:border-box}
+  body{margin:0;background:#222;display:flex;flex-wrap:wrap;gap:0}
+  .a{width:1080px;height:1080px;position:relative;background:var(--navy);overflow:hidden;
+     display:grid;place-items:center}
+  /* jemný přechod, aby plocha nebyla mrtvá */
+  .a::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 38%,rgba(41,64,116,.55),transparent 62%)}
+  .in{position:relative;text-align:center;color:var(--brass-2)}
+  .kp{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;line-height:1;
+      letter-spacing:.02em;color:var(--brass-2)}
+  .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;
+        border:1px solid var(--brass)}
+  .pod{font-family:"IBM Plex Sans",sans-serif;text-transform:uppercase;color:rgba(244,241,235,.74)}
+  .car{height:1px;background:var(--brass);opacity:.55;margin:0 auto}
+
+  /* 1 — pečeť */
+  #v1 .ring.o{width:960px;height:960px;border-width:5px}
+  #v1 .ring.i{width:876px;height:876px;border-color:rgba(192,143,78,.45)}
+  #v1 .kp{font-size:330px}
+  #v1 .car{width:300px;margin-top:34px;margin-bottom:26px}
+  #v1 .pod{font-size:40px;letter-spacing:.42em;text-indent:.42em}
+
+  /* 2 — monogram */
+  #v2 .ring.o{width:900px;height:900px;border-width:6px}
+  #v2 .kp{font-size:460px}
+
+  /* 3 — kruhový nápis */
+  #v3 svg{position:absolute;inset:0;width:1080px;height:1080px}
+  #v3 .kp{font-size:300px}
+  #v3 text{font-family:"IBM Plex Sans",sans-serif;font-size:40px;letter-spacing:.3em;
+    fill:rgba(244,241,235,.8);text-transform:uppercase}
+</style>
+
+<div class="a" id="v1">
+  <div class="ring o"></div><div class="ring i"></div>
+  <div class="in">
+    <div class="kp">KP</div>
+    <div class="car"></div>
+    <div class="pod">Účetní kancelář</div>
+  </div>
+</div>
+
+<div class="a" id="v2">
+  <div class="ring o"></div>
+  <div class="in"><div class="kp">KP</div></div>
+</div>
+
+<div class="a" id="v3">
+  <div class="ring o" style="width:940px;height:940px;border-width:5px"></div>
+  <div class="ring i" style="width:700px;height:700px;border-color:rgba(192,143,78,.4)"></div>
+  <svg viewBox="0 0 1080 1080">
+    <defs>
+      <!-- horní oblouk zleva doprava, spodní obráceně, jinak by se text dole
+           četl vzhůru nohama -->
+      <path id="nahore" d="M130 540 a410 410 0 0 1 820 0" fill="none"/>
+      <path id="dole"   d="M140 540 a400 400 0 0 0 800 0" fill="none"/>
+    </defs>
+    <text><textPath href="#nahore" startOffset="50%" text-anchor="middle">Konsalting Profi</textPath></text>
+    <text><textPath href="#dole" startOffset="50%" text-anchor="middle">Účetní kancelář · Praha 9</textPath></text>
+  </svg>
+  <div class="in"><div class="kp">KP</div></div>
+</div>
