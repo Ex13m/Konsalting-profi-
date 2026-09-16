@@ -15,6 +15,7 @@ Jednostránková prezentace účetní kanceláře Konsalting Profi (Praha 9 – 
 - `netlify.toml`, `_headers` — konfigurace nasazení a cache
 - `DOCS.md` — podrobná dokumentace projektu (rusky): jak je co udělané,
   kde se to mění, co ještě není hotové
+- `PLAN.md` — plán prací (rusky): co se dělá po schválení a v jakém pořadí
 
 ## Vizuální systém
 - papír (krémová #F7F4EF) · inkoust (námořní modř #16264F) · mosaz (#A9743C)
