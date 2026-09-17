@@ -1,6 +1,6 @@
 # Konsalting Profi
 
-`verze 1.0.0 · 14. 9. 2026`
+`verze 1.0.1 · 17. 9. 2026`
 
 Jednostránková prezentace účetní kanceláře Konsalting Profi (Praha 9 – Vysočany).
 

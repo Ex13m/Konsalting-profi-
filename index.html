@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Konsalting Profi — účetnictví, mzdy a daně pro firmy v Praze</title>
 <meta name="description" content="Účetní kancelář Praha 9 – Vysočany. Vedení účetnictví, mzdová agenda, daňová evidence a poradenství při zakládání společnosti. Termíny hlídáme za vás.">
-<meta name="kp-verze" content="1.0.0 · 2026-09-14">
+<meta name="kp-verze" content="1.0.1 · 2026-09-17">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="mask-icon" href="assets/favicon.svg" color="#A9743C">
 <meta name="theme-color" content="#16264F">
@@ -824,7 +824,7 @@ body.dock-on .live-fab{bottom:calc(152px + var(--dockh,96px))}
   body.dock-on .assist-fab{bottom:calc(78px + var(--dockh,96px))}
   body.dock-on .holo-fab{bottom:calc(136px + var(--dockh,96px))}
   body.dock-on .holo-mute{bottom:calc(145px + var(--dockh,96px))}
-  body.dock-on .holo{bottom:calc(196px + var(--dockh,96px))}
+  body.dock-on .holo{bottom:calc(208px + var(--dockh,96px))}
   body.dock-on .live-fab{bottom:calc(190px + var(--dockh,96px))}}
 
 .holo-fab{position:fixed;right:22px;bottom:88px;z-index:67;width:52px;height:52px;border-radius:50%;
@@ -934,8 +934,11 @@ body.dark .holo-fig::after{background:repeating-linear-gradient(to bottom,rgba(0
   cursor:pointer;transition:border-color .2s,background .2s;backdrop-filter:blur(6px);
   box-shadow:0 8px 22px rgba(8,14,30,.4)}
 .holo-akce button:hover{border-color:#E0B173;background:rgba(22,38,79,.92)}
-.holo.uvitani .holo-fig{bottom:58px}
-.holo.uvitani .holo-cap{top:-10px}
+/* výšku nabídky neodhadujeme — změříme ji a o tolik zvedneme postavu,
+   jinak tlačítka leží Kláře na šatech a zakrývají projektor pod ní */
+.holo.uvitani .holo-fig{bottom:var(--akce,58px)}
+/* titulek drží nad hlavou: zvedne se přesně o to, o co postava */
+.holo.uvitani .holo-cap{top:calc(48px - var(--akce,58px))}
 @media(max-width:700px){
   .holo-akce{left:0;right:0;margin:0 auto;width:min(300px,88vw)}
   .holo-akce button{font-size:12px;padding:8px 12px}}
@@ -1037,7 +1040,7 @@ body.classic .holo-fig video{filter:url(#klaraLuma) brightness(.92) contrast(1.1
   .live-fab svg{width:20px;height:20px}
   .holo-mute{right:70px;bottom:145px}
   /* nad tlačítkem u kraje se postava nevejde, na úzké obrazovce stojí na střed */
-  .holo{left:0;right:0;bottom:196px;width:100%;height:300px}
+  .holo{left:0;right:0;bottom:208px;width:100%;height:300px}
   .holo-fig{left:0;right:0;margin:0 auto;width:190px;height:253px}
   .holo-cap{left:0;right:0;margin:0 auto;width:min(266px,82vw);font-size:12px;top:-6px}}
 @media(prefers-reduced-motion:reduce){
@@ -1655,7 +1658,7 @@ body.classic .on-dark .btn:not(.ghost),body.classic .contact .btn:not(.ghost){ba
     </div>
     <div class="fbot">
       <span>© <span id="yr"></span> Konsalting Profi</span>
-      <span class="verze num" title="Verze webu">v1.0.0</span>
+      <span class="verze num" title="Verze webu">v1.0.1</span>
       <button type="button" class="legal-open" data-doc="gdpr">Ochrana osobních údajů</button>
       <button type="button" class="legal-open" data-doc="cookies">Cookies</button>
       <button type="button" class="legal-open" data-doc="terms">Podmínky použití</button>
@@ -2780,6 +2783,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     'Objednat schůzku můžete kdykoli, i mimo pracovní dobu.'
   ];
   const PAUZA=10000;   // po dopovídání se uvítání pustí znovu za deset vteřin
+  const PRICHOD=1350;  // než se obraz ustálí; do té doby Klára mlčí
   const t=s=>(window.KP&&KP.t)?KP.t(s):s;
 
   /* ---- zvuk ----------------------------------------------------------
@@ -2872,14 +2876,6 @@ document.getElementById('leadform').addEventListener('submit',e=>{
       o.connect(og);ven(a,og,0.45,0.7);o.start(z);o.stop(z+1.6);
     });
 
-    // 4) jediné tiché ťuknutí, když se obraz ustálí
-    const tuk=a.createOscillator(),tukG=a.createGain(),z=t+0.86;
-    tuk.type='sine';
-    tuk.frequency.setValueAtTime(1320,z);tuk.frequency.exponentialRampToValueAtTime(880,z+0.1);
-    tukG.gain.setValueAtTime(0.0001,z);
-    tukG.gain.exponentialRampToValueAtTime(0.03,z+0.01);
-    tukG.gain.exponentialRampToValueAtTime(0.0001,z+0.32);
-    tuk.connect(tukG);ven(a,tukG,0.4,0.6);tuk.start(z);tuk.stop(z+0.35);
   }
 
   /* hudba pod projekcí — místo bzučení.
@@ -2956,7 +2952,7 @@ document.getElementById('leadform').addEventListener('submit',e=>{
       try{
         humG.gain.cancelScheduledValues(n);
         humG.gain.setValueAtTime(humG.gain.value,n);
-        humG.gain.exponentialRampToValueAtTime(0.004,n+0.02);
+        humG.gain.exponentialRampToValueAtTime(0.004,n+0.09);
         humG.gain.exponentialRampToValueAtTime(0.085,n+delka+0.5);
       }catch(e){}
       if(fig){fig.classList.add('vypadek');setTimeout(()=>fig.classList.remove('vypadek'),delka*1000)}
@@ -3001,29 +2997,16 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     sub.connect(subG);ven(a,subG,0.5,0.15);sub.start(t);sub.stop(t+0.5);
   }
 
-  /* změna repliky — sotva znatelné ťuknutí */
-  function zvukReplika(){
-    const a=ctx();if(!a||ticho)return;
-    const t=a.currentTime;
-    const o=a.createOscillator(),g=a.createGain();
-    o.type='sine';
-    o.frequency.setValueAtTime(1046.5,t);o.frequency.exponentialRampToValueAtTime(784,t+0.09);
-    g.gain.setValueAtTime(0.0001,t);
-    g.gain.exponentialRampToValueAtTime(0.016,t+0.012);
-    g.gain.exponentialRampToValueAtTime(0.0001,t+0.26);
-    o.connect(g);ven(a,g,0.4,0.65);o.start(t);o.stop(t+0.3);
-  }
-
   /* ---- repliky ---- */
   let casovace=[],smycka=null;
   const zrus=()=>{casovace.forEach(clearTimeout);casovace=[];clearTimeout(smycka);smycka=null};
-  function rekni(text,tise){
+  /* Titulky se mění potichu: žádné ťuknutí, jen text. */
+  function rekni(text){
     cap.innerHTML='<b>Klára</b><span>'+t(text)+'</span>';
-    if(!tise)zvukReplika();
   }
   /* titulky k mluvenému uvítání */
   function titulky(){
-    UVITANI.forEach(([text,cas])=>casovace.push(setTimeout(()=>rekni(text,true),cas*1000)));
+    UVITANI.forEach(([text,cas])=>casovace.push(setTimeout(()=>rekni(text),cas*1000)));
   }
   /* tiché čekání mezi přehráními */
   function povidej(od){
@@ -3034,6 +3017,16 @@ document.getElementById('leadform').addEventListener('submit',e=>{
      Video je zatím jen nahrané uvítání, žádná AI. Pozadí se odstraňuje
      až v prohlížeči přes SVG filtr, aby stála přímo na stránce. */
   let mluvi=false;
+  /* Prohlížeč pustí zvuk jen z gesta uživatele. Video proto hned při
+     kliknutí potichu rozehrajeme a zastavíme — element je tím odemčený
+     a mluvit může začít až se Klára doopravdy zjeví, ne do zvuku příchodu. */
+  function odemkni(){
+    if(!vid||!vid.play)return;
+    const bylo=vid.muted;vid.muted=true;
+    const stop=()=>{try{vid.pause();vid.currentTime=0}catch(e){}vid.muted=bylo};
+    const p=vid.play();
+    if(p&&p.then)p.then(stop,()=>{vid.muted=bylo}); else stop();
+  }
   function prehraj(){
     if(!zapnuto)return;
     zrus();
@@ -3073,7 +3066,8 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     if(!tichy){
       nabidka(true);              // pod Klárou rovnou nabídneme, co dál
       setTimeout(humZap,300);
-      prehraj();   // pustit hned, jinak prohlížeč zvuk bez gesta odmítne
+      odemkni();                  // odemknout musíme v gestu…
+      casovace.push(setTimeout(prehraj,PRICHOD));   // …promluvit až po příchodu
     }
   }
   function vyp(){
@@ -3158,8 +3152,10 @@ document.getElementById('leadform').addEventListener('submit',e=>{
     if(!akce)return;
     akce.hidden=!ukaz;
     box.classList.toggle('uvitani',!!ukaz);
-    if(!ukaz){akce.innerHTML='';return}
+    if(!ukaz){akce.innerHTML='';box.style.removeProperty('--akce');return}
     akce.innerHTML=AKCE.map((a,i)=>'<button type="button" data-i="'+i+'">'+t(a[0])+'</button>').join('');
+    /* kolik místa nabídka opravdu zabrala — v jiném jazyce se zalomí jinak */
+    box.style.setProperty('--akce',(akce.offsetHeight+14)+'px');
     akce.querySelectorAll('button').forEach(b=>b.onclick=e=>{
       e.stopPropagation();
       const kam=AKCE[+b.dataset.i][1];
